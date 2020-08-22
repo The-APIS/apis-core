@@ -1,0 +1,114 @@
+version: "3"
+
+services:
+
+  gateway:
+    build: ./gateway/src
+    command: npm run dev
+    environment:
+      EXPRESS_PORT: 8100
+      BITCOIN_RPC_ADDR: 'bitcoin-rpc'
+      ETHEREUM_RPC_ADDR: 'ethereum-rpc'
+    volumes:
+      - /app/node_modules
+      - ./gateway/src:/app
+
+  bitcoin-listener:
+    build: ./bitcoin-listener/src
+    command: npm run dev
+    environment:
+      EXPRESS_PORT: 8101
+      # BITCOIN_CORE_HOST: "bitcoin-core"
+      # BITCOIN_CORE_NETWORK: "regtest"
+      # BITCOIN_CORE_USER: "bitcoin_rpc_user"
+      # BITCOIN_CORE_PASS: "bitcoin_rpc_pass"
+      # BITCOIN_CORE_LISTENER_PORT: "19332"
+      # BITCOIN_CORE_RPC_PORT: "19333"
+      # BITCOIN_CORE_ZMQ_PORT: "29332"
+    volumes:
+      - /app/node_modules
+      - ./bitcoin-listener/src:/app
+
+  bitcoin-rpc:
+    build: ./bitcoin-rpc/src
+    command: npm run dev
+    environment:
+      EXPRESS_PORT: 8102
+      # BITCOIN_CORE_HOST: "127.0.0.1"
+      # BITCOIN_CORE_NETWORK: "regtest"
+      # BITCOIN_CORE_USER: "bitcoin_rpc_user"
+      # BITCOIN_CORE_PASS: "bitcoin_rpc_pass"
+      # BITCOIN_CORE_RPC_PORT: "18333"
+    volumes:
+      - /app/node_modules
+      - ./bitcoin-rpc/src:/app
+
+  ethereum-listener:
+    build: ./ethereum-listener/src
+    command: npm run dev
+    environment:
+      NETWORK: 'rinkeby' # "rinkeby" | "mainnet" | ...
+      GATEWAY_HOST: '127.0.0.1'
+      GATEWAY_PORT: '8100'
+      ETHEREUM_WSS_ADDR: ''
+    volumes:
+      - /app/node_modules
+      - ./ethereum-listener/src:/app
+
+  ethereum-rpc:
+    build: ./ethereum-rpc/src
+    command: npm run dev
+    environment:
+      EXPRESS_PORT: 8103
+      ETHEREUM_WSS_ADDR: 'ws://127.0.0.1:8545'
+      ERC20_USDT_CONTRACT_ADDRESS: ''
+    volumes:
+      - /app/node_modules
+      - ./ethereum-rpc/src:/app
+
+  bitcoin-core:
+    image: ruimarinho/bitcoin-core:0.20.1
+    ports:
+      - "8332:8332"
+      - "9332:9332"
+      - "8333:8333"
+      - "9333:9333"
+      - "19332:19332"
+      - "19333:19333"
+      - "29332:29332"
+    command:
+      - -regtest=1
+      - -listen=1
+      - -txindex=1
+      - -server=1
+      - -printtoconsole
+      - -port=19332
+      - -rpcport=19333
+      - -rpcallowip=127.0.0.1
+      - -rpcallowip=172.17.0.0
+      - -rpcallowip=172.17.0.0/8
+      - -rpcallowip=172.17.0.0/16
+      - -rpcallowip=192.168.0.0/16
+      - -rpcbind=0.0.0.0
+      - -rpcuser=bitcoin_rpc_user
+      - -rpcpassword=bitcoin_rpc_pass
+      - -zmqpubrawtx=tcp://*:29332
+      - -zmqpubrawblock=tcp://*:29332
+      - -zmqpubhashblock=tcp://*:29332
+      - -zmqpubhashtx=tcp://*:29332
+      - -keypool=100
+      - -deprecatedrpc=generate
+
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
