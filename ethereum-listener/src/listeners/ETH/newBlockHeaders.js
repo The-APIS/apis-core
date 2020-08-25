@@ -29,7 +29,7 @@ module.exports = async ({ web3 }) => {
           status: 'CONFIRMED',
         }
 
-        console.log('CreateTransactionRecord result: ', result)
+        console.log('CreateTransactionRecord payload: ', payload)
       })
     } catch (error) {
       console.log(error)

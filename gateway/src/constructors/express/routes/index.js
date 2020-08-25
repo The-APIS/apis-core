@@ -5,6 +5,11 @@ const router = require('express').Router()
 module.exports = (context = {}) => {
   const APIRouter = require('./api')(context)
 
+  router.use('/api', (req, res, next) => {
+    console.log('TODO - authenticate...')
+    next()
+  })
+
   if (process.env.NODE_ENV === 'development') {
     router.use('/api', cors(), APIRouter)
   } else {
