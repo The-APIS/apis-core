@@ -1,7 +1,7 @@
 const router = require('express').Router()
 
 const v1 = context => {
-  router.use('/commands', require('./v1/Commands')(context))
+  router.use('/commands', require('./v1/commands')(context))
   return router
 }
 

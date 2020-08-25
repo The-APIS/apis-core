@@ -1,4 +1,4 @@
 module.exports.run = async () => {
-  console.log('[bitcoin-rpc] Starting Express...')
+  console.log('[ethereum-rpc] Starting Express...')
   await require('@/constructors/express')({})
 }

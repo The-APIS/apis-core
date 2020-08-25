@@ -6,9 +6,9 @@ services:
     build: ./gateway/src
     command: npm run dev
     environment:
-      EXPRESS_PORT: 8100
-      BITCOIN_RPC_ADDR: 'bitcoin-rpc'
-      ETHEREUM_RPC_ADDR: 'ethereum-rpc'
+      EXPRESS_PORT: "${TAG}:8100"
+    env_file:
+      - .env
     volumes:
       - /app/node_modules
       - ./gateway/src:/app
@@ -17,14 +17,9 @@ services:
     build: ./bitcoin-listener/src
     command: npm run dev
     environment:
-      EXPRESS_PORT: 8101
-      # BITCOIN_CORE_HOST: "bitcoin-core"
-      # BITCOIN_CORE_NETWORK: "regtest"
-      # BITCOIN_CORE_USER: "bitcoin_rpc_user"
-      # BITCOIN_CORE_PASS: "bitcoin_rpc_pass"
-      # BITCOIN_CORE_LISTENER_PORT: "19332"
-      # BITCOIN_CORE_RPC_PORT: "19333"
-      # BITCOIN_CORE_ZMQ_PORT: "29332"
+      EXPRESS_PORT: "${BITCOIN_LISTENER_PORT}:8101"
+    env_file:
+      - .env
     volumes:
       - /app/node_modules
       - ./bitcoin-listener/src:/app
@@ -33,12 +28,9 @@ services:
     build: ./bitcoin-rpc/src
     command: npm run dev
     environment:
-      EXPRESS_PORT: 8102
-      # BITCOIN_CORE_HOST: "127.0.0.1"
-      # BITCOIN_CORE_NETWORK: "regtest"
-      # BITCOIN_CORE_USER: "bitcoin_rpc_user"
-      # BITCOIN_CORE_PASS: "bitcoin_rpc_pass"
-      # BITCOIN_CORE_RPC_PORT: "18333"
+      EXPRESS_PORT: "${BITCOIN_RPC_PORT}:8102"
+    env_file:
+      - .env
     volumes:
       - /app/node_modules
       - ./bitcoin-rpc/src:/app
@@ -46,11 +38,8 @@ services:
   ethereum-listener:
     build: ./ethereum-listener/src
     command: npm run dev
-    environment:
-      NETWORK: 'rinkeby' # "rinkeby" | "mainnet" | ...
-      GATEWAY_HOST: '127.0.0.1'
-      GATEWAY_PORT: '8100'
-      ETHEREUM_WSS_ADDR: ''
+    env_file:
+      - .env
     volumes:
       - /app/node_modules
       - ./ethereum-listener/src:/app
@@ -59,9 +48,9 @@ services:
     build: ./ethereum-rpc/src
     command: npm run dev
     environment:
-      EXPRESS_PORT: 8103
-      ETHEREUM_WSS_ADDR: 'ws://127.0.0.1:8545'
-      ERC20_USDT_CONTRACT_ADDRESS: ''
+      EXPRESS_PORT: "${ETHEREUM_RPC_PORT}:8103"
+    env_file:
+    - .env
     volumes:
       - /app/node_modules
       - ./ethereum-rpc/src:/app
@@ -76,6 +65,8 @@ services:
       - "19332:19332"
       - "19333:19333"
       - "29332:29332"
+    env_file:
+      - .env
     command:
       - -regtest=1
       - -listen=1
@@ -102,8 +93,8 @@ services:
   db:
     image: postgres:13
     restart: always
-    environment:
-      POSTGRES_PASSWORD: password
+    env_file:
+      - .env
     ports:
       - "5432:5432"
 
@@ -112,3 +103,5 @@ services:
     restart: always
     ports:
       - 8080:8080
+    env_file:
+      - .env

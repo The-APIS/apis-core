@@ -1,1 +1,1 @@
-# APIS Core
+# apis-core

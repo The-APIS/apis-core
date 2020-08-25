@@ -1,6 +1,5 @@
 const Web3 = require('web3')
 
-
 let web3
 let reconnectTimeout
 
@@ -32,4 +31,4 @@ const Web3Provider = ({ socketAddress }) => {
 }
 
 
-module.exports = Web3Provider({ socketAddress: process.env.ETHEREUM_WSS_ADDR })
+module.exports = Web3Provider({ socketAddress: process.env.ETHEREUM_WSS_ADDR || 'http://127.0.0.1:8545' })

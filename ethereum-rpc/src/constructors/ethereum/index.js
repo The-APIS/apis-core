@@ -1,4 +1,4 @@
-import web3 from '@/constructors/web3'
+const web3 = require('@/constructors/web3')
 
 const Ethereum = module.exports = {
 
