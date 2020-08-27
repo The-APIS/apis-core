@@ -10,4 +10,5 @@ module.exports = {
   ONE_MINUTE,
   ONE_HOUR,
   ONE_DAY,
+  RPC_COMMANDS: [],
 }
