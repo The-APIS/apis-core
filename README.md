@@ -11,10 +11,28 @@
 2. ...
 
 
+## Run
+
+
 ```bash
-docker-compose up
+npm run build-development
+npm run start-development
 ```
 
+
+# Production
+
+
+## Run
+
+
+```bash
+npm run build-production
+npm run start-production
+```
+
+
+# Notes
 
 > See individual service README files
 > (`gateway` is a good place to start)
