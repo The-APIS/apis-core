@@ -10,8 +10,8 @@ volumes: [
 ]) {
   node(label) {
     def gateway
-    def btcRpc
-    def ethRpc
+    def bitcoinRpc
+    def ethereumRpc
 
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
@@ -23,30 +23,30 @@ volumes: [
     def gatewayImageName = "apiscore-gateway"
     def gatewayImage = "${registry}/${gatewayImageName}"
 
-    def btcRpcImageName = "apiscore-btc-rpc"
-    def btcRpcImage = "${registry}/${btcRpcImageName}"
+    def bitcoinRpcImageName = "apiscore-bitcoin-rpc"
+    def bitcoinRpcImage = "${registry}/${bitcoinRpcImageName}"
 
-    def ethRpcImageName = "apiscore-eth-rpc"
-    def ethRpcImage = "${registry}/${ethRpcImageName}"
+    def ethereumRpcImageName = "apiscore-ethereum-rpc"
+    def ethereumRpcImage = "${registry}/${ethereumRpcImageName}"
 
     container('docker') {
-      stage('Build Gateway') {
+      stage('Build') {
         checkout scm
-        dir('gateway') {
+        dir('gateway/src') {
           gateway = docker.build("${gatewayImage}", "-f Dockerfile .")
         }
-      }
-      stage('Build Gateway') {
-        checkout scm
-        dir('gateway') {
-          gateway = docker.build("${gatewayImage}", "-f Dockerfile .")
+        dir('bitcoin-rpc/src') {
+          bitcoinRpc = docker.build("${bitcoinRpcImage}", "-f Dockerfile .")
+        }
+        dir('ethereum-rpc/src') {
+          ethereumRpc = docker.build("${ethereumRpcImage}", "-f Dockerfile .")
         }
       }
       stage('Push') {
         docker.withRegistry('https://registry.trustedlife.app') {
           gateway.push("latest")
-          btcRpc.push("latest")
-          ethRpc.push("latest")
+          bitcoinRpc.push("latest")
+          ethereumRpc.push("latest")
         }
       }
     }
@@ -60,11 +60,11 @@ volumes: [
           # TODO # kubectl set image -n apiscore deployment/gateway gateway=${gatewayImage}:latest
           # TODO # kubectl patch -n apiscore deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
 
-          # TODO # kubectl set image -n apiscore deployment/btc-rpc btc-rpc=${btcRpcImage}:latest
-          # TODO # kubectl patch -n apiscore deployment/btc-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
+          # TODO # kubectl set image -n apiscore deployment/bitcoin-rpc bitcoin-rpc=${bitcoinRpcImage}:latest
+          # TODO # kubectl patch -n apiscore deployment/bitcoin-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
 
-          # TODO # kubectl set image -n apiscore deployment/eth-rpc eth-rpc=${ethRpcImage}:latest
-          # TODO # kubectl patch -n apiscore deployment/eth-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
+          # TODO # kubectl set image -n apiscore deployment/ethereum-rpc ethereum-rpc=${ethereumRpcImage}:latest
+          # TODO # kubectl patch -n apiscore deployment/ethereum-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
           """
       }
     }
