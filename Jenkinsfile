@@ -51,22 +51,22 @@ volumes: [
       }
     }
 
-    stage('Deploy (kubectl)') {
-      container('kubectl') {
-        sh """
-          # without tagging, rollout will not be triggered
-          # patch, to force rollout (development envs only)
+    // stage('Deploy (kubectl)') {
+    //   container('kubectl') {
+    //     sh """
+    //       # without tagging, rollout will not be triggered
+    //       # patch, to force rollout (development envs only)
 
-          # TODO # kubectl set image -n apiscore deployment/gateway gateway=${gatewayImage}:latest
-          # TODO # kubectl patch -n apiscore deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
+    //       # kubectl set image -n apiscore deployment/gateway gateway=${gatewayImage}:latest
+    //       # kubectl patch -n apiscore deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
 
-          # TODO # kubectl set image -n apiscore deployment/bitcoin-rpc bitcoin-rpc=${bitcoinRpcImage}:latest
-          # TODO # kubectl patch -n apiscore deployment/bitcoin-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
+    //       # kubectl set image -n apiscore deployment/bitcoin-rpc bitcoin-rpc=${bitcoinRpcImage}:latest
+    //       # kubectl patch -n apiscore deployment/bitcoin-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
 
-          # TODO # kubectl set image -n apiscore deployment/ethereum-rpc ethereum-rpc=${ethereumRpcImage}:latest
-          # TODO # kubectl patch -n apiscore deployment/ethereum-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
-          """
-      }
-    }
+    //       # kubectl set image -n apiscore deployment/ethereum-rpc ethereum-rpc=${ethereumRpcImage}:latest
+    //       # kubectl patch -n apiscore deployment/ethereum-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
+    //       """
+    //   }
+    // }
   }
 }
