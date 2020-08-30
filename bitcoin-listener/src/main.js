@@ -64,7 +64,7 @@ const socket = zmq.socket('sub')
 
 
 module.exports.run = async (
-  host = process.env.BITCOIN_CORE_HOST,
+  host = process.env.BITCOIN_HTTPS_ADDR,
   port = process.env.BITCOIN_CORE_ZMQ_PORT,
   network = process.env.BITCOIN_CORE_NETWORK,
 ) => {
