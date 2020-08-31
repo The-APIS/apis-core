@@ -2,6 +2,7 @@ const router = require('express').Router()
 
 const v1 = context => {
   router.use('/rpc', require('./v1/rpc')(context))
+  router.use('/wallets', require('./v1/wallets')(context))
   return router
 }
 

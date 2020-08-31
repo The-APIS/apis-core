@@ -1,3 +1,5 @@
+// https://github.com/ethereum/go-ethereum/wiki/Management-APIs#personal_newaccount
+
 const ETH_RPC_COMMANDS = {
   // Retrieving Blocks
   eth_blockNumber: 'eth_blockNumber',
@@ -51,11 +53,15 @@ const ETH_RPC_COMMANDS = {
   eth_unsubscribe: 'eth_unsubscribe',
 }
 
+
+const {
+  net_listening,
+  ...ALOWED,
+} = ETH_RPC_COMMANDS
+
 module.exports = {
   STANDARD: {
     ...ETH_RPC_COMMANDS,
   },
-  ALLOWED: {
-    ...ETH_RPC_COMMANDS,
-  },
+  ALLOWED,
 }

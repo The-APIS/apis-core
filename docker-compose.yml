@@ -7,7 +7,7 @@ services:
     command: npm run dev
     environment:
       NODE_ENV: development
-      EXPRESS_PORT: "80"
+      EXPRESS_PORT: 80
     env_file:
       - .env
     volumes:
@@ -51,6 +51,7 @@ services:
     command: npm run dev
     environment:
       NODE_ENV: development
+      EXPRESS_PORT: 80
     ports:
       - "${BITCOIN_LISTENER_PORT:-8103}:80"
     env_file:
@@ -66,6 +67,7 @@ services:
     command: npm run dev
     environment:
       NODE_ENV: development
+      EXPRESS_PORT: 80
     env_file:
       - .env
     ports:

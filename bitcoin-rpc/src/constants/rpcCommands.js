@@ -1,12 +1,5 @@
 const BTC_RPC_COMMANDS = {
-  addMultiSigAddress: 'addmultisigaddress',
-  backupWallet: 'backupwallet',
-  dumpPrivKey: 'dumpprivkey',
-  encryptWallet: 'encryptwallet',
-  getAccount: 'getaccount',
-  getAccountAddress: 'getaccountaddress',
-  getAddressesByAccount: 'getaddressesbyaccount',
-  getBalance: 'getbalance',
+  // Retrieving Blocks
   getBlock: 'getblock',
   getBlockCount: 'getblockcount',
   getBlockHash: 'getblockhash',
@@ -20,20 +13,14 @@ const BTC_RPC_COMMANDS = {
   getMemorypool: 'getmemorypool',
   getMemoryPool: 'getmemorypool',
   getMiningInfo: 'getmininginfo',
-  getNewAddress: 'getnewaddress',
-  getReceivedByAccount: 'getreceivedbyaccount',
-  getReceivedByAddress: 'getreceivedbyaddress',
-  getTransaction: 'gettransaction',
   getWork: 'getwork',
-  help: 'help',
-  importPrivKey: 'importprivkey',
-  keypoolRefill: 'keypoolrefill',
-  keyPoolRefill: 'keypoolrefill',
-  listAccounts: 'listaccounts',
-  listReceivedByAccount: 'listreceivedbyaccount',
-  listReceivedByAddress: 'listreceivedbyaddress',
+  // Reading Transactions
+  getTransaction: 'gettransaction',
   listSinceBlock: 'listsinceblock',
   listTransactions: 'listtransactions',
+  // Writing Transactions
+  getNewAddress: 'getnewaddress',
+  addMultiSigAddress: 'addmultisigaddress',
   move: 'move',
   sendFrom: 'sendfrom',
   sendMany: 'sendmany',
@@ -43,6 +30,30 @@ const BTC_RPC_COMMANDS = {
   setTxFee: 'settxfee',
   signMessage: 'signmessage',
   stop: 'stop',
+  // Account Information
+  getAccount: 'getaccount',
+  getAccountAddress: 'getaccountaddress',
+  getAddressesByAccount: 'getaddressesbyaccount',
+  getBalance: 'getbalance',
+  getReceivedByAccount: 'getreceivedbyaccount',
+  getReceivedByAddress: 'getreceivedbyaddress',
+  listReceivedByAccount: 'listreceivedbyaccount',
+  listReceivedByAddress: 'listreceivedbyaddress',
+  // Event Logs
+  // Chain Information
+  // Retrieving Uncles
+  // Filters
+  // Real Time Events
+  // ...
+  // Admin
+  backupWallet: 'backupwallet',
+  dumpPrivKey: 'dumpprivkey',
+  encryptWallet: 'encryptwallet',
+  help: 'help',
+  importPrivKey: 'importprivkey',
+  keypoolRefill: 'keypoolrefill',
+  keyPoolRefill: 'keypoolrefill',
+  listAccounts: 'listaccounts',
   validateAddress: 'validateaddress',
   verifyMessage: 'verifymessage',
   walletLock: 'walletlock',
@@ -50,11 +61,17 @@ const BTC_RPC_COMMANDS = {
   walletPassphraseChange: 'walletpassphrasechange'
 }
 
+const {
+  stop,
+  backupWallet,
+  keypoolRefill,
+  keyPoolRefill,
+  ...ALOWED,
+} = BTC_RPC_COMMANDS
+
 module.exports = {
   STANDARD: {
     ...BTC_RPC_COMMANDS,
   },
-  ALLOWED: {
-    ...BTC_RPC_COMMANDS,
-  },
+  ALLOWED,
 }
