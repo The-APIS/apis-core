@@ -52,3 +52,34 @@ returns:
 10001 INVALID NETWORK
 
 ```
+
+# Migration History
+
+```bash
+./node_modules/.bin/sequelize model:generate \
+  --name Tx --attributes tx_id:string,chain:enum
+
+./node_modules/.bin/sequelize model:generate \
+  --name EthereumTx --attributes transactionIndex:string,input:string,gasPrice:string,gas:string,blockNumber:integer,txHash:string,v:string,r:string,contractAddress:string,cumulativeGasUsed:string,gasUsed:string,logs:string,logsBloom:string,status:string,sender:string,recipient:string,value:string,nonce:integer,blockNumber:integer,txHash:string,balanceTo:string,balanceFrom:string,blockHash:string
+
+./node_modules/.bin/sequelize model:generate \
+  --name EthereumBlock --attributes transactionIndex:string,input:string,gasPrice:string,gas:string,blockNumber:integer,txHash:string,v:string,r:string,contractAddress:string,cumulativeGasUsed:string,gasUsed:string,logs:string,logsBloom:string,status:string,sender:string,recipient:string,value:string,nonce:integer,blockNumber:integer,txHash:string,balanceTo:string,balanceFrom:string,blockHash:string
+
+./node_modules/.bin/sequelize model:generate \
+  --name EthereumBlock --attributes difficulty:integer,extraData:string,gasLimit:string,blockGasUsed:string,blockHash:string,blockLogsBloom:string,miner:string,mixHash:string,blockNonce:integer,blockNumber:integer,parentHash:string,receiptsRoot:string,sha3Uncles:string,size:integer,stateRoot:string,timestamp:date,totalDifficulty:string,transactionsRoot:string,uncles:JSONB
+# (transactions:rel)
+./node_modules/.bin/sequelize model:generate \
+  --name BitcoinTx --attributes version:string,locktime:string,txHash:string,blockHash:string
+# ins:rel
+# outs:rel
+./node_modules/.bin/sequelize model:generate \
+  --name BitcoinTxIn --attributes hash:string,index:string,script:string,sequence:string,witness:string
+
+./node_modules/.bin/sequelize model:generate \
+  --name BitcoinTxOut --attributes txHash:string,value:string,sequence:string,script:string
+
+./node_modules/.bin/sequelize model:generate \
+  --name BitcoinBlock --attributes version:integer,prevHash:string,merkleRoot:string,timestamp:date,bits:string,nonce:integer
+
+
+```

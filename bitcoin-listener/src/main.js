@@ -3,68 +3,9 @@ const zmq = require('zeromq')
 
 const socket = zmq.socket('sub')
 
-// example block
-//
-// {
-//   "version": int,
-//   "prevHash": {
-//     "type": "Buffer",
-//     "data": [...]
-//   },
-//   "merkleRoot": {
-//     "type": "Buffer",
-//     "data": [...]
-//   },
-//   "timestamp": int,
-//   "bits": int,
-//   "nonce": int,
-//   "transactions": [
-//     {
-//       "version": 2,
-//       "locktime": int,
-//       "ins": [
-//         {
-//           "hash": {
-//             "type": "Buffer",
-//             "data": [...]
-//           },
-//           "index": int,
-//           "script": {
-//             "type": "Buffer",
-//             "data": [...]
-//           },
-//           "sequence": int,
-//           "witness": [
-//             {
-//               "type": "Buffer",
-//               "data": [...]
-//             }
-//           ]
-//         }
-//       ],
-//       "outs": [
-//         {
-//           "value": 5000000000,
-//           "script": {
-//             "type": "Buffer",
-//             "data": [...]
-//           }
-//         },
-//         {
-//           "value": 0,
-//           "script": {
-//             "type": "Buffer",
-//             "data": [...]
-//           }
-//         }
-//       ]
-//     }
-//   ]
-// }
-
 
 module.exports.run = async (
-  host = process.env.BITCOIN_HTTPS_ADDR,
+  host = process.env.BITCOIN_CORE_ZMQ_HOST,
   port = process.env.BITCOIN_CORE_ZMQ_PORT,
   network = process.env.BITCOIN_CORE_NETWORK,
 ) => {
@@ -75,6 +16,7 @@ module.exports.run = async (
    * - hashtx
    * - hashblock
   **/
+  console.log(`Listening to: tcp://${host}:${port}, ${network}`)
   socket.connect(`tcp://${host}:${port}`)
   socket.subscribe('rawtx')
   socket.subscribe('rawblock')
@@ -85,10 +27,10 @@ module.exports.run = async (
         case 'rawblock':
           const block = bitcoin.Block.fromBuffer(message)
           const { transactions } = block
-          console.log('block', JSON.stringify(block, null, 2))
+          // console.log('block', block)
           for (let i = 1; i < transactions.length; i++) { // skip coinbase
             const tx = transactions[i]
-            // console.log('tx', tx)
+            // console.log('tx', JSON.stringify(tx, null, 2))
             const { outs } = tx
             for (let j = 0; j < outs.length; j++) {
               const out = outs[j]

@@ -65,6 +65,14 @@ volumes: [
 
     //       # kubectl set image -n apiscore deployment/ethereum-rpc ethereum-rpc=${ethereumRpcImage}:latest
     //       # kubectl patch -n apiscore deployment/ethereum-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
+            // kubectl set image -n apiscore deployment/gateway gateway=registry.trustedlife.app/apiscore-gateway:latest
+            // kubectl patch -n apiscore deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"1"}}}}}'
+
+            // kubectl set image -n apiscore deployment/bitcoin-rpc bitcoin-rpc=registry.trustedlife.app/apiscore-bitcoin-rpc:latest
+            // kubectl patch -n apiscore deployment/bitcoin-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"1"}}}}}'
+
+            // kubectl set image -n apiscore deployment/ethereum-rpc ethereum-rpc=registry.trustedlife.app/apiscore-ethereum-rpc:latest
+            // kubectl patch -n apiscore deployment/ethereum-rpc -p '{"spec":{"template":{"metadata":{"labels":{"date":"1"}}}}}'
     //       """
     //   }
     // }

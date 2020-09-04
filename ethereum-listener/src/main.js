@@ -13,6 +13,7 @@ const run = async () => {
   console.info('[ethereum-listener] Starting...')
   try {
     require('./listeners/ETH/newBlockHeaders')({ web3 })
+    require('./listeners/ETH/pendingTransactions')({ web3 })
   } catch (e) {
     console.error('[ethereum-listener] Error.')
     console.error(e)

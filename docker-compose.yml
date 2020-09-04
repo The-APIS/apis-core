@@ -111,7 +111,7 @@ services:
       - -keypool=100
       - -deprecatedrpc=generate
 
-  db:
+  postgres:
     image: postgres:13
     restart: always
     env_file:

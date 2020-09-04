@@ -1,24 +1,30 @@
 'use strict';
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('ContactMessages', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('BitcoinBlock', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      version: {
+        type: Sequelize.INTEGER
+      },
+      prevHash: {
         type: Sequelize.STRING
       },
-      email: {
+      merkleRoot: {
         type: Sequelize.STRING
       },
-      phone: {
+      timestamp: {
+        type: Sequelize.DATE
+      },
+      bits: {
         type: Sequelize.STRING
       },
-      additional_info: {
-        type: Sequelize.TEXT
+      nonce: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -30,7 +36,7 @@ module.exports = {
       }
     });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('ContactMessages');
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('BitcoinBlock');
   }
 };
