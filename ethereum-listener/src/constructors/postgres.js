@@ -3,7 +3,7 @@ const { Client } = require('pg')
 const sleep = timeout => new Promise(resolve => setTimeout(resolve, timeout))
 
 
-const run = async (
+module.exports = async (
   attempts = Infinity,
   interval = 3000,
   onError = (e) => console.error('[Postgres] Connection Error', e),
@@ -11,7 +11,8 @@ const run = async (
   port = process.env.POSTGRES_PORT || 5432,
   database = process.env.POSTGRES_DATABASE || 'postgres',
   user = process.env.POSTGRES_USER || 'postgres',
-  password = process.env.POSTGRES_PASSWORD || 'password'
+  password = process.env.POSTGRES_PASSWORD || 'password',
+  url = null
 ) => {
   try {
     const connectionString = url || `postgresql://${user}:${password}@${host}:${port}/${database}`
@@ -28,5 +29,3 @@ const run = async (
     return run(attempts, interval, onError)
   }
 }
-
-module.exports = run

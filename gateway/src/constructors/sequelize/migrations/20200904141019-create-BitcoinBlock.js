@@ -12,7 +12,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       prevHash: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
       },
       merkleRoot: {
         type: Sequelize.STRING
@@ -24,7 +25,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       nonce: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        unique: true,
       },
       createdAt: {
         allowNull: false,

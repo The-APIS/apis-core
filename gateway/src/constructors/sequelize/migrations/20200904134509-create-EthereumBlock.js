@@ -9,63 +9,62 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       difficulty: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING,
       },
       extraData: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT,
       },
       gasLimit: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
       },
       blockGasUsed: {
-        type: Sequelize.STRING
-      },
-      blockHash: {
         type: Sequelize.STRING,
-        unique: true,
       },
-      blockLogsBloom: {
-        type: Sequelize.STRING
+      hash: {
+        type: Sequelize.STRING,
+      },
+      logsBloom: {
+        type: Sequelize.TEXT,
       },
       miner: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       mixHash: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
-      blockNonce: {
-        type: Sequelize.INTEGER
+      nonce: {
+        type: Sequelize.STRING,
       },
-      blockNumber: {
-        type: Sequelize.INTEGER
+      number: {
+        type: Sequelize.INTEGER,
+        unique: true,
       },
       parentHash: {
         type: Sequelize.STRING,
-        unique: true,
       },
       receiptsRoot: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       sha3Uncles: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       size: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       stateRoot: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       timestamp: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       totalDifficulty: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       transactionsRoot: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       uncles: {
-        type: Sequelize.JSONB
+        type: Sequelize.JSONB,
       },
       createdAt: {
         allowNull: false,

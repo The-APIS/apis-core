@@ -1,18 +1,10 @@
 module.exports.run = async () => {
   console.log('[gateway] Starting Express...')
-  const [
-    postgres,
-    // redis,
-    // { io },
-  ] = await Promise.all([
-    await require(`@/constructors/postgres`)(),
-    // await require(`@/singletons/redis`),
-    // await require(`@/singletons/io`),
-  ])
-  // const sockets = await require(`./constructors/sockets`)({ io })
-
-
-
+  // const [
+  //   postgres,
+  // ] = await Promise.all([
+  //   await require(`@/constructors/postgres`)(),
+  // ])
 
   const {
     sequelize,
@@ -21,9 +13,7 @@ module.exports.run = async () => {
   } = require('@/constructors/sequelize')({})
 
   const expressContext = {
-    postgres,
-    // redis,
-    // io,
+    // postgres,
     sequelize,
     Sequelize,
     models,

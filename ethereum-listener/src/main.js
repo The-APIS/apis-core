@@ -9,15 +9,38 @@ process.on('uncaughtException', (e) => {
   console.error(`[ethereum-listener] unhandled exception: ${e.message} ${e}`)
 })
 
-const run = async () => {
+
+module.exports = async () => {
   console.info('[ethereum-listener] Starting...')
   try {
-    require('./listeners/ETH/newBlockHeaders')({ web3 })
-    require('./listeners/ETH/pendingTransactions')({ web3 })
+    // const [
+    //   postgres,
+    // ] = await Promise.all([
+    //   await require(`@/constructors/postgres`)(),
+    // ])
+
+    const {
+      sequelize,
+      Sequelize,
+      models,
+    } = require('@/constructors/sequelize')({})
+
+    const context = {
+      // host,
+      // port,
+      // network,
+      sequelize,
+      Sequelize,
+      models,
+      // postgres,
+      web3,
+    }
+
+    require('./lib/listeners/ETH/newBlockHeaders')(context)
+    require('./lib/listeners/ETH/pendingTransactions')(context)
+    require('./lib/sync')(context)
   } catch (e) {
     console.error('[ethereum-listener] Error.')
     console.error(e)
   }
 }
-
-module.exports.run = run

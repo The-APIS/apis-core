@@ -14,7 +14,8 @@ const readModelFilenamesFromPath = (dirPath) => (
 
 module.exports = ({ sequelize, Sequelize, modelsPath }) => {
   const mPath = modelsPath || path.resolve(__dirname, './models')
-  const importSequelizeModel = (filename) => sequelize.import(path.join(mPath, filename))
+
+  const importSequelizeModel = (filename) => require(path.resolve(mPath, filename))(sequelize, Sequelize.DataTypes)
 
   const modelFilenames = readModelFilenamesFromPath(mPath)
 

@@ -8,26 +8,35 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      from: {
+        type: Sequelize.STRING,
+      },
+      to: {
+        type: Sequelize.STRING,
+      },
       transactionIndex: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       input: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       gasPrice: {
         type: Sequelize.STRING
       },
       gas: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       blockNumber: {
         type: Sequelize.INTEGER
       },
-      txHash: {
+      hash: {
         type: Sequelize.STRING,
         unique: true,
       },
       v: {
+        type: Sequelize.STRING
+      },
+      s: {
         type: Sequelize.STRING
       },
       r: {
@@ -51,12 +60,6 @@ module.exports = {
       status: {
         type: Sequelize.STRING
       },
-      sender: {
-        type: Sequelize.STRING
-      },
-      recipient: {
-        type: Sequelize.STRING
-      },
       value: {
         type: Sequelize.STRING
       },
@@ -66,7 +69,7 @@ module.exports = {
       blockNumber: {
         type: Sequelize.INTEGER
       },
-      txHash: {
+      input: {
         type: Sequelize.STRING
       },
       balanceTo: {

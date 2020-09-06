@@ -1,2 +1,2 @@
 require('module-alias/register')
-require('@/main').run()
+require('@/main')()
