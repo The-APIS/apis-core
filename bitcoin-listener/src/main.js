@@ -1,7 +1,7 @@
 module.exports = async (
-  host = process.env.BITCOIN_CORE_ZMQ_HOST,
-  port = process.env.BITCOIN_CORE_ZMQ_PORT,
-  network = process.env.BITCOIN_CORE_NETWORK
+  host = process.env.BITCOIN_ZMQ_HOST,
+  port = process.env.BITCOIN_ZMQ_PORT,
+  network = process.env.BITCOIN_NETWORK
 ) => {
 
   const [

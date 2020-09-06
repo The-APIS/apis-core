@@ -4,8 +4,8 @@ const router = require('express').Router()
 
 
 const RPC_ADDR_MAP = {
-  bitcoin: process.env.BITCOIN_RPC_ADDR,
-  ethereum: process.env.ETHEREUM_RPC_ADDR,
+  bitcoin: process.env.BITCOIN_RPC_SVC_ADDR,
+  ethereum: process.env.ETHEREUM_RPC_SVC_ADDR,
 }
 
 
