@@ -1,4 +1,4 @@
 module.exports = async (context) => {
-  require('./syncPastBlocks')(context)
-  require('./syncCurrentBlocks')(context)
+  // require('./syncPastBlocks')(context)
+  // require('./syncCurrentBlocks')(context)
 }

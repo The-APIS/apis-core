@@ -23,8 +23,8 @@ module.exports = async ({
 
     while (current <= end) {
       const block = await web3.eth.getBlock(current, true) /* true: include transactions */
-      await models.EthereumBlock.create(block)
 
+      await models.EthereumBlock.create(block)
 
       if (get(block, 'transactions', []).length) {
         const txs = await models.EthereumTx.bulkCreate(block.transactions.map(({ input, ...tx }) => tx))
