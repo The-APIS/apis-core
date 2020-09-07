@@ -15,7 +15,7 @@ module.exports = async ({
 }) => {
     const latestBlock = await models.BitcoinBlock.findOne({
       limit: 1,
-      order: [ [ 'height', 'DESC' ]]
+      order: [ [ 'height', 'DESC' ]],
     })
 
     // TOOD - confirm all blocks exist in db
