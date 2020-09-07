@@ -24,7 +24,7 @@ module.exports = async ({
     const end = await client.getBlockCount() || 0
 
     let current = start
-    let retries = 3
+    let retries = 5
 
     while (current <= end) {
       try {
@@ -37,12 +37,12 @@ module.exports = async ({
         }
 
         current += 1;
-        retries = 3;
+        retries = 5;
       } catch (e) {
         console.error(e)
         retries = retries - 1;
         if (retries < 0) process.exit(1)
-        sleep(3 / retries)
+        sleep(5 / retries)
       }
     }
 
