@@ -8,7 +8,7 @@ const bitcoinCoreOptions = {
   network: process.env.BITCOIN_RPC_NETWORK,
   host: bitcoinCoreUrl.host,
   version: process.env.BITCOIN_RPC_VERSION,
-  username: process.env.BITCOIN_RPC_ADDR,
+  username: process.env.BITCOIN_RPC_USER,
   password: process.env.BITCOIN_RPC_PASS,
   port: process.env.BITCOIN_PORT,
 }
