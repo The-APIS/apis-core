@@ -15,6 +15,9 @@ services:
       - ./gateway/src:/app
     ports:
       - "8100:80"
+    restart: always
+    links:
+      - postgres
 
   bitcoin-rpc:
     build: ./bitcoin-rpc/src
@@ -30,7 +33,9 @@ services:
       - /app/node_modules
       - ./bitcoin-rpc/src:/app
     links:
+      - postgres
       - bitcoin-core
+    restart: always
 
   ethereum-rpc:
     build: ./ethereum-rpc/src
@@ -45,6 +50,9 @@ services:
     volumes:
       - /app/node_modules
       - ./ethereum-rpc/src:/app
+    links:
+      - postgres
+    restart: always
 
   bitcoin-listener:
     build: ./bitcoin-listener/src
@@ -60,6 +68,8 @@ services:
       - ./bitcoin-listener/src:/app
     links:
       - bitcoin-core
+      - postgres
+    restart: always
 
   ethereum-listener:
     build: ./ethereum-listener/src
@@ -73,6 +83,9 @@ services:
     volumes:
       - /app/node_modules
       - ./ethereum-listener/src:/app
+    links:
+      - postgres
+    restart: always
 
   bitcoin-core:
     image: ruimarinho/bitcoin-core:0.20.1
@@ -109,13 +122,14 @@ services:
       - -keypool=100
       - -deprecatedrpc=generate
 
-  db:
+  postgres:
     image: postgres:13
     restart: always
     env_file:
       - .env
     ports:
       - "5432:5432"
+    restart: always
 
   adminer:
     image: adminer

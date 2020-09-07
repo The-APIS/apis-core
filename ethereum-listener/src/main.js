@@ -13,11 +13,11 @@ process.on('uncaughtException', (e) => {
 module.exports = async () => {
   console.info('[ethereum-listener] Starting...')
   try {
-    // const [
-    //   postgres,
-    // ] = await Promise.all([
-    //   await require(`@/constructors/postgres`)(),
-    // ])
+    const [
+      postgres,
+    ] = await Promise.all([
+      await require(`@/constructors/postgres`)(),
+    ])
 
     const {
       sequelize,
@@ -32,7 +32,7 @@ module.exports = async () => {
       sequelize,
       Sequelize,
       models,
-      // postgres,
+      postgres,
       web3,
     }
 

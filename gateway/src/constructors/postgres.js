@@ -11,7 +11,8 @@ const run = async (
   port = process.env.POSTGRES_PORT || 5432,
   database = process.env.POSTGRES_DATABASE || 'postgres',
   user = process.env.POSTGRES_USER || 'postgres',
-  password = process.env.POSTGRES_PASSWORD || 'password'
+  password = process.env.POSTGRES_PASSWORD || 'password',
+  url = null
 ) => {
   try {
     const connectionString = url || `postgresql://${user}:${password}@${host}:${port}/${database}`

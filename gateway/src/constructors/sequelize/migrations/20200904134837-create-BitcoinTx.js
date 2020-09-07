@@ -8,24 +8,40 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      senderAddress: {
-        type: Sequelize.STRING,
-      },
-      recipientAddress: {
-        type: Sequelize.STRING,
-      },
-      version: {
-        type: Sequelize.STRING
-      },
-      locktime: {
-        type: Sequelize.STRING
-      },
-      txHash: {
+      txid: {
         type: Sequelize.STRING,
         unique: true,
       },
+      hash: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
+      version: {
+        type: Sequelize.INTEGER,
+      },
+      size: {
+        type: Sequelize.INTEGER,
+      },
+      vsize: {
+        type: Sequelize.INTEGER,
+      },
+      weight: {
+        type: Sequelize.INTEGER,
+      },
+      locktime: {
+        type: Sequelize.INTEGER,
+      },
+      vin: {
+        type: Sequelize.JSONB,
+      },
+      vout: {
+        type: Sequelize.JSONB,
+      },
+      hex: {
+        type: Sequelize.TEXT,
+      },
       blockHash: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

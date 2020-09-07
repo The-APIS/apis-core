@@ -26,6 +26,10 @@ const sequelize = new Sequelize(
     },
 
     operatorsAliases: Sequelize.Op,
+
+    define: {
+      freezeTableName: true,
+    },
   }
 )
 

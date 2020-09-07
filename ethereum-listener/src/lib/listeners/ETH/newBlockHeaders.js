@@ -26,11 +26,12 @@ module.exports = async ({
 
       lastCalled = number
 
-      const block = await web3.eth.getBlock(get(blockHeader,'hash'))
+      const block = await web3.eth.getBlock(get(blockHeader, 'hash'), true) /* true: include transactions */
 
       await models.EthereumBlock.create(block)
 
       if (get(block, 'transactions', []).length) {
+        // console.log('txns', block.transactions.map(({ input, ...tx }) => tx))
         const txs = await models.EthereumTx.bulkCreate(block.transactions.map(({ input, ...tx }) => tx))
       }
 

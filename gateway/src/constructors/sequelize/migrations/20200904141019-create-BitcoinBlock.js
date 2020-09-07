@@ -8,24 +8,59 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      version: {
-        type: Sequelize.INTEGER
-      },
-      prevHash: {
+      hash: {
         type: Sequelize.STRING,
         unique: true,
       },
-      merkleRoot: {
-        type: Sequelize.STRING
+      confirmations: {
+        type: Sequelize.INTEGER,
       },
-      timestamp: {
-        type: Sequelize.DATE
+      strippedsize: {
+        type: Sequelize.INTEGER,
       },
-      bits: {
-        type: Sequelize.STRING
+      size: {
+        type: Sequelize.INTEGER,
+      },
+      weight: {
+        type: Sequelize.INTEGER,
+      },
+      height: {
+        type: Sequelize.INTEGER,
+        unique: true,
+      },
+      version: {
+        type: Sequelize.INTEGER,
+      },
+      versionHex: {
+        type: Sequelize.STRING,
+      },
+      merkleroot: {
+        type: Sequelize.STRING,
+      },
+      time: {
+        type: Sequelize.DATE,
+      },
+      mediantime: {
+        type: Sequelize.DATE,
       },
       nonce: {
+        type: Sequelize.BIGINT,
+        unique: true,
+      },
+      bits: {
+        type: Sequelize.STRING,
+      },
+      difficulty: {
         type: Sequelize.INTEGER,
+      },
+      chainwork: {
+        type: Sequelize.STRING,
+      },
+      nTx: {
+        type: Sequelize.INTEGER,
+      },
+      nextblockhash: {
+        type: Sequelize.STRING,
         unique: true,
       },
       createdAt: {

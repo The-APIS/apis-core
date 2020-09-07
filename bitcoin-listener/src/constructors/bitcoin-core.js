@@ -1,18 +1,19 @@
 const url = require('url');
 const Client = require('bitcoin-core');
 
-const bitcoinCoreUrl = url.parse(process.env.BITCOIN_HTTPS_ADDR)
+
+const bitcoinCoreUrl = url.parse(process.env.BITCOIN_RPC_ADDR)
 
 const bitcoinCoreOptions = {
-  network: process.env.BITCOIN_NETWORK,
+  network: 'testnet',
   host: bitcoinCoreUrl.host,
-  version: process.env.BITCOIN_CORE_VERSION,
-  username: process.env.BITCOIN_CORE_USER,
-  password: process.env.BITCOIN_CORE_PASS,
-  port: process.env.BITCOIN_CORE_PORT,
+  version: '0.17.1',
+  username: 'bitcoin_rpc_user',
+  password: 'bitcoin_rpc_pass',
+  port: process.env.BITCOIN_PORT,
 }
 
-if (bitcoinCoreUrl.protocol === 'https') {
+if (bitcoinCoreUrl.protocol === 'https:') {
   bitcoinCoreOptions.ssl = {
     enabled: true,
     strict: false
