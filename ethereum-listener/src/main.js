@@ -15,8 +15,13 @@ module.exports = async () => {
   try {
     const [
       postgres,
+      redis,
     ] = await Promise.all([
       await require(`@/constructors/postgres`)(),
+      await require(`@/constructors/redis`)({
+        url: process.env.REDIS_URL,
+        prefix: 'ethereum-listener',
+      }),
     ])
 
     const {
@@ -33,6 +38,7 @@ module.exports = async () => {
       Sequelize,
       models,
       postgres,
+      redis,
       web3,
     }
 

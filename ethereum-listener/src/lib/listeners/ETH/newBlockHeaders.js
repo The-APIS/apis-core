@@ -10,6 +10,7 @@ module.exports = async ({
   sequelize,
   Sequelize,
   models,
+  redis,
   web3,
 }) => {
   const subscription = web3.eth.subscribe(subscriptionKey)
@@ -30,9 +31,16 @@ module.exports = async ({
 
       await models.EthereumBlock.create(block)
 
-      if (get(block, 'transactions', []).length) {
-        // console.log('txns', block.transactions.map(({ input, ...tx }) => tx))
-        const txs = await models.EthereumTx.bulkCreate(block.transactions.map(({ input, ...tx }) => tx))
+      const transactions = get(block, 'transactions', [])
+
+      if (transactions.length) {
+        const txs = await models.EthereumTx.bulkCreate(transactions.map(({ input, ...tx }) => tx))
+
+        const newTxHashes = transactions.map(tx => tx.hash)
+        const cachedTxHashes = await redis.hkeysAsync("eth-tx-pending");
+        const cachedTxHashesInBlock = cachedTxHashes.filter(cachedTxHash => newTxHashes.indexOf(cachedTxHash) !== -1)
+
+        const result = await redis.multi(cachedTxHashesInBlock.map(k => (['hdel', 'eth-tx-pending', k]))).exec()
       }
 
     } catch (e) {
