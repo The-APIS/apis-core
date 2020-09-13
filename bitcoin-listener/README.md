@@ -11,3 +11,4 @@ bitcoin-cli -rpcport=18333  -regtest -rpcuser=bitcoin_rpc_user -rpcpassword=bitc
 
 
 > Bitcoin Core distributions: https://bitcoincore.org/bin/bitcoin-core-0.17.1/
+> https://bitcoincore.org/en/doc/0.17.1/rpc/

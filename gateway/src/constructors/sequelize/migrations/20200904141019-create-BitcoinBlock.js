@@ -51,7 +51,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       difficulty: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       chainwork: {
         type: Sequelize.STRING,

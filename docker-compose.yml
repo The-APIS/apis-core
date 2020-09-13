@@ -103,6 +103,7 @@ services:
       - .env
     command:
       - -regtest=1
+      - -fallbackfee=0.000001
       - -listen=1
       - -txindex=1
       - -server=1

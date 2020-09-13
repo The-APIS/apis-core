@@ -6,8 +6,13 @@ module.exports = async (
 
   const [
     postgres,
+    redis,
   ] = await Promise.all([
     await require(`@/constructors/postgres`)(),
+    await require(`@/constructors/redis`)({
+      url: process.env.REDIS_URL,
+      prefix: 'bitcoin-listener',
+    }),
   ])
 
   const {
@@ -24,8 +29,11 @@ module.exports = async (
     Sequelize,
     models,
     postgres,
+    redis,
   }
 
   require('./lib/listener')(context)
-  require('./lib/sync')(context)
+
+  require('./lib/sync/syncPastBlocks')(context)
+  require('./lib/sync/syncPendingTransactions')(context)
 }

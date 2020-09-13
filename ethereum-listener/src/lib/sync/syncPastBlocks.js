@@ -1,9 +1,6 @@
 const get = require('lodash/get')
 
 module.exports = async ({
-  host,
-  port,
-  network,
   sequelize,
   Sequelize,
   models,

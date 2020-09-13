@@ -1,8 +1,9 @@
 const bitcoin = require('bitcoinjs-lib')
 const zmq = require('zeromq')
+
 const syncPastBlocks = require('@/lib/sync/syncPastBlocks')
 
-const socket = zmq.socket('sub')
+// https://bitcoindev.network/accessing-bitcoins-zeromq-interface/
 
 
 module.exports = async ({
@@ -21,12 +22,18 @@ module.exports = async ({
    * - hashtx
    * - hashblock
   **/
+  const socket = new zmq.Subscriber
+
   console.log(`Listening to: tcp://${host}:${port}, ${network}`)
+
   socket.connect(`tcp://${host}:${port}`)
+
   socket.subscribe('rawtx')
   socket.subscribe('rawblock')
   socket.subscribe('hashblock')
-  socket.on('message', async (topic, message) => {
+
+  for await (const [topic, msg] of socket) {
+    console.log("received a message related to:", topic.toString(), "containing message:", msg)
     try {
       switch(topic.toString()) {
         case 'rawblock':
@@ -45,5 +52,5 @@ module.exports = async ({
     } catch (e) {
       console.error(e)
     }
-  })
+  }
 }

@@ -31,9 +31,6 @@ module.exports = async () => {
     } = require('@/constructors/sequelize')({})
 
     const context = {
-      // host,
-      // port,
-      // network,
       sequelize,
       Sequelize,
       models,

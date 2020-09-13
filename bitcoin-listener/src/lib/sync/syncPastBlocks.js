@@ -1,5 +1,4 @@
 const get = require('lodash/get')
-const bitcoin = require('bitcoinjs-lib')
 const client = require('@/constructors/bitcoin-core')
 
 const sleep = timeout => new Promise(resolve => setTimeout(resolve, timeout))
@@ -13,6 +12,7 @@ module.exports = async ({
   Sequelize,
   models,
 }) => {
+  try {
     const latestBlock = await models.BitcoinBlock.findOne({
       limit: 1,
       order: [ [ 'height', 'DESC' ]],
@@ -30,20 +30,32 @@ module.exports = async ({
       try {
         const currentHash = await client.getBlockHash(current)
         const block = await client.getBlock(currentHash, 2) /* verbosity = 2: include transactions */
+        const { difficulty, ...values } = block
+
         await models.BitcoinBlock.create(block)
 
         if (get(block, 'tx', []).length) {
           const txs = await models.BitcoinTx.bulkCreate(block.tx.map(tx => ({ blockHash: currentHash, ...tx })))
         }
 
-        current += 1;
-        retries = 5;
+        current += 1
+        retries = 5
       } catch (e) {
-        console.error(e)
-        retries = retries - 1;
-        if (retries < 0) process.exit(1)
-        sleep(5 / retries)
+        if (e.name === 'SequelizeUniqueConstraintError') {
+          console.log('[syncPastBlocks] Skipping Block Insertion - Record Already Exists.')
+          current += 1
+          retries = 5
+        } else {
+          console.error(e)
+          retries -= 1
+          if (retries < 0) curent += 1
+          await sleep(2 / retries * 1000)
+        }
       }
     }
+
+  } catch (e) {
+    console.error(e)
+  }
 
 }
