@@ -14,7 +14,7 @@ module.exports = async ({
 
     // TOOD - confirm all blocks exist in db
 
-    const start = get(latestBlock, 'number', -1) + 1
+    const start = Math.max(get(latestBlock, 'number', -1), (process.env.ETHEREUM_MIN_BLOCK_NUMBER || 0))
     const end = await web3.eth.getBlockNumber() || 0
     let current = start
 
@@ -24,7 +24,7 @@ module.exports = async ({
       await models.EthereumBlock.create(block)
 
       if (get(block, 'transactions', []).length) {
-        const txs = await models.EthereumTx.bulkCreate(block.transactions.map(({ input, ...tx }) => tx))
+        const txs = await models.EthereumTx.bulkCreate(block.transactions) => tx))
       }
 
       current += 1;

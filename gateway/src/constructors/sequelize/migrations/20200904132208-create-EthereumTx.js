@@ -17,9 +17,6 @@ module.exports = {
       transactionIndex: {
         type: Sequelize.INTEGER
       },
-      input: {
-        type: Sequelize.TEXT
-      },
       gasPrice: {
         type: Sequelize.STRING
       },
@@ -70,7 +67,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       input: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       balanceTo: {
         type: Sequelize.STRING
