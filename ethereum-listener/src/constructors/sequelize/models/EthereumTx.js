@@ -17,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
     from: DataTypes.STRING,
     to: DataTypes.STRING,
     transactionIndex: DataTypes.INTEGER,
-    input: DataTypes.STRING,
     gasPrice: DataTypes.STRING,
     gas: DataTypes.INTEGER,
     blockNumber: DataTypes.INTEGER,
