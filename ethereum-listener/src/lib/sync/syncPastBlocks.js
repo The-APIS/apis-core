@@ -24,7 +24,7 @@ module.exports = async ({
       await models.EthereumBlock.create(block)
 
       if (get(block, 'transactions', []).length) {
-        const txs = await models.EthereumTx.bulkCreate(block.transactions) => tx))
+        const txs = await models.EthereumTx.bulkCreate(block.transactions)
       }
 
       current += 1;

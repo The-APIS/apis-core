@@ -36,8 +36,8 @@ module.exports = (context) => {
 
       return res.status(status).json(data)
     } catch (e) {
-      // console.error(`errors.api.v1.wallets`, e)
-      return res.status(500).json({ errors: [e] })
+      console.error(`errors.api.v1.wallets`, e)
+      return res.status(500).json({ errors: [e.message] })
     }
   })
 
