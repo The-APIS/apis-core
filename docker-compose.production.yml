@@ -14,7 +14,8 @@ services:
       - /app/node_modules
       - ./gateway/src:/app
     ports:
-      - "8100:80"
+      - "80:80"
+      - "443:80"
     restart: always
     links:
       - postgres
@@ -127,9 +128,13 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - "5432:5432"
     restart: always
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server
+    environment:
+     - REDIS_REPLICATION_MODE=master
 
   adminer:
     image: adminer
