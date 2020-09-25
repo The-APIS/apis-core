@@ -12,6 +12,8 @@ volumes: [
     def gateway
     def bitcoinRpc
     def ethereumRpc
+    def bitcoinListener
+    def ethereumListener
 
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
@@ -45,13 +47,13 @@ volumes: [
           bitcoinRpc = docker.build("${bitcoinRpcImage}", "-f Dockerfile .")
         }
         dir('bitcoin-listener/src') {
-          bitcoinListener = docker.build("${ethereumRpcImage}", "-f Dockerfile .")
+          bitcoinListener = docker.build("${bitcoinListenerImage}", "-f Dockerfile .")
         }
         dir('ethereum-rpc/src') {
           ethereumRpc = docker.build("${ethereumRpcImage}", "-f Dockerfile .")
         }
         dir('ethereum-listener/src') {
-          ethereumListener = docker.build("${ethereumRpcImage}", "-f Dockerfile .")
+          ethereumListener = docker.build("${ethereumListenerImage}", "-f Dockerfile .")
         }
       }
       stage('Push') {
