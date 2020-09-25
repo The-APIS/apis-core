@@ -11,7 +11,38 @@ const RPC_ADDR_MAP = {
 
 
 module.exports = ({ models, ...context }) => {
-  router.get('/:identifier/details', async (req, res, next) => {
+
+  router.get('/addresses/:address/transactions', async (req, res, next) => {
+    try {
+      const { address = '*' } = req.params
+      let {
+        network = 'rinkeby',
+        limit = 1000,
+      } = { ...req.query }
+
+      limit = Math.max(limit, 1000)
+
+      const txns = await models.EthereumTx.findAll({
+        where: {
+          [Op.or]: [
+            { from: address },
+            { to: address },
+          ],
+        },
+        raw: true,
+      })
+
+      console.log('txns', txns)
+
+      return res.status(200).json({ transactions: txns })
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({ errors: [e] })
+    }
+  })
+
+
+  router.get('/addresses/:identifier/details', async (req, res, next) => {
     try {
       const { identifier } = req.params
       const {

@@ -29,6 +29,12 @@ volumes: [
     def ethereumRpcImageName = "apiscore-ethereum-rpc"
     def ethereumRpcImage = "${registry}/${ethereumRpcImageName}"
 
+    def bitcoinListenerImageName = "apiscore-bitcoin-listener"
+    def bitcoinListenerImage = "${registry}/${bitcoinListenerImageName}"
+
+    def ethereumListenerImageName = "apiscore-ethereum-listener"
+    def ethereumListenerImage = "${registry}/${ethereumListenerImageName}"
+
     container('docker') {
       stage('Build') {
         checkout scm
@@ -38,8 +44,14 @@ volumes: [
         dir('bitcoin-rpc/src') {
           bitcoinRpc = docker.build("${bitcoinRpcImage}", "-f Dockerfile .")
         }
+        dir('bitcoin-listener/src') {
+          bitcoinListener = docker.build("${ethereumRpcImage}", "-f Dockerfile .")
+        }
         dir('ethereum-rpc/src') {
           ethereumRpc = docker.build("${ethereumRpcImage}", "-f Dockerfile .")
+        }
+        dir('ethereum-listener/src') {
+          ethereumListener = docker.build("${ethereumRpcImage}", "-f Dockerfile .")
         }
       }
       stage('Push') {
@@ -47,12 +59,14 @@ volumes: [
           gateway.push("latest")
           bitcoinRpc.push("latest")
           ethereumRpc.push("latest")
+          bitcoinListener.push("latest")
+          ethereumListener.push("latest")
         }
       }
     }
 
     // stage('Deploy (kubectl)') {
-    //   container('kubectl') {
+      // container('kubectl') {
     //     sh """
     //       # without tagging, rollout will not be triggered
     //       # patch, to force rollout (development envs only)
