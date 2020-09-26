@@ -4,6 +4,8 @@ const router = require('express').Router()
 const web3 = require('@/constructors/web3')
 const get = require('lodash/get')
 
+const web3GetTransactionsByAccount = require('@/bin/web3GetTransactionsByAccount')
+
 const RPC_ADDR_MAP = {
   bitcoin: process.env.BITCOIN_HTTPS_ADDR,
   ethereum: process.env.ETHEREUM_HTTPS_ADDR,
@@ -35,6 +37,17 @@ module.exports = ({ models, ...context }) => {
       console.log('txns', txns)
 
       return res.status(200).json({ transactions: txns })
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({ errors: [e] })
+    }
+  })
+
+  router.get('/web3/addresses/:address/transactions', async (req, res, next) => {
+    try {
+      const { address = '*' } = req.params
+      const { startBlockNumber = 6500000, endBlockNumber = 7242250 } = req.query
+      return res.status(200).json({ transactions: await web3GetTransactionsByAccount(address, startBlockNumber, endBlockNumber) })
     } catch (e) {
       console.error(e)
       return res.status(500).json({ errors: [e] })

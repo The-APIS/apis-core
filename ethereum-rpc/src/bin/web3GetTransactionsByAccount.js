@@ -1,4 +1,4 @@
-module.exports = async function web3GetTransactionsByAccount(myaccount, startBlockNumber, endBlockNumber) {
+module.exports = async function web3GetTransactionsByAccount(myaccount, startBlockNumber = 6500000, endBlockNumber = 7242250) {
 
   const web3 = await require('../constructors/web3')
   const { eth } = web3
