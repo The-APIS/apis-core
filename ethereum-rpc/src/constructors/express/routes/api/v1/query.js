@@ -57,7 +57,8 @@ module.exports = ({ models, ...context }) => {
 
   router.get('/defi/rates', async (req, res, next) => {
     try {
-      return res.status(200).json({ rates: await axios.get('https://api.rates.dev.titans.finance/api/v1/rates') })
+      const { status, data } = await axios.get('https://api.rates.dev.titans.finance/api/v1/rates')
+      return res.status(status).json({ rates: data })
     } catch (e) {
       console.error(e)
       return res.status(500).json({ errors: [e] })
