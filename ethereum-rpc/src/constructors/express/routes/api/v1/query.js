@@ -43,11 +43,21 @@ module.exports = ({ models, ...context }) => {
     }
   })
 
-  router.get('/web3/addresses/:address/transactions', async (req, res, next) => {
+  // router.get('/web3/addresses/:address/transactions', async (req, res, next) => {
+  //   try {
+  //     const { address = '*' } = req.params
+  //     const { startBlockNumber = 6500000, endBlockNumber = 7242250 } = req.query
+  //     return res.status(200).json({ transactions: await web3GetTransactionsByAccount(address, startBlockNumber, endBlockNumber) })
+  //   } catch (e) {
+  //     console.error(e)
+  //     return res.status(500).json({ errors: [e] })
+  //   }
+  // })
+
+
+  router.get('/defi/rates', async (req, res, next) => {
     try {
-      const { address = '*' } = req.params
-      const { startBlockNumber = 6500000, endBlockNumber = 7242250 } = req.query
-      return res.status(200).json({ transactions: await web3GetTransactionsByAccount(address, startBlockNumber, endBlockNumber) })
+      return res.status(200).json({ rates: await axios.get('https://api.rates.dev.titans.finance/api/v1/rates') })
     } catch (e) {
       console.error(e)
       return res.status(500).json({ errors: [e] })
