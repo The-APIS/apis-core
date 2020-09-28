@@ -65,6 +65,16 @@ module.exports = ({ models, ...context }) => {
     }
   })
 
+  router.get('/defi/compound/*', async (req, res, next) => {
+    try {
+      const { status, data } = await axios.get(`https://api.compound.finance/api/v2${req.originalUrl.replace(/api\/v1\/query\/defi\/compound\//gi, '')}`)
+      return res.status(status).json({ rates: data })
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({ errors: [e] })
+    }
+  })
+
 
   router.get('/addresses/:identifier/details', async (req, res, next) => {
     try {
