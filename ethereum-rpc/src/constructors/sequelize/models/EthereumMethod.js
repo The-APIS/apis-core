@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       EthereumBlock,
       EthereumTx,
       EthereumMethod,
+      EthereumContract,
       ...models
     }) {
       EthereumMethod.belongsTo(EthereumTx, {
@@ -20,6 +21,13 @@ module.exports = (sequelize, DataTypes) => {
           name: 'txHash',
         },
         targetKey: 'hash',
+      })
+
+      EthereumMethod.belongsTo(EthereumContract, {
+        foreignKey: {
+          name: 'contract',
+        },
+        targetKey: 'address',
       })
     }
   };

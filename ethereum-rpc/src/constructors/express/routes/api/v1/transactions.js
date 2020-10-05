@@ -14,7 +14,7 @@ module.exports = ({ models, ...context }) => {
 
       const txs = await models.EthereumTx.findAll({
         where: {
-          ...query
+          ...query,
         },
         limit: Math.min(limit, 1000),
         offset,
