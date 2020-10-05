@@ -19,8 +19,10 @@ module.exports = (context) => {
       } = web3.eth.accounts.create(get(options, 'passphrase'));
 
       return res.status(200).json({
-        address,
-        privateKey,
+        data: {
+          address,
+          privateKey,
+        },
       })
     } catch (e) {
       console.error(`errors.api.v1.wallets`, e)

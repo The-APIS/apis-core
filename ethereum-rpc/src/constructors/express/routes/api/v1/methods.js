@@ -20,7 +20,9 @@ module.exports = ({ models, ...context }) => {
         offset,
       })
 
-      return res.status(200).json(methods)
+      return res.status(200).json({
+        data: methods,
+      })
     } catch (e) {
       console.error(e)
       return res.status(500).json({ errors: [e] })

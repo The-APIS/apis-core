@@ -52,7 +52,7 @@ const syncPastMethods = async ({
         },
       ],
     })
-    const start = latestMethod.EthereumTx.EthereumBlock.number || process.env.ETHEREUM_MIN_BLOCK_NUMBER || 0
+    const start = get(latestMethod, 'EthereumTx.EthereumBlock.number', process.env.ETHEREUM_MIN_BLOCK_NUMBER || 0)
     console.log('[ethereum-listener][syncMethods] start block is ', start)
     const end = await web3.eth.getBlockNumber()
     console.log('[ethereum-listener][syncMethods] end block is ', end)

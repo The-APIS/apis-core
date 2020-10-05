@@ -11,6 +11,36 @@ module.exports = ({ models, ...context }) => {
 
   router.get('/:address/transactions', async (req, res, next) => {
     try {
+      const {
+        network = 'rinkeby',
+        limit = 100,
+        offset = 0,
+        ...query
+      } = req.query
+
+
+      limit = Math.max(limit, 1000)
+
+      const transactions = await models.EthereumTx.findAll({
+        where: {
+          ...query,
+        },
+        offset,
+        limit,
+        raw: true,
+      })
+
+      return res.status(200).json({
+        data: transactions,
+      })
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({ errors: [e] })
+    }
+  })
+
+  router.get('/:address/transactions', async (req, res, next) => {
+    try {
       const { address = '*' } = req.params
       let {
         network = 'rinkeby',
@@ -72,15 +102,17 @@ module.exports = ({ models, ...context }) => {
       const cmcQuote = get(cmcData, ['quote', baseCurrency])
 
       return res.status(200).json({
-        token: contract.slug,
-        contractType: contract.type,
-        contractAddress: contract.address,
-        lastPrice: get(cmcQuote, 'price'), // From coinmarketcap
-        marketcap: get(cmcQuote, 'market_cap'), // Market Cap
-        volume: get(cmcQuote, 'volume_24h'), // Volume (24 h)
-        circulatingSupply: get(cmcQuote, 'circulating_supply'), // Circulating Supply
-        totalSupply: get(cmcQuote, 'total_supply'), // Total Supply
-        metadata: {},
+        data: {
+          token: contract.slug,
+          contractType: contract.type,
+          contractAddress: contract.address,
+          lastPrice: get(cmcQuote, 'price'), // From coinmarketcap
+          marketcap: get(cmcQuote, 'market_cap'), // Market Cap
+          volume: get(cmcQuote, 'volume_24h'), // Volume (24 h)
+          circulatingSupply: get(cmcQuote, 'circulating_supply'), // Circulating Supply
+          totalSupply: get(cmcQuote, 'total_supply'), // Total Supply
+          metadata: {},
+        },
       })
     } catch (e) {
       console.error(`errors.api.v1.query`, e)
