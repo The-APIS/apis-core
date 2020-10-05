@@ -11,7 +11,8 @@ RUN apk add --no-cache \
   && yarn global add node-gyp \
   && yarn cache clean
 
-ADD . /app
+ADD ./ethereum-listener/src /app
+ADD ./share /app/share
 
 RUN yarn install
 

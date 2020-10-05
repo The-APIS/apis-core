@@ -40,21 +40,11 @@ volumes: [
     container('docker') {
       stage('Build') {
         checkout scm
-        dir('gateway/src') {
-          gateway = docker.build("${gatewayImage}", "-f Dockerfile .")
-        }
-        dir('bitcoin-rpc/src') {
-          bitcoinRpc = docker.build("${bitcoinRpcImage}", "-f Dockerfile .")
-        }
-        dir('bitcoin-listener/src') {
-          bitcoinListener = docker.build("${bitcoinListenerImage}", "-f Dockerfile .")
-        }
-        dir('ethereum-rpc/src') {
-          ethereumRpc = docker.build("${ethereumRpcImage}", "-f Dockerfile .")
-        }
-        dir('ethereum-listener/src') {
-          ethereumListener = docker.build("${ethereumListenerImage}", "-f Dockerfile .")
-        }
+        gateway = docker.build("${gatewayImage}", "-f gateway/src/Dockerfile .")
+        bitcoinRpc = docker.build("${bitcoinRpcImage}", "-f bitcoin-rpc/src/Dockerfile .")
+        bitcoinListener = docker.build("${bitcoinListenerImage}", "-f bitcoin-listener/src/Dockerfile .")
+        ethereumRpc = docker.build("${ethereumRpcImage}", "-f ethereum-rpc/src/Dockerfile .")
+        ethereumListener = docker.build("${ethereumListenerImage}", "-f ethereum-listener/src/Dockerfile .")
       }
       stage('Push') {
         docker.withRegistry('https://registry.trustedlife.app') {

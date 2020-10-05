@@ -10,7 +10,8 @@ RUN apk add --no-cache \
   gettext \
   && npm -g install node-gyp
 
-ADD . /app
+ADD ./bitcoin-listener/src /app
+ADD ./share /app/share
 
 RUN npm install
 

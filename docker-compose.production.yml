@@ -3,7 +3,9 @@ version: "3"
 services:
 
   gateway:
-    build: ./gateway/src
+    build:
+      context: .
+      dockerfile: ./gateway/src/Dockerfile
     command: npm start
     environment:
       NODE_ENV: production
@@ -23,7 +25,9 @@ services:
       - postgres
 
   bitcoin-rpc:
-    build: ./bitcoin-rpc/src
+    build:
+      context: .
+      dockerfile: ./bitcoin-rpc/src/Dockerfile
     command: npm start
     environment:
       NODE_ENV: production
@@ -43,7 +47,9 @@ services:
     restart: always
 
   ethereum-rpc:
-    build: ./ethereum-rpc/src
+    build:
+      context: .
+      dockerfile: ./ethereum-rpc/src/Dockerfile
     command: npm start
     environment:
       NODE_ENV: production
@@ -62,7 +68,9 @@ services:
     restart: always
 
   bitcoin-listener:
-    build: ./bitcoin-listener/src
+    build:
+      context: .
+      dockerfile: ./bitcoin-listener/src/Dockerfile
     command: npm start
     environment:
       NODE_ENV: production
@@ -81,7 +89,9 @@ services:
     restart: always
 
   ethereum-listener:
-    build: ./ethereum-listener/src
+    build:
+      context: .
+      dockerfile: ./ethereum-listener/src/Dockerfile
     command: npm start
     environment:
       NODE_ENV: production
