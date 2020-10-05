@@ -1,21 +1,8 @@
 const axios = require('axios')
 const router = require('express').Router()
 
+const { queryStringIncludeToModelsInclude } = require('@/share/lib')
 
-const queryStringIncludeToModelsInclude = ({ models = [], include = null }) => {
-  if (!include) {
-    include = []
-  } else if (!Array.isArray(include)) {
-    include = [include]
-  }
-
-  if (include && include.length) {
-    include = include.map(suffix => models[`Ethereum${suffix}`])
-  }
-
-  console.log('include', include)
-  return include
-}
 
 module.exports = ({ models, ...context }) => {
 

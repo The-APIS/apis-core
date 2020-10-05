@@ -13,6 +13,8 @@ services:
     volumes:
       - /app/node_modules
       - ./gateway/src:/app
+      - ./share:/app/share
+      - ./share/models:/app/constructors/sequelize/models
     ports:
       - "80:80"
       - "443:80"
@@ -33,6 +35,8 @@ services:
     volumes:
       - /app/node_modules
       - ./bitcoin-rpc/src:/app
+      - ./share:/app/share
+      - ./share/models:/app/constructors/sequelize/models
     links:
       - postgres
       - bitcoin-core
@@ -51,6 +55,8 @@ services:
     volumes:
       - /app/node_modules
       - ./ethereum-rpc/src:/app
+      - ./share:/app/share
+      - ./share/models:/app/constructors/sequelize/models
     links:
       - postgres
     restart: always
@@ -67,6 +73,8 @@ services:
     volumes:
       - /app/node_modules
       - ./bitcoin-listener/src:/app
+      - ./share:/app/share
+      - ./share/models:/app/constructors/sequelize/models
     links:
       - bitcoin-core
       - postgres
@@ -84,6 +92,8 @@ services:
     volumes:
       - /app/node_modules
       - ./ethereum-listener/src:/app
+      - ./share:/app/share
+      - ./share/models:/app/constructors/sequelize/models
     links:
       - postgres
     restart: always
