@@ -1,4 +1,5 @@
 const web3 = require('@/constructors/web3')
+const ethereum = require('@/constructors/ethereum')
 
 // Allow for clean nodemon restarts (see https://github.com/remy/nodemon/issues/1025#issuecomment-308049864)
 process.on('SIGINT', () => {
@@ -37,12 +38,14 @@ module.exports = async () => {
       postgres,
       redis,
       web3,
+      ethereum,
     }
 
     require('./lib/listeners/ETH/newBlockHeaders')(context)
     require('./lib/listeners/ETH/pendingTransactions')(context)
 
     require('./lib/sync/syncPastBlocks')(context)
+    require('./lib/sync/syncPastMethods').syncPastMethods(context)
     require('./lib/sync/syncPendingTransactions')(context)
   } catch (e) {
     console.error('[ethereum-listener] Error.')

@@ -22,6 +22,7 @@ module.exports = {
       },
       hash: {
         type: Sequelize.STRING,
+        unique: true,
       },
       logsBloom: {
         type: Sequelize.TEXT,
@@ -41,6 +42,7 @@ module.exports = {
       },
       parentHash: {
         type: Sequelize.STRING,
+        unique: true,
       },
       receiptsRoot: {
         type: Sequelize.STRING,

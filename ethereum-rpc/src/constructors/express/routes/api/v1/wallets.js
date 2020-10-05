@@ -16,12 +16,7 @@ module.exports = (context) => {
       const {
         address,
         privateKey,
-        ...rest
       } = web3.eth.accounts.create(get(options, 'passphrase'));
-
-      console.log(address,
-        privateKey,
-      rest)
 
       return res.status(200).json({
         address,

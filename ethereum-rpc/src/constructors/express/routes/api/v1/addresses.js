@@ -1,20 +1,15 @@
 const axios = require('axios')
 const { Op } = require("sequelize");
 const router = require('express').Router()
-const web3 = require('@/constructors/web3')
+// const web3 = require('@/constructors/web3')
 const get = require('lodash/get')
 
-const web3GetTransactionsByAccount = require('@/bin/web3GetTransactionsByAccount')
-
-const RPC_ADDR_MAP = {
-  bitcoin: process.env.BITCOIN_HTTPS_ADDR,
-  ethereum: process.env.ETHEREUM_HTTPS_ADDR,
-}
+// const web3GetTransactionsByAccount = require('@/bin/web3GetTransactionsByAccount')
 
 
 module.exports = ({ models, ...context }) => {
 
-  router.get('/addresses/:address/transactions', async (req, res, next) => {
+  router.get('/:address/transactions', async (req, res, next) => {
     try {
       const { address = '*' } = req.params
       let {
@@ -43,40 +38,7 @@ module.exports = ({ models, ...context }) => {
     }
   })
 
-  // router.get('/web3/addresses/:address/transactions', async (req, res, next) => {
-  //   try {
-  //     const { address = '*' } = req.params
-  //     const { startBlockNumber = 6500000, endBlockNumber = 7242250 } = req.query
-  //     return res.status(200).json({ transactions: await web3GetTransactionsByAccount(address, startBlockNumber, endBlockNumber) })
-  //   } catch (e) {
-  //     console.error(e)
-  //     return res.status(500).json({ errors: [e] })
-  //   }
-  // })
-
-
-  router.get('/defi/rates', async (req, res, next) => {
-    try {
-      const { status, data } = await axios.get('https://api.rates.dev.titans.finance/api/v1/rates')
-      return res.status(status).json({ rates: data })
-    } catch (e) {
-      console.error(e)
-      return res.status(500).json({ errors: [e] })
-    }
-  })
-
-  router.get('/defi/compound/*', async (req, res, next) => {
-    try {
-      const { status, data } = await axios.get(`https://api.compound.finance/api/v2${req.originalUrl.replace(/api\/v1\/query\/defi\/compound\//gi, '')}`)
-      return res.status(status).json({ rates: data })
-    } catch (e) {
-      console.error(e)
-      return res.status(500).json({ errors: [e] })
-    }
-  })
-
-
-  router.get('/addresses/:identifier/details', async (req, res, next) => {
+   router.get('/:identifier/details', async (req, res, next) => {
     try {
       const { identifier } = req.params
       const {
@@ -125,6 +87,18 @@ module.exports = ({ models, ...context }) => {
       return res.status(500).json({ errors: [e] })
     }
   })
+
+
+  // router.get('/web3/addresses/:address/transactions', async (req, res, next) => {
+  //   try {
+  //     const { address = '*' } = req.params
+  //     const { startBlockNumber = 6500000, endBlockNumber = 7242250 } = req.query
+  //     return res.status(200).json({ transactions: await web3GetTransactionsByAccount(address, startBlockNumber, endBlockNumber) })
+  //   } catch (e) {
+  //     console.error(e)
+  //     return res.status(500).json({ errors: [e] })
+  //   }
+  // })
 
   return router
 }

@@ -16,7 +16,7 @@ const sequelize = new Sequelize(
   {
     host,
     dialect,
-    logging: console.log,
+    logging: false, // console.log, // TODO
 
     pool: {
       max: 10,

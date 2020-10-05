@@ -1,17 +1,14 @@
 const get = require('lodash/get')
+const { syncPastMethodsForBlockNumber } = require('@/lib/sync/syncPastMethods')
 
 const subscriptionKey = 'newBlockHeaders'
 let lastCalled = null
 
 module.exports = async ({
-  host,
-  port,
-  network,
-  sequelize,
-  Sequelize,
   models,
   redis,
   web3,
+  ethereum,
 }) => {
   const subscription = web3.eth.subscribe(subscriptionKey)
 
@@ -41,6 +38,8 @@ module.exports = async ({
         const cachedTxHashesInBlock = cachedTxHashes.filter(cachedTxHash => newTxHashes.indexOf(cachedTxHash) !== -1)
 
         const result = await redis.multi(cachedTxHashesInBlock.map(k => (['hdel', 'eth-tx-pending', k]))).exec()
+
+        await syncPastMethodsForBlockNumber({ ethereum, models, blockNumber: block.number })
       }
 
     } catch (e) {

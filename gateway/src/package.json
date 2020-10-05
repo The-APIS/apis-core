@@ -9,6 +9,9 @@
     "start": "node index.js",
     "dev": "./node_modules/.bin/nodemon index.js",
     "setup": "npm install",
+    "sequelize": "./node_modules/.bin/sequelize $@",
+    "model:generate": "npm run sequelize model:generate -- $@",
+    "seed:generate": "npm run sequelize seed:generate -- $@",
     "test:watch": "./node_modules/mocha/bin/mocha --recursive --watch",
     "test": "./node_modules/mocha/bin/mocha --recursive"
   },

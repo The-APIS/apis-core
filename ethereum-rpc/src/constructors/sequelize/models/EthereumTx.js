@@ -32,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING,
     value: DataTypes.STRING,
     nonce: DataTypes.INTEGER,
-    blockNumber: DataTypes.INTEGER,
     input: DataTypes.TEXT,
     balanceTo: DataTypes.STRING,
     balanceFrom: DataTypes.STRING,

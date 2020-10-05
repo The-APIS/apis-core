@@ -63,9 +63,6 @@ module.exports = {
       nonce: {
         type: Sequelize.INTEGER
       },
-      blockNumber: {
-        type: Sequelize.INTEGER
-      },
       input: {
         type: Sequelize.TEXT
       },
