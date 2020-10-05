@@ -9,9 +9,16 @@ module.exports = async ({ web3, redis }) => {
     }
   }).on('data', async (txHash) => {
     console.log(`[Daemon][${subscriptionKey}] new hash: `, txHash)
-    const tx = await web3.eth.getTransaction(txHash)
-    const { input, ...values } = tx
-    const hs = await redis.hsetAsync("eth-tx-pending", txHash, JSON.stringify(values));
-    const hga = await redis.hgetallAsync("eth-tx-pending");
+    try {
+      const tx = await web3.eth.getTransaction(txHash)
+
+      if (!tx) return
+
+      const { input, ...values } = tx
+      const hs = await redis.hsetAsync("eth-tx-pending", txHash, JSON.stringify(values));
+      const hga = await redis.hgetallAsync("eth-tx-pending");
+    } catch(e) {
+      console.error(e)
+    }
   })
 }

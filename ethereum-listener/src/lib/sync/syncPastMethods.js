@@ -40,7 +40,6 @@ const syncPastMethods = async ({
   ethereum,
   web3,
 }) => {
-
   try {
     const latestMethod = await models.EthereumMethod.findOne({
       limit: 1,
@@ -59,6 +58,7 @@ const syncPastMethods = async ({
     let current = start
 
     while (current <= end) {
+      console.error(`[ethereum-listener][syncMethods] syncing block ${current}`)
       await syncPastMethodsForBlockNumber({
         models,
         web3,
