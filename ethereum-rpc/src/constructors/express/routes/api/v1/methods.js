@@ -26,8 +26,6 @@ module.exports = ({ models, ...context }) => {
         limit,
       })
 
-      console.log('methods', methods)
-
       return res.status(200).json(methods)
     } catch (e) {
       console.error(e)
