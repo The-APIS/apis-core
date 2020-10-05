@@ -10,8 +10,12 @@
     "dev": "./node_modules/.bin/nodemon index.js",
     "setup": "npm install",
     "sequelize": "./node_modules/.bin/sequelize $@",
+    "migration:generate": "npm run sequelize migration:generate -- $@",
     "model:generate": "npm run sequelize model:generate -- $@",
     "seed:generate": "npm run sequelize seed:generate -- $@",
+    "db:migrate": "pm run sequelize db:migrate -- $@",
+    "db:seed:all": "npm run sequelize db:seed:all -- $@",
+    "seed": "npm run db:seed:all -- $@",
     "test:watch": "./node_modules/mocha/bin/mocha --recursive --watch",
     "test": "./node_modules/mocha/bin/mocha --recursive"
   },
