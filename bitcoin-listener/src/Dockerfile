@@ -12,6 +12,7 @@ RUN apk add --no-cache \
 
 ADD ./bitcoin-listener/src /app
 ADD ./share /app/share
+ADD ./share/models:/app/constructors/sequelize/models
 
 RUN npm install
 
