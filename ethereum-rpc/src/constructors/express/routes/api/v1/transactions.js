@@ -5,27 +5,22 @@ const router = require('express').Router()
 module.exports = ({ models, ...context }) => {
 
   router.get('/', async (req, res, next) => {
-
-    // TODO - devise query interface and strategy
-
     try {
       const {
-        toAddress,
-        fromAddress,
         limit = 100,
-        // ...
+        offset = 0,
+        ...query
       } = req.query
 
-      const { status, data } = await models.EthereumTx.findAll({
+      const txs = await models.EthereumTx.findAll({
         where: {
-          ...req.query,
+          ...query
         },
-        limit,
+        limit: Math.min(limit, 1000),
+        offset,
       })
 
-      return res.status(200).json({
-        ...req.query,
-      })
+      return res.status(200).json(txs)
     } catch (e) {
       console.error(e)
       return res.status(500).json({ errors: [e] })
