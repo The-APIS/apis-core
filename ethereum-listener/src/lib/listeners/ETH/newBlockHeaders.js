@@ -1,5 +1,5 @@
 const get = require('lodash/get')
-const { syncPastMethodsForBlockNumber } = require('@/lib/sync/syncPastMethods')
+const { syncMethodsForBlockNumber } = require('@/lib/sync/syncMethods')
 
 const subscriptionKey = 'newBlockHeaders'
 let lastCalled = null
@@ -39,7 +39,7 @@ module.exports = async ({
 
         const result = await redis.multi(cachedTxHashesInBlock.map(k => (['hdel', 'eth-tx-pending', k]))).exec()
 
-        await syncPastMethodsForBlockNumber({ ethereum, models, blockNumber: block.number })
+        await syncMethodsForBlockNumber({ ethereum, models, blockNumber: block.number })
       }
 
     } catch (e) {

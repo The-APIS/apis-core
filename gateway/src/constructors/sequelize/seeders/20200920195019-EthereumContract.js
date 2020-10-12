@@ -20,8 +20,16 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        slug: 'dai',
+        address: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
+        type: 'ERC20',
+        network: 'rinkeby',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
         slug: 'cryptokitties',
-        address: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
+        address: '0x16baF0dE678E52367adC69fD067E5eDd1D33e3bF',
         type: 'ERC721',
         network: 'rinkeby',
         createdAt: new Date(),

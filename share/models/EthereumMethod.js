@@ -29,6 +29,13 @@ module.exports = (sequelize, DataTypes) => {
         },
         targetKey: 'address',
       })
+
+      // EthereumMethod.hasOne(EthereumContract, {
+      //   foreignKey: {
+      //     name: 'address',
+      //   },
+      //   otherKey: 'contract',
+      // })
     }
   };
   EthereumMethod.init({

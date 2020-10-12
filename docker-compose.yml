@@ -24,7 +24,9 @@ services:
       - redis
 
   bitcoin-rpc:
-    build: ./bitcoin-rpc/src
+    build:
+      context: .
+      dockerfile: ./bitcoin-rpc/src/Dockerfile
     command: npm run dev
     environment:
       NODE_ENV: development
@@ -44,7 +46,9 @@ services:
       - redis
 
   ethereum-rpc:
-    build: ./ethereum-rpc/src
+    build:
+      context: .
+      dockerfile: ./ethereum-rpc/src/Dockerfile
     command: npm run dev
     environment:
       NODE_ENV: development
@@ -63,7 +67,9 @@ services:
       - redis
 
   bitcoin-listener:
-    build: ./bitcoin-listener/src
+    build:
+      context: .
+      dockerfile: ./bitcoin-listener/src/Dockerfile
     command: npm run dev
     environment:
       NODE_ENV: development
@@ -75,13 +81,17 @@ services:
     volumes:
       - /app/node_modules
       - ./bitcoin-listener/src:/app
+      - ./share:/app/share
+      - ./share/models:/app/constructors/sequelize/models
     links:
       - bitcoin-core
       - postgres
       - redis
 
   ethereum-listener:
-    build: ./ethereum-listener/src
+    build:
+      context: .
+      dockerfile: ./ethereum-listener/src/Dockerfile
     command: npm run dev
     environment:
       NODE_ENV: development
@@ -155,10 +165,10 @@ services:
     environment:
      - REDIS_REPLICATION_MODE=master
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-    env_file:
-      - .env
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+  #   env_file:
+  #     - .env

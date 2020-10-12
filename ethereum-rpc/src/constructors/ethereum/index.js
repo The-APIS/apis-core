@@ -1,10 +1,8 @@
 const web3 = require('@/constructors/web3')
+const checksum = require('ethereum-checksum-address')
+
 
 const Ethereum = module.exports = {
-
-  getBalance() {
-    // ...
-  },
-
   web3,
+  checksum,
 }

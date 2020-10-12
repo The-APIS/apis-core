@@ -1,8 +1,17 @@
 const axios = require('axios')
 const router = require('express').Router()
 
+const ethereum = require('@/constructors/ethereum')
 const { queryStringIncludeToModelsInclude } = require('@/share/lib')
 
+
+const checksumAddresses = (query) => ({
+  ...query,
+  ...['address', 'contract', 'to', 'from'].reduce((acc, field) => !query[field] ? acc : {
+    ...acc,
+    [field]: ethereum.web3.utils.toChecksumAddress(query[field]),
+  }, {}),
+})
 
 module.exports = ({ models, ...context }) => {
 
@@ -17,7 +26,7 @@ module.exports = ({ models, ...context }) => {
 
       const methods = await models.EthereumMethod.findAll({
         where: {
-          ...query,
+          ...checksumAddresses(query),
         },
         limit: Math.min(limit, 1000),
         offset,

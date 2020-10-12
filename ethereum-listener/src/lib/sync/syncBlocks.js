@@ -1,4 +1,6 @@
 const get = require('lodash/get')
+const ethereum = require('@/constructors/ethereum')
+const { syncMethodsForBlockNumber } = require('./syncMethods')
 
 // TODO share logic with newBlockHeaders to simplify
 
@@ -8,12 +10,12 @@ module.exports = async ({
   web3,
 }) => {
   try {
-    console.log('[ethereum-listener][syncPastBlocks] default block is ', process.env.ETHEREUM_MIN_BLOCK_NUMBER || 0)
+    console.log('[ethereum-listener][syncBlocks] default block is ', process.env.ETHEREUM_MIN_BLOCK_NUMBER || 0)
     const latestBlock = await models.EthereumBlock.findOne({
       limit: 1,
       order: [[ 'number', 'DESC' ]],
     })
-    console.log('[ethereum-listener][syncPastBlocks] latest block is ', get(latestBlock, 'number', -1))
+    console.log('[ethereum-listener][syncBlocks] latest block is ', get(latestBlock, 'number', -1))
     // TOOD - confirm all blocks exist in db
 
     const start = Math.max(get(latestBlock, 'number', -1), (process.env.ETHEREUM_MIN_BLOCK_NUMBER || 0))
@@ -23,7 +25,7 @@ module.exports = async ({
     let current = start
 
     while (current <= end) {
-      console.error(`[ethereum-listener][syncPastBlocks] syncing block ${current}`)
+      console.error(`[ethereum-listener][syncBlocks] syncing block ${current}`)
       try {
         const block = await web3.eth.getBlock(current, true) /* true: include transactions */
 
@@ -31,6 +33,12 @@ module.exports = async ({
 
         if (get(block, 'transactions', []).length) {
           const txs = await models.EthereumTx.bulkCreate(block.transactions)
+          await syncMethodsForBlockNumber({
+            models,
+            web3,
+            ethereum,
+            blockNumber: current,
+          })
         }
 
       } catch (e) {

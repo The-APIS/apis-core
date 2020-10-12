@@ -83,3 +83,22 @@ returns:
 
 
 ```
+
+
+## ERC20 Query
+
+```bash
+DAI: http://127.0.0.1:8100/api/v1/ethereum/methods?contract=0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa&limit=5&include=Tx&include=Contract
+
+```
+
+## ERC721 Query
+
+```bash
+
+cryptokitties: http://127.0.0.1:8100/api/v1/ethereum/methods?contract=0x16baf0de678e52367adc69fd067e5edd1d33e3bf&limit=5&include=Tx&include=Contract
+
+```
+
+
+

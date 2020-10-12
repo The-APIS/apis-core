@@ -1,6 +1,6 @@
 const get = require('lodash/get')
 
-const syncPastMethodsForBlockNumber = async ({
+const syncMethodsForBlockNumber = async ({
   ethereum,
   models,
   blockNumber,
@@ -11,7 +11,7 @@ const syncPastMethodsForBlockNumber = async ({
       blockNumber,
     },
   })
-
+  console.log('[sync-methods] num transactions', transactions && transactions.length || 0)
   if (transactions && transactions.length) {
     try {
       const methods = transactions
@@ -28,6 +28,7 @@ const syncPastMethodsForBlockNumber = async ({
 
       if (methods && methods.length) {
         const bulkMethods = await models.EthereumMethod.bulkCreate(methods)
+        console.log('[sync-methods] bulkMethods', bulkMethods)
       }
     } catch (e) {
       console.error('[ethereum-listener][syncMethods] EthereumMethod.bulkCreate', e)
@@ -35,7 +36,7 @@ const syncPastMethodsForBlockNumber = async ({
   }
 }
 
-const syncPastMethods = async ({
+const syncMethods = async ({
   models,
   ethereum,
   web3,
@@ -58,8 +59,8 @@ const syncPastMethods = async ({
     let current = start
 
     while (current <= end) {
-      console.error(`[ethereum-listener][syncMethods] syncing block ${current}`)
-      await syncPastMethodsForBlockNumber({
+      // console.error(`[ethereum-listener][syncMethods] syncing block ${current}`)
+      await syncMethodsForBlockNumber({
         models,
         web3,
         ethereum,
@@ -75,6 +76,5 @@ const syncPastMethods = async ({
 }
 
 
-module.exports.syncPastMethodsForBlockNumber = syncPastMethodsForBlockNumber
-module.exports.syncPastMethods = syncPastMethods
-// module.exports = syncPastMethods
+module.exports.syncMethodsForBlockNumber = syncMethodsForBlockNumber
+module.exports.syncMethods = syncMethods

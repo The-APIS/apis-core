@@ -44,8 +44,8 @@ module.exports = async () => {
     require('./lib/listeners/ETH/newBlockHeaders')(context)
     require('./lib/listeners/ETH/pendingTransactions')(context)
 
-    require('./lib/sync/syncPastBlocks')(context)
-    require('./lib/sync/syncPastMethods').syncPastMethods(context)
+    require('./lib/sync/syncBlocks')(context)
+    // require('./lib/sync/syncMethods').syncMethods(context)
     require('./lib/sync/syncPendingTransactions')(context)
   } catch (e) {
     console.error('[ethereum-listener] Error.')
