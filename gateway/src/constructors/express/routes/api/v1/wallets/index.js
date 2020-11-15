@@ -6,13 +6,14 @@ const router = require('express').Router()
 const RPC_ADDR_MAP = {
   bitcoin: process.env.BITCOIN_RPC_SVC_ADDR,
   ethereum: process.env.ETHEREUM_RPC_SVC_ADDR,
+  solana: process.env.SOLANA_RPC_SVC_ADDR,
 }
 
 
 module.exports = (context) => {
   router.post('/', [
-    body('chain').trim().isIn(['bitcoin', 'ethereum']),
-    body('network').trim().isIn(['regtest', 'rinkeby', /* TODO */]),
+    body('chain').trim().isIn(['bitcoin', 'ethereum', 'solana']),
+    body('network').trim().isIn(['regtest', 'rinkeby', 'testnet' /* TODO */]),
   ], async (req, res, next) => {
     // {
     //   "chain",

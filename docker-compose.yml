@@ -66,6 +66,27 @@ services:
       - postgres
       - redis
 
+  solana-rpc:
+    build:
+      context: .
+      dockerfile: ./solana-rpc/src/Dockerfile
+    command: npm run dev
+    environment:
+      NODE_ENV: development
+      EXPRESS_PORT: 80
+    ports:
+      - "${SOLANA_RPC_PORT:-8105}:80"
+    env_file:
+    - .env
+    volumes:
+      - /app/node_modules
+      - ./solana-rpc/src:/app
+      - ./share:/app/share
+      - ./share/models:/app/constructors/sequelize/models
+    links:
+      - postgres
+      - redis
+
   bitcoin-listener:
     build:
       context: .
@@ -109,6 +130,8 @@ services:
       - postgres
       - redis
 
+  # solana-listener: // TODO
+
   bitcoin-core:
     image: ruimarinho/bitcoin-core:0.20.1
     ports:
@@ -144,6 +167,46 @@ services:
       - -zmqpubhashtx=tcp://*:29332
       - -keypool=100
       - -deprecatedrpc=generate
+
+  # solana:
+  #   image: solanalabs/solana:v1.4.3
+  #   ports:
+  #     - "8899:8899"
+  #     - "9900:9900"
+  #     - "8000-8010:8000-8010"
+  #   env_file:
+  #     - .env
+    # command:
+      # # - --identity ~/validator-keypair.json
+      # # - --vote-account ~/vote-account-keypair.json
+      # # - --trusted-validator 5D1fNXzvv5NjV1ysLjirC4WY92RNsVH18vjmcszZd8on
+      # # - --trusted-validator ta1Uvfb7W5BRPrdGnhP9RmeCGKzBySGM1hTE4rBRy6T
+      # # - --trusted-validator Ft5fbkqNa76vnsjYNwjDZUXoTWpP7VYm3mtsaQckQADN
+      # # - --trusted-validator 9QxCLckBiJc783jnMvXZubK4wH86Eqqvashtrwvcsgkv
+      # - --no-untrusted-rpc
+      # # - --ledger ~/validator-ledger
+      # - --rpc-port 8899
+      # - --dynamic-port-range 8000-8010
+      # - --entrypoint entrypoint.testnet.solana.com:8001
+      # # - --expected-genesis-hash 4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY
+      # - --wal-recovery-mode skip_any_corrupted_record
+      # - --limit-ledger-size
+    # command: sleep 10000
+    # command: # solana-validator \
+    #   - --identity ~/validator-keypair.json
+    #   - --vote-account ~/vote-account-keypair.json
+    #   - --trusted-validator 5D1fNXzvv5NjV1ysLjirC4WY92RNsVH18vjmcszZd8on
+    #   - --trusted-validator ta1Uvfb7W5BRPrdGnhP9RmeCGKzBySGM1hTE4rBRy6T
+    #   - --trusted-validator Ft5fbkqNa76vnsjYNwjDZUXoTWpP7VYm3mtsaQckQADN
+    #   - --trusted-validator 9QxCLckBiJc783jnMvXZubK4wH86Eqqvashtrwvcsgkv
+    #   - --no-untrusted-rpc
+    #   - --ledger ~/validator-ledger
+    #   - --rpc-port 8899
+    #   - --dynamic-port-range 8000-8010
+    #   - --entrypoint entrypoint.testnet.solana.com:8001
+    #   - --expected-genesis-hash 4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY
+    #   - --wal-recovery-mode skip_any_corrupted_record
+    #   - --limit-ledger-size
 
   postgres:
     image: postgres:13
