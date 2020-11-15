@@ -5,7 +5,14 @@ const router = require('express').Router()
 
 const makeRPCRequest = async (req, res) => {
   try {
-      const { data, status } = await axios.post(process.env.SOLANA_HTTPS_ADDR, { ...req.body }, { ...req.headers })
+      const { network = 'mainnet' } = req.query
+      let networkAddress
+      if (network === 'devnet') networkAddress = 'https://devnet.solana.com'
+      if (network === 'testnet') networkAddress = 'https://testnet.solana.com'
+      if (network === 'mainnet') networkAddress = 'https://api.mainnet-beta.solana.com'
+      // process.env.SOLANA_HTTPS_ADDR
+    console.log('network', network, 'networkAddress', networkAddress)
+      const { data, status } = await axios.post(networkAddress, { ...req.body }, { ...req.headers })
       return res.status(status).json(data)
     } catch (error) {
       console.error(`errors.rpc`, error)

@@ -48,16 +48,14 @@ module.exports = (context) => {
     try {
       const { network, options = {} } = req.body
 
+      console.log('Creating Solana account...')
       const account = await createAccount()
       const keys = keysFromAccount(account)
-      console.log('account', account, keys)
 
       return res.status(200).json({
         data: {
-          publicKey: keys.publicKey,
-          secretKey: keys.secretKey,
-          // address,
-          // privateKey,
+          address: keys.publicKey,
+          privateKey: keys.secretKey,
         },
       })
     } catch (e) {

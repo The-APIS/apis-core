@@ -10,6 +10,7 @@ const makeApiRouter = context => {
   router.use('/v1/rpc', require('./api/v1/rpc')(context))
   router.use('/v1/wallets', require('./api/v1/wallets')(context))
   router.use('/v1/transactions', require('./api/v1/transactions')(context))
+  router.use('/v1/tokens', require('./api/v1/tokens')(context))
   return router
 }
 

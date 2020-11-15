@@ -11,6 +11,7 @@ module.exports = ({ models, ...context }) => {
         // offset = 0,
         address = "",
         slug = "",
+        network = "mainnet",
         ...query
       } = req.query
 
@@ -19,11 +20,16 @@ module.exports = ({ models, ...context }) => {
         address = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
       }
 
+      let networkAddress = process.env.SOLANA_HTTPS_ADDR
+      if (network === 'devnet') networkAddress = 'https://devnet.solana.com'
+      if (network === 'testnet') networkAddress = 'https://testnet.solana.com'
+      if (network === 'mainnet') networkAddress = 'https://api.mainnet-beta.solana.com'
+
       console.log('slug', slug)
       console.log('address', address)
 
       const { data, status } = await axios.post(
-        process.env.SOLANA_HTTPS_ADDR, {
+        networkAddress, {
           method: "getConfirmedSignaturesForAddress2",
           jsonrpc: "2.0",
           params: [
