@@ -1,5 +1,4 @@
 const router = require('express').Router()
-// const web3 = require('@/constructors/web3')
 const get = require('lodash/get')
 
 const RPC_ADDR_MAP = {
@@ -47,30 +46,40 @@ module.exports = ({ ethereum: { web3, buildContract }, ...context }) => {
       const erc20TokenContractAddressesArray = Array.isArray(erc20TokenContractAddresses) ?
         [...erc20TokenContractAddresses] : [erc20TokenContractAddresses]
 
-      console.log('erc20TokenContractAddressesArray', erc20TokenContractAddressesArray)
-
-      const balanceWei = await web3.eth.getBalance(address)
-      const balances = {
-        ETH: web3.utils.fromWei(balanceWei, 'ether'),
-      }
-
-      console.log('balanceWei', balanceWei, balances)
+      const ethBalanceWei = await web3.eth.getBalance(address)
+      const ethBalance = web3.utils.fromWei(ethBalanceWei, 'ether')
 
       const erc20TokenBalances = (await Promise.all(
         erc20TokenContractAddressesArray.map(tokenContractAddress => {
           console.log('tokenContractAddress: ', tokenContractAddress)
-          return buildContract({ type: 'ERC20', address: tokenContractAddress })
-            .methods
-            .balanceOf(address)
-            .call({ from: address })
+          return new Promise(async (resolve, reject) => {
+            const contract = buildContract({ type: 'ERC20', address: tokenContractAddress })
+            console.log('contract', contract)
+            const balance = await contract
+                .methods
+                .balanceOf(address)
+                .call({ from: address })
+            console.log('balance', balance)
+            const decimals = await contract.methods.decimals().call()
+            console.log('decimals', decimals)
+            return resolve({
+              [tokenContractAddress]: {
+                balance,
+                uiBalance: (balance / Math.pow(10, (decimals || 0))).toString(),
+              },
+            })
+          })
         })
-      )).map((balance, i) => ({ [erc20TokenContractAddressesArray[i]]: balance }))
-
-      console.log('erc20TokenBalances', erc20TokenBalances)
+      )).reduce((acc, item) => ({ ...acc, ...item }), {})
 
       return res.status(200).json({
-        balances,
-        erc20TokenBalances,
+        balances: {
+          ETH: {
+            balance: ethBalance,
+            uiBalance: ethBalance,
+          },
+          ...erc20TokenBalances,
+        },
       })
     } catch (e) {
       console.error(`errors.api.v1.wallets`, e)

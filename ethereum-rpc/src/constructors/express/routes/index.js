@@ -11,6 +11,7 @@ const makeApiRouter = context => {
   router.use('/v1/wallets', require('./api/v1/wallets')(context))
   router.use('/v1/addresses', require('./api/v1/addresses')(context))
   router.use('/v1/transactions', require('./api/v1/transactions')(context))
+  router.use('/v1/tokens', require('./api/v1/tokens')(context))
   router.use('/v1/methods', require('./api/v1/methods')(context))
   router.use('/v1/defi', require('./api/v1/defi')(context))
   return router

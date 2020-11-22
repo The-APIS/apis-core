@@ -4,6 +4,7 @@ const checksum = require('ethereum-checksum-address')
 // const decoder = require('abi-decoder')
 
 const web3 = require('@/constructors/web3')
+const compiler = require('./compiler')
 
 
 const readABIFilenamesFromPath = (dirPath) => (
@@ -36,6 +37,7 @@ const ethereum = module.exports = {
   abi,
   // decoder,
   checksum,
+  compiler,
   buildContract: ({
     type,
     address,

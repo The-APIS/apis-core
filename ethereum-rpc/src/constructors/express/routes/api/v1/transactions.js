@@ -33,7 +33,6 @@ const sendETHTransaction = async (options) => {
     ...body
   } = options
   const chain = getEthereumChainIdFromNetworkSlug(network)
-  console.log('sendETHTransaction')
   const txData = {
     gasLimit: web3.utils.toHex(100000),
     gasPrice: web3.utils.toHex(50e9), // 10 Gwei
@@ -70,7 +69,6 @@ const sendTokenTransaction = async (options) => {
     signed = false,
     ...body
   } = options
-  console.log('sendTokenTransaction', options)
   const chain = getEthereumChainIdFromNetworkSlug(network)
   const txData = {
     gasLimit: web3.utils.toHex(100000),
@@ -85,10 +83,11 @@ const sendTokenTransaction = async (options) => {
   }, { /* TODO */ })
   const m = contract.methods[method](recipient, amount)
   const encoded = m.encodeABI()
+
   txData.data = encoded
   txData.value = "0x0"
   txData.to = tokenContractAddress
-  console.log('txData: ', txData)
+
   const tx = new EthereumTx({
     ...txData,
     nonce: web3.utils.toHex(await web3.eth.getTransactionCount(sender)),
@@ -122,7 +121,6 @@ module.exports = ({ models, ...context }) => {
 
       const chain = getEthereumChainIdFromNetworkSlug(network)
 
-      console.log('req.body', req.body)
       return res.status(200).json(method ? await sendTokenTransaction(req.body) : await sendETHTransaction(req.body))
       // const gasStationResponse = await axios.get(`${process.env.ETH_GAS_STATION_API_URL}?api-key=${process.env.ETH_GAS_STATION_API_KEY}`)
 
