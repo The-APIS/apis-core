@@ -35,6 +35,14 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        slug: 'tusdt',
+        address: '0xD92E713d051C37EbB2561803a3b5FBAbc4962431', // https://bybit-exchange.github.io/erc20-faucet/
+        type: 'ERC20',
+        network: 'rinkeby',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ]);
   },
 

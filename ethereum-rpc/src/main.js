@@ -1,3 +1,5 @@
+const ethereum = require('@/constructors/ethereum')
+
 module.exports.run = async () => {
   console.log('[gateway] Starting Express...')
   const [
@@ -18,6 +20,7 @@ module.exports.run = async () => {
     Sequelize,
     models,
     session: true,
+    ethereum,
   }
 
   console.log('[ethereum-rpc] Starting Express...')
