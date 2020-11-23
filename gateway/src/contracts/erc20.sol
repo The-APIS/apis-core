@@ -293,6 +293,12 @@ contract ERC20 is Context, IERC20 {
     string private _symbol;
     uint8 private _decimals;
 
+    /// @notice Address which may mint new tokens
+    address public minter;
+
+    /// @notice An event thats emitted when the minter address is changed
+    event MinterChanged(address minter, address newMinter);
+
     /**
      * @dev Sets the values for {name} and {symbol}, initializes {decimals} with
      * a default value of 18.
@@ -301,11 +307,18 @@ contract ERC20 is Context, IERC20 {
      *
      * All three of these values are immutable: they can only be set once during
      * construction.
+     *
+     * Added by APIS:
+     * {minter_} sets which address may mint new tokens
+     * {initialSupply} specifies the initial token supply amount
+     * {account} specifies the account receiving the initial token supply
      */
-    constructor (string memory name_, string memory symbol_) public {
+    constructor (string memory name_, string memory symbol_, address minter_, address account, uint initialSupply) {
         _name = name_;
         _symbol = symbol_;
         _decimals = 18;
+        minter = minter_;
+        _mint(account, initialSupply);
     }
 
     /**
@@ -364,6 +377,19 @@ contract ERC20 is Context, IERC20 {
      */
     function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
         _transfer(_msgSender(), recipient, amount);
+        return true;
+    }
+
+    /**
+     * @dev Mint tokens
+     *
+     * Requirements:
+     *
+     * - `account` cannot be the zero address.
+     * - the caller must have a balance of at least `amount`.
+     */
+    function mint(address account, uint256 amount) public returns (bool) {
+        _mint(account, amount);
         return true;
     }
 
@@ -442,28 +468,13 @@ contract ERC20 is Context, IERC20 {
     }
 
     /**
-     * @dev Moves tokens `amount` from `sender` to `recipient`.
-     *
-     * This is internal function is equivalent to {transfer}, and can be used to
-     * e.g. implement automatic token fees, slashing mechanisms, etc.
-     *
-     * Emits a {Transfer} event.
-     *
-     * Requirements:
-     *
-     * - `sender` cannot be the zero address.
-     * - `recipient` cannot be the zero address.
-     * - `sender` must have a balance of at least `amount`.
+     * @notice Change the minter address
+     * @param minter_ The address of the new minter
      */
-    function _transfer(address sender, address recipient, uint256 amount) internal virtual {
-        require(sender != address(0), "ERC20: transfer from the zero address");
-        require(recipient != address(0), "ERC20: transfer to the zero address");
-
-        _beforeTokenTransfer(sender, recipient, amount);
-
-        _balances[sender] = _balances[sender].sub(amount, "ERC20: transfer amount exceeds balance");
-        _balances[recipient] = _balances[recipient].add(amount);
-        emit Transfer(sender, recipient, amount);
+    function setMinter(address minter_) external {
+        require(_msgSender() == minter, "ERC20: only the minter can change the minter address");
+        emit MinterChanged(minter, minter_);
+        minter = minter_;
     }
 
     /** @dev Creates `amount` tokens and assigns them to `account`, increasing
@@ -472,10 +483,11 @@ contract ERC20 is Context, IERC20 {
      * Emits a {Transfer} event with `from` set to the zero address.
      *
      * Requirements:
-     *
+     * - only minter can mint
      * - `to` cannot be the zero address.
      */
     function _mint(address account, uint256 amount) internal virtual {
+        require(_msgSender() == minter, "ERC20: only the minter can mint");
         require(account != address(0), "ERC20: mint to the zero address");
 
         _beforeTokenTransfer(address(0), account, amount);
@@ -504,6 +516,31 @@ contract ERC20 is Context, IERC20 {
         _balances[account] = _balances[account].sub(amount, "ERC20: burn amount exceeds balance");
         _totalSupply = _totalSupply.sub(amount);
         emit Transfer(account, address(0), amount);
+    }
+
+    /**
+     * @dev Moves tokens `amount` from `sender` to `recipient`.
+     *
+     * This is internal function is equivalent to {transfer}, and can be used to
+     * e.g. implement automatic token fees, slashing mechanisms, etc.
+     *
+     * Emits a {Transfer} event.
+     *
+     * Requirements:
+     *
+     * - `sender` cannot be the zero address.
+     * - `recipient` cannot be the zero address.
+     * - `sender` must have a balance of at least `amount`.
+     */
+    function _transfer(address sender, address recipient, uint256 amount) internal virtual {
+        require(sender != address(0), "ERC20: transfer from the zero address");
+        require(recipient != address(0), "ERC20: transfer to the zero address");
+
+        _beforeTokenTransfer(sender, recipient, amount);
+
+        _balances[sender] = _balances[sender].sub(amount, "ERC20: transfer amount exceeds balance");
+        _balances[recipient] = _balances[recipient].add(amount);
+        emit Transfer(sender, recipient, amount);
     }
 
     /**
