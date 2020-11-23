@@ -4,7 +4,7 @@ const router = require('express').Router()
 // const web3 = require('@/constructors/web3')
 
 
-module.exports = ({ models, ethereum: { web3, buildContract }, ...context }) => {
+module.exports = ({ models, ethereum: { web3, buildContract, compiler }, ...context }) => {
 
   router.post('/', async (req, res, next) => {
     try {
@@ -23,16 +23,16 @@ module.exports = ({ models, ethereum: { web3, buildContract }, ...context }) => 
         ...body
       } = req.body
 
-      // const result = await compiler.deployContract({
-      //   token,
-      //   sender,
-      //   privateKey,
-      //   sendOptions,
-      // })
+      const result = await compiler.deployContract({
+        token,
+        sender,
+        privateKey,
+        sendOptions,
+      })
 
-      // console.log('result', result)
+      console.log('result', result)
 
-      // return res.status(200).json(result.deployTransaction)
+      return res.status(200).json(result.deployTransaction)
     } catch (e) {
       console.error(e)
       return res.status(500).json({ errors: [e] })

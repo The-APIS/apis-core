@@ -39,8 +39,6 @@ module.exports = ({ ethereum: { web3, buildContract }, ...context }) => {
         tokens = [], // TODO
       } = req.query
 
-      console.log('req.query', req.query)
-
       // TODO - network, address for ethereum query
 
       const erc20TokenContractAddressesArray = Array.isArray(erc20TokenContractAddresses) ?
@@ -51,17 +49,13 @@ module.exports = ({ ethereum: { web3, buildContract }, ...context }) => {
 
       const erc20TokenBalances = (await Promise.all(
         erc20TokenContractAddressesArray.map(tokenContractAddress => {
-          console.log('tokenContractAddress: ', tokenContractAddress)
           return new Promise(async (resolve, reject) => {
             const contract = buildContract({ type: 'ERC20', address: tokenContractAddress })
-            console.log('contract', contract)
             const balance = await contract
                 .methods
                 .balanceOf(address)
                 .call({ from: address })
-            console.log('balance', balance)
             const decimals = await contract.methods.decimals().call()
-            console.log('decimals', decimals)
             return resolve({
               [tokenContractAddress]: {
                 balance,
