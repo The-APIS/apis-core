@@ -76,6 +76,7 @@ async function deployContractInternal({
   const wallet = new ethers.Wallet(privateKey, provider);
   console.log('contractJson.abi', contractJson.abi)
   console.log('contractJson.evm.bytecode.object', contractJson.evm.bytecode.object)
+  console.log('deployArgs', deployArgs)
   const factory = new ethers.ContractFactory(contractJson.abi, contractJson.evm.bytecode.object, wallet);
   return factory.deploy(...(deployArgs || []))
 }
@@ -99,8 +100,8 @@ const deployContract = (params = {
     name: 'TheApis',
     symbol: 'APIS',
     minter: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
-    address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
-    initialSupply: 100000,
+    account: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+    initialSupply: '100000000000000000000000',
   },
   type: 'APIS_ERC20',
   sender: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
@@ -110,6 +111,7 @@ const deployContract = (params = {
     gasPrice: web3.utils.toHex(50e9),
   },
 }) => {
+  console.log('params', params)
   if (params.type === 'APIS_ERC20' || !params.type) {
     // return deployStaticContract({
     //   abi: apisErc20Abi,
@@ -119,7 +121,7 @@ const deployContract = (params = {
     //   deployArgs: [
     //     params.sender,
     //     (params.minter || params.sender),
-    //     (params.address || params.sender),
+    //     (params.account || params.sender),
     //     (params.supply || false),
     //   ],
     // })
@@ -140,8 +142,8 @@ const deployContract = (params = {
         params.token.name,
         params.token.symbol,
         (params.token.minter || params.token.sender),
-        (params.token.address || params.token.sender),
-        (params.token.initialSupply || false),
+        (params.token.account || params.token.sender),
+        (new web3.utils.BN(params.token.initialSupply || 0)).toString(),
       ],
     })
   }
