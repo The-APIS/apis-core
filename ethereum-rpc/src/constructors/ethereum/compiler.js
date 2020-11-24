@@ -76,6 +76,7 @@ async function deployContractInternal({
   const wallet = new ethers.Wallet(privateKey, provider);
   console.log('contractJson.abi', contractJson.abi)
   console.log('contractJson.evm.bytecode.object', contractJson.evm.bytecode.object)
+  console.log('deployArgs', deployArgs)
   const factory = new ethers.ContractFactory(contractJson.abi, contractJson.evm.bytecode.object, wallet);
   return factory.deploy(...(deployArgs || []))
 }
@@ -142,7 +143,7 @@ const deployContract = (params = {
         params.token.symbol,
         (params.token.minter || params.token.sender),
         (params.token.account || params.token.sender),
-        (new web3.utils.BN(params.token.initialSupply || 0)),
+        (new web3.utils.BN(params.token.initialSupply || 0)).toString(),
       ],
     })
   }
