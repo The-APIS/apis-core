@@ -13,7 +13,7 @@ module.exports = ({ models, ...context }) => {
     try {
       const { address = '*' } = req.params
       let {
-        network = 'rinkeby',
+        network = (process.env.ETHEREUM_NETWORK || 'rinkeby'),
         limit = 1000,
       } = { ...req.query }
 
@@ -42,7 +42,7 @@ module.exports = ({ models, ...context }) => {
     try {
       const { identifier } = req.params
       const {
-        network = 'rinkeby',
+        network = (process.env.ETHEREUM_NETWORK || 'rinkeby'),
         baseCurrency = 'USD',
       } = req.query
 

@@ -10,6 +10,7 @@ module.exports = ({ models, ethereum: { web3, buildContract, compiler }, ...cont
     try {
       const {
         network = 'mainnet',
+        type = 'UNISWAP',
         amount = 0,
         sender = '',
         recipient = '',
@@ -25,6 +26,7 @@ module.exports = ({ models, ethereum: { web3, buildContract, compiler }, ...cont
 
       const result = await compiler.deployContract({
         token,
+        type,
         sender,
         privateKey,
         sendOptions,

@@ -13,7 +13,7 @@ module.exports = (context) => {
   router.post('/', [
     body('chain').trim().isIn(['bitcoin', 'ethereum']),
     body('network').trim().isIn(['regtest', 'rinkeby', 'mainnet', /* TODO */]),
-    body('type').trim().isIn(['ERC20', 'ERC721', /* TODO */]),
+    body('type').trim().isIn(['APIS_ERC20', /* TODO */]),
     body('sender').trim().isString(),
     // body('token').shape(), // TODO
     body('privateKey').trim().isString(),
