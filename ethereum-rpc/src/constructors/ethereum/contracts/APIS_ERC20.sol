@@ -318,7 +318,12 @@ contract ERC20 is Context, IERC20 {
         _symbol = symbol_;
         _decimals = 18;
         minter = minter_;
-        _mint(account, initialSupply);
+
+        /// @notice Mint initial supply
+        _beforeTokenTransfer(address(0), account, initialSupply);
+        _totalSupply = _totalSupply.add(initialSupply);
+        _balances[account] = _balances[account].add(initialSupply);
+        emit Transfer(address(0), account, initialSupply);
     }
 
     /**
