@@ -394,6 +394,19 @@ contract ERC20 is Context, IERC20 {
     }
 
     /**
+     * @dev Burn tokens
+     *
+     * Requirements:
+     *
+     * - the caller must have a balance of at least `amount`.
+     * - the caller must be the minter
+     */
+    function burn(uint256 amount) public returns (bool) {
+        _burn(amount);
+        return true;
+    }
+
+    /**
      * @dev See {IERC20-allowance}.
      */
     function allowance(address owner, address spender) public view virtual override returns (uint256) {
@@ -498,24 +511,24 @@ contract ERC20 is Context, IERC20 {
     }
 
     /**
-     * @dev Destroys `amount` tokens from `account`, reducing the
+     * @dev Destroys `amount` tokens from `minter`, reducing the
      * total supply.
      *
      * Emits a {Transfer} event with `to` set to the zero address.
      *
      * Requirements:
-     *
-     * - `account` cannot be the zero address.
-     * - `account` must have at least `amount` tokens.
+     * - the caller has to be the minter
+     * - the caller cannot be the zero address.
+     * - the caller must have at least `amount` tokens.
      */
-    function _burn(address account, uint256 amount) internal virtual {
-        require(account != address(0), "ERC20: burn from the zero address");
+    function _burn(uint256 amount) internal virtual {
+        require(_msgSender() == minter, "ERC20: only the minter can burn");
 
-        _beforeTokenTransfer(account, address(0), amount);
+        _beforeTokenTransfer(minter, address(0), amount);
 
-        _balances[account] = _balances[account].sub(amount, "ERC20: burn amount exceeds balance");
+        _balances[minter] = _balances[minter].sub(amount, "ERC20: burn amount exceeds balance");
         _totalSupply = _totalSupply.sub(amount);
-        emit Transfer(account, address(0), amount);
+        emit Transfer(minter, address(0), amount);
     }
 
     /**
