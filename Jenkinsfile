@@ -14,6 +14,7 @@ volumes: [
     def ethereumRpc
     def bitcoinListener
     def ethereumListener
+    def staticServer
 
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
@@ -37,6 +38,9 @@ volumes: [
     def ethereumListenerImageName = "apiscore-ethereum-listener"
     def ethereumListenerImage = "${registry}/${ethereumListenerImageName}"
 
+    def staticServerImageName = "apiscore-static"
+    def staticServerImage = "${registry}/${staticServerImageName}"
+
     container('docker') {
       stage('Build') {
         checkout scm
@@ -45,6 +49,7 @@ volumes: [
         bitcoinListener = docker.build("${bitcoinListenerImage}", "-f bitcoin-listener/src/Dockerfile .")
         ethereumRpc = docker.build("${ethereumRpcImage}", "-f ethereum-rpc/src/Dockerfile .")
         ethereumListener = docker.build("${ethereumListenerImage}", "-f ethereum-listener/src/Dockerfile .")
+        staticServer = docker.build("${staticServerImage}", "-f static/Dockerfile ./static/src")
       }
       stage('Push') {
         docker.withRegistry('https://registry.trustedlife.app') {
@@ -53,6 +58,7 @@ volumes: [
           ethereumRpc.push("latest")
           bitcoinListener.push("latest")
           ethereumListener.push("latest")
+          staticServer.push("latest")
         }
       }
     }
@@ -68,7 +74,8 @@ volumes: [
             bitcoin-rpc=${bitcoinRpcImage}:latest \
             bitcoin-listener=${bitcoinListenerImage}:latest \
             ethereum-rpc=${ethereumRpcImage}:latest \
-            ethereum-listener=${ethereumListenerImage}:latest
+            ethereum-listener=${ethereumListenerImage}:latest \
+            static=${staticServerImage}:latest
 
           kubectl patch -n apis deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
 
