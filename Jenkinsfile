@@ -74,8 +74,8 @@ volumes: [
             bitcoin-rpc=${bitcoinRpcImage}:latest \
             bitcoin-listener=${bitcoinListenerImage}:latest \
             ethereum-rpc=${ethereumRpcImage}:latest \
-            ethereum-listener=${ethereumListenerImage}:latest \
-            static=${staticServerImage}:latest
+            ethereum-listener=${ethereumListenerImage}:latest
+            # static=${staticServerImage}:latest # does not exist in dev
 
           kubectl patch -n apis deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
 
