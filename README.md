@@ -1,5 +1,8 @@
 # apis-core
 
+![theapis](https://circleci.com/gh/The-APIS/apis-core/tree/master.svg?style=svg)
+
+
 
 # Development
 
