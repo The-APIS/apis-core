@@ -1,0 +1,99 @@
+version: 2.1
+
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - bitcoin-listener:
+          filters:
+            branches:
+              only:
+                - master
+      - bitcoin-rpc:
+          filters:
+            branches:
+              only:
+                - master
+      - ethereum-listener:
+          filters:
+            branches:
+              only:
+                - master
+      - ethereum-rpc:
+          filters:
+            branches:
+              only:
+                - master
+      - gateway:
+          filters:
+            branches:
+              only:
+                - master
+
+executors:
+
+  ubuntu:
+    machine:
+      image: ubuntu-2004:202010-01
+      docker_layer_caching: false
+
+
+commands:
+
+  docker_login:
+    steps:
+      - run: docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
+
+
+jobs:
+
+  bitcoin-listener:
+    executor: ubuntu
+    steps:
+      - checkout
+      - run:
+          command: "docker build -f bitcoin-listener/src/Dockerfile . -t 'theapis/apis-core-bitcoin-listener:latest'"
+      - docker_login
+      - run:
+          command: "docker push theapis/apis-core-bitcoin-listener:latest"
+
+  bitcoin-rpc:
+    executor: ubuntu
+    steps:
+      - checkout
+      - run:
+          command: "docker build -f bitcoin-rpc/src/Dockerfile . -t 'theapis/apis-core-bitcoin-rpc:latest'"
+      - docker_login
+      - run:
+          command: "docker push theapis/apis-core-bitcoin-rpc:latest"
+
+  ethereum-listener:
+    executor: ubuntu
+    steps:
+      - checkout
+      - run:
+          command: "docker build -f ethereum-listener/src/Dockerfile . -t 'theapis/apis-core-ethereum-listener:latest'"
+      - docker_login
+      - run:
+          command: "docker push theapis/apis-core-ethereum-listener:latest"
+
+  ethereum-rpc:
+    executor: ubuntu
+    steps:
+      - checkout
+      - run:
+          command: "docker build -f ethereum-rpc/src/Dockerfile . -t 'theapis/apis-core-ethereum-rpc:latest'"
+      - docker_login
+      - run:
+          command: "docker push theapis/apis-core-ethereum-rpc:latest"
+
+  gateway:
+    executor: ubuntu
+    steps:
+      - checkout
+      - run:
+          command: "docker build -f gateway/src/Dockerfile . -t 'theapis/apis-core-gateway:latest'"
+      - docker_login
+      - run:
+          command: "docker push theapis/apis-core-gateway:latest"
