@@ -1,0 +1,7 @@
+{
+  "baseUrl": "https://api.dev.theapis.io",
+  "pluginsFile": false,
+  "supportFile": false,
+  "fixturesFolder": false,
+  "video": false
+}

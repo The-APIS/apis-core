@@ -4,13 +4,14 @@ const { ADDRESS_WHITELIST, RPC_COMMANDS } = require('@/constants')
 
 const makeRPCRequest = async (req, res) => {
   console.log('POST [rpc] makeRPCRequest')
+
   try {
       const { data, status } = await axios({
         method: 'POST',
         url: process.env.BITCOIN_HTTPS_ADDR,
         data: req.body,
         headers: {
-          'Authorization': `Basic ${Buffer.from(`${process.env.BITCOIN_CORE_USER}:${process.env.BITCOIN_CORE_PASS}`).toString('base64')}`,
+          'Authorization': `Basic ${Buffer.from(`${process.env.BITCOIN_RPC_USER}:${process.env.BITCOIN_RPC_PASS}`).toString('base64')}`,
           'Content-Type': 'application/json',
         },
       })

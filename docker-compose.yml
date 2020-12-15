@@ -175,6 +175,18 @@ services:
     volumes:
       - ./static/src:/web
 
+  e2e:
+    # the Docker image to use from https://github.com/cypress-io/cypress-docker-images
+    image: "cypress/included:3.2.0"
+    depends_on:
+      - gateway
+    env_file:
+      - .env
+    # share the current folder as volume to avoid copying
+    working_dir: /e2e
+    volumes:
+      - ./e2e:/e2e
+
   # adminer:
   #   image: adminer
   #   restart: always
