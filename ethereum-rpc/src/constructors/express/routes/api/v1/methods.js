@@ -1,6 +1,7 @@
 const axios = require('axios')
 const router = require('express').Router()
 
+
 const ethereum = require('@/constructors/ethereum')
 const { queryStringIncludeToModelsInclude } = require('@/share/lib')
 
@@ -13,7 +14,7 @@ const checksumAddresses = (query) => ({
   }, {}),
 })
 
-module.exports = ({ models, ...context }) => {
+module.exports = ({ models, sequelize, ...context }) => {
 
   router.get('/', async (req, res, next) => {
     try {
@@ -21,13 +22,26 @@ module.exports = ({ models, ...context }) => {
         limit = 100,
         offset = 0,
         include,
+        startBlock = 0,
+        endBlock,
         ...query
       } = { ...req.query }
 
+      const where = {
+        ...checksumAddresses(query),
+      }
+
+      if (startBlock) {
+        query.where.EthereumTx.blockNumber = {
+          [sequelize.Op.gt]: startBlock,
+        }
+        if (endBlock) {
+          query.where.EthereumTx.blockNumber[sequelize.Op.lt] = endBlock
+        }
+      }
+
       const methods = await models.EthereumMethod.findAll({
-        where: {
-          ...checksumAddresses(query),
-        },
+        where,
         limit: Math.min(limit, 1000),
         offset,
         include: queryStringIncludeToModelsInclude({ models, include }),
