@@ -6,8 +6,9 @@ describe('BTC RPC', () => {
         "method": "getblockchaininfo",
         "params": []
     }).should((response) => {
-      expect(response.body).to.have.property('address')
-      expect(response.body).to.have.property('privateKey')
+      expect(response.body).to.have.property('result')
+      expect(response.body).to.have.property('error')
+      expect(response.body).to.have.property('id')
     })
   })
 })
