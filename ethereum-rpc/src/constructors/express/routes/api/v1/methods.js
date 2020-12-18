@@ -24,6 +24,7 @@ module.exports = ({ models, sequelize, ...context }) => {
         include,
         startBlock = 0,
         endBlock,
+        excludeConfirmationCount = 0,
         ...query
       } = { ...req.query }
 
@@ -36,7 +37,7 @@ module.exports = ({ models, sequelize, ...context }) => {
           [sequelize.Op.gt]: startBlock,
         }
         if (endBlock) {
-          query.where.EthereumTx.blockNumber[sequelize.Op.lt] = endBlock
+          query.where.EthereumTx.blockNumber[sequelize.Op.lt] = (excludeConfirmationCount ? endBlock - excludeConfirmationCount : endBlock)
         }
       }
 
