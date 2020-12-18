@@ -1,0 +1,28 @@
+{
+  "name": "share",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test:watch": "./node_modules/mocha/bin/mocha --recursive --watch",
+    "test": "./node_modules/mocha/bin/mocha --recursive"
+  },
+  "keywords": [],
+  "author": "Shain Lafazan",
+  "license": "ISC",
+  "devDependencies": {
+    "expect": "26.6.2",
+    "mocha": "8.2.1"
+  },
+  "_moduleAliases": {
+    "@": ".",
+    "~": "../"
+  },
+  "dependencies": {
+    "module-alias": "2.2.2"
+  }
+}
