@@ -32,12 +32,12 @@ module.exports = async ({
       // TODO -- handle large batches
       const rawTxsInMemPool = await client.command(pendingTxIdsNotInCache.map(txId => ({ method: 'getrawtransaction', parameters: [ txId, true ] })))
       console.log(`[Daemon][syncPendingTransactions] rawTxsInMemPool: `, rawTxsInMemPool)
-      const hSetResult = await redis.multi(rawTxsInMemPool.map((tx) => (['hset', 'eth-tx-pending', tx.txid, JSON.stringify(tx)]))).exec()
+      const hSetResult = await redis.multi(rawTxsInMemPool.map((tx) => (['hset', 'btc-tx-pending', tx.txid, JSON.stringify(tx)]))).exec()
       console.log(`[Daemon][syncPendingTransactions] hSetResult: `, hSetResult)
     }
 
-    const hga = await redis.hgetallAsync("eth-tx-pending"); // TODO
-    console.log(`[Daemon][syncPendingTransactions] hga: `, hga)
+    // const hga = await redis.hgetallAsync("eth-tx-pending"); // TODO
+    // console.log(`[Daemon][syncPendingTransactions] hga: `, hga)
   } catch (e) {
     console.error(e)
   }

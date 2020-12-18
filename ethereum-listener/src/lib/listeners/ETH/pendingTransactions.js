@@ -16,7 +16,7 @@ module.exports = async ({ web3, redis }) => {
 
       const { input, ...values } = tx
       const hs = await redis.hsetAsync("eth-tx-pending", txHash, JSON.stringify(values));
-      const hga = await redis.hgetallAsync("eth-tx-pending");
+      // const hga = await redis.hgetallAsync("eth-tx-pending");
     } catch(e) {
       console.error(e)
     }

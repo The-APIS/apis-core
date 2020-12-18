@@ -11,6 +11,7 @@ module.exports = async ({
   sequelize,
   Sequelize,
   models,
+  redis,
 }) => {
   try {
     const latestBlock = await models.BitcoinBlock.findOne({
@@ -36,6 +37,8 @@ module.exports = async ({
 
         if (get(block, 'tx', []).length) {
           const txs = await models.BitcoinTx.bulkCreate(block.tx.map(tx => ({ blockHash: currentHash, ...tx })))
+          const delResult = await redis.multi(block.tx.map(tx => (['hdel', 'eth-tx-pending', tx.hash]))).exec()
+          console.log(`[Daemon][syncPastBlocks] delResult: `, delResult)
         }
 
         current += 1
