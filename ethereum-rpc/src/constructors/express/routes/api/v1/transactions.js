@@ -133,6 +133,8 @@ module.exports = ({ models, ...context }) => {
   router.get('/', async (req, res, next) => {
     try {
       const {
+        chain = 'ethereum',
+        network = 'rinkeby',
         limit = 100,
         offset = 0,
         ...query
