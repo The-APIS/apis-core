@@ -1,7 +1,5 @@
 const axios = require('axios')
 const router = require('express').Router()
-// const EthereumTx = require('ethereumjs-tx').Transaction
-// const web3 = require('@/constructors/web3')
 
 
 module.exports = ({ models, ethereum: { web3, buildContract, compiler }, ...context }) => {

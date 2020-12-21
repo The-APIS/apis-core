@@ -1,10 +1,7 @@
 const axios = require('axios')
 const { Op } = require("sequelize");
 const router = require('express').Router()
-// const web3 = require('@/constructors/web3')
 const get = require('lodash/get')
-
-// const web3GetTransactionsByAccount = require('@/bin/web3GetTransactionsByAccount')
 
 
 module.exports = ({ models, ...context }) => {
@@ -17,7 +14,7 @@ module.exports = ({ models, ...context }) => {
         limit = 1000,
       } = { ...req.query }
 
-      limit = Math.max(limit, 1000)
+      limit = Math.min(limit, 1000)
 
       const txns = await models.EthereumTx.findAll({
         where: {
@@ -89,18 +86,6 @@ module.exports = ({ models, ...context }) => {
       return res.status(500).json({ errors: [e] })
     }
   })
-
-
-  // router.get('/web3/addresses/:address/transactions', async (req, res, next) => {
-  //   try {
-  //     const { address = '*' } = req.params
-  //     const { startBlockNumber = 6500000, endBlockNumber = 7242250 } = req.query
-  //     return res.status(200).json({ transactions: await web3GetTransactionsByAccount(address, startBlockNumber, endBlockNumber) })
-  //   } catch (e) {
-  //     console.error(e)
-  //     return res.status(500).json({ errors: [e] })
-  //   }
-  // })
 
   return router
 }
