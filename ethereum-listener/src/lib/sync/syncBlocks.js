@@ -19,9 +19,9 @@ module.exports = async ({
     // TOOD - confirm all blocks exist in db
 
     const start = Math.max(get(latestBlock, 'number', -1), (process.env.ETHEREUM_MIN_BLOCK_NUMBER || 0))
-    console.log('[ethereum-listener] start block is ', start)
+    console.log('[ethereum-listener][syncBlocks] start block is ', start)
     const end = await web3.eth.getBlockNumber() || 0
-    console.log('[ethereum-listener] end block is ', end)
+    console.log('[ethereum-listener][syncBlocks] end block is ', end)
     let current = start
 
     while (current <= end) {
