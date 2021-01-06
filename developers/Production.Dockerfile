@@ -14,6 +14,7 @@ RUN mkdir /usr/share/app
 ADD . ./usr/share/app
 WORKDIR /usr/share/app
 
+RUN npm i -g eslint eslint-watch
 RUN npm i
 RUN npm rebuild node-sass
 RUN npm run build

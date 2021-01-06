@@ -12,7 +12,8 @@ ADD . ./app
 
 WORKDIR /app
 
-RUN npm
+RUN npm i -g eslint eslint-watch
+RUN npm i
 RUN npm rebuild node-sass
 
 CMD npm run dev
