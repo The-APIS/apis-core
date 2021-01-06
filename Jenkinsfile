@@ -53,7 +53,7 @@ volumes: [
         bitcoinListener = docker.build("${bitcoinListenerImage}", "-f bitcoin-listener/src/Dockerfile .")
         ethereumRpc = docker.build("${ethereumRpcImage}", "-f ethereum-rpc/src/Dockerfile .")
         ethereumListener = docker.build("${ethereumListenerImage}", "-f ethereum-listener/src/Dockerfile .")
-        developers = docker.build("${developersImageName}", "-f developers/Production.Dockerfile .")
+        developers = docker.build("${developersImageName}", "-f developers/Production.Dockerfile ./developers")
         staticServer = docker.build("${staticServerImage}", "-f static/Dockerfile ./static/src")
       }
       stage('Push') {
