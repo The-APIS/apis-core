@@ -53,7 +53,7 @@ volumes: [
         bitcoinListener = docker.build("${bitcoinListenerImage}", "-f bitcoin-listener/src/Dockerfile .")
         ethereumRpc = docker.build("${ethereumRpcImage}", "-f ethereum-rpc/src/Dockerfile .")
         ethereumListener = docker.build("${ethereumListenerImage}", "-f ethereum-listener/src/Dockerfile .")
-        developers = docker.build("${ethereumListenerImage}", "-f ethereum-listener/src/Dockerfile .")
+        developers = docker.build("${developersImageName}", "-f developers/Production.Dockerfile .")
         staticServer = docker.build("${staticServerImage}", "-f static/Dockerfile ./static/src")
       }
       stage('Push') {
@@ -63,6 +63,7 @@ volumes: [
           ethereumRpc.push("latest")
           bitcoinListener.push("latest")
           ethereumListener.push("latest")
+          developers.push("latest")
           staticServer.push("latest")
         }
       }
@@ -82,7 +83,7 @@ volumes: [
             ethereum-listener=${ethereumListenerImage}:latest
             # static=${staticServerImage}:latest # does not exist in dev
 
-          kubectl set image -n apis deployment/gateway \
+          kubectl set image -n apis deployment/developers \
             web=${developersImage}:latest
 
           kubectl patch -n apis deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
