@@ -108,7 +108,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: "docker build -f developers/Production.Dockerfile . -t 'theapis/apis-core-developers:latest'"
+          command: "docker build -f developers/Production.Dockerfile ./developers -t 'theapis/apis-core-developers:latest'"
       - docker_login
       - run:
           command: "docker push theapis/apis-core-developers:latest"
