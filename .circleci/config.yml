@@ -30,7 +30,7 @@ workflows:
             branches:
               only:
                 - master
-       - developers:
+      - developers:
           filters:
             branches:
               only:
