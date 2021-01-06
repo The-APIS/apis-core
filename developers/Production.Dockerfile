@@ -1,9 +1,6 @@
 # Build static files
 FROM node:14-alpine as builder
 
-ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
-
 RUN apk update -qq \
   && apk add --no-cache git \
   && apk add python \
