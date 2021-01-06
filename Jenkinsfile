@@ -15,6 +15,7 @@ volumes: [
     def bitcoinListener
     def ethereumListener
     def staticServer
+    def developers
 
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
@@ -41,6 +42,9 @@ volumes: [
     def staticServerImageName = "apiscore-static"
     def staticServerImage = "${registry}/${staticServerImageName}"
 
+    def developersImageName = "apiscore-developers"
+    def developersImage = "${registry}/${developersImageName}"
+
     container('docker') {
       stage('Build') {
         checkout scm
@@ -49,6 +53,7 @@ volumes: [
         bitcoinListener = docker.build("${bitcoinListenerImage}", "-f bitcoin-listener/src/Dockerfile .")
         ethereumRpc = docker.build("${ethereumRpcImage}", "-f ethereum-rpc/src/Dockerfile .")
         ethereumListener = docker.build("${ethereumListenerImage}", "-f ethereum-listener/src/Dockerfile .")
+        developers = docker.build("${ethereumListenerImage}", "-f ethereum-listener/src/Dockerfile .")
         staticServer = docker.build("${staticServerImage}", "-f static/Dockerfile ./static/src")
       }
       stage('Push') {
@@ -77,7 +82,11 @@ volumes: [
             ethereum-listener=${ethereumListenerImage}:latest
             # static=${staticServerImage}:latest # does not exist in dev
 
+          kubectl set image -n apis deployment/gateway \
+            web=${developersImage}:latest
+
           kubectl patch -n apis deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
+          kubectl patch -n apis deployment/developers -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
 
           """
       }

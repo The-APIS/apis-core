@@ -194,3 +194,19 @@ services:
   #     - 8080:8080
   #   env_file:
   #     - .env
+
+
+  # developers:
+  #   build:
+  #     context: .
+  #     dockerfile: ./developers/Dockerfile
+  #   command: npm run dev
+  #   environment:
+  #     NODE_ENV: development
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - /app/node_modules
+  #     - ./developers:/app
+  #   ports:
+  #     - "8099:3000"

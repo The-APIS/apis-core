@@ -163,3 +163,17 @@ services:
       - 8080:8080
     env_file:
       - .env
+
+  developers:
+    build:
+      context: ./developers/
+      dockerfile: Production.Dockerfile
+    environment:
+      NODE_ENV: production
+    env_file:
+      - .env
+    volumes:
+      - /app/node_modules
+      - ./developers:/app
+    ports:
+      - "8099:80"

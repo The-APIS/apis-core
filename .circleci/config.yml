@@ -30,6 +30,11 @@ workflows:
             branches:
               only:
                 - master
+       - developers:
+          filters:
+            branches:
+              only:
+                - master
 
 executors:
 
@@ -97,3 +102,13 @@ jobs:
       - docker_login
       - run:
           command: "docker push theapis/apis-core-gateway:latest"
+
+  developers:
+    executor: ubuntu
+    steps:
+      - checkout
+      - run:
+          command: "docker build -f developers/Production.Dockerfile . -t 'theapis/apis-core-developers:latest'"
+      - docker_login
+      - run:
+          command: "docker push theapis/apis-core-developers:latest"
