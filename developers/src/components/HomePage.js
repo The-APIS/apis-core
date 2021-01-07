@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import qs from 'query-string';
 import { Layout, Button, Row, Col, Divider, Empty } from 'antd';
 import ReactJson from 'react-json-view'
 
@@ -84,7 +85,21 @@ const HomePage = () => {
   const [req2Result, setReq2Result] = React.useState({})
   const [req3Result, setReq3Result] = React.useState({})
   const [req4Result, setReq4Result] = React.useState({})
-
+  const [demo1Json, setDemo1Json] = React.useState({
+    chain: 'ethereum',
+    network: 'mainnet',
+    address: '0x49931C77832C91E7D6d2d20Ce5e6d986fAA70235',
+  })
+  const [demo2Json, setDemo2Json] = React.useState({
+    chain: 'ethereum',
+    network: 'mainnet',
+    contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    limit: 5,
+  })
+  const [demo3Json, setDemo3Json] = React.useState({
+    chain: 'ethereum',
+    network: 'rinkeby',
+  })
   const [demo4Json, setDemo4Json] = React.useState({
     "chain": "ethereum",
     "network": "rinkeby",
@@ -115,7 +130,7 @@ const HomePage = () => {
             }}
             onClick={() => window.open('https://theapis.io', { target: '_blank', rel: 'noopener' })}
           />
-          <a href="https://docs.theapis.io" style={{ margin: '0 20px', color: 'white' }}>Documentation</a>
+          <a href="https://docs.theapis.io" style={{ margin: '0 20px', color: 'white' }}>API Reference</a>
         </Header>
         <Content>
 
@@ -123,25 +138,25 @@ const HomePage = () => {
             <Col span={24}>
               <div>
                 <h3>Demo 1: Input wallet address and get the balances (Ethereum Mainnet)</h3>
-                <p>GET https://api.theapis.io/api/v1/wallets?chain=ethereum&network=mainnet&address=0x49931C77832C91E7D6d2d20Ce5e6d986fAA70235</p>
+                <p style={{ lineBreak: 'anywhere' }}>GET {`https://api.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`}</p>
               </div>
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <div>
                 <ReactJson
                   style={{ overflowX: 'scroll' }}
                   name="Query Parameters"
-                  src={{
-                    chain: 'ethereum',
-                    network: 'mainnet',
-                    address: '0x49931C77832C91E7D6d2d20Ce5e6d986fAA70235',
+                  src={demo1Json}
+                  onEdit={({ updated_src }) => {
+                    setDemo1Json(updated_src)
+                    return true
                   }}
                 />
               </div>
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Button onClick={async () => {
-                const result = await axios.get('https://api.theapis.io/api/v1/wallets?chain=ethereum&network=mainnet&address=0x49931C77832C91E7D6d2d20Ce5e6d986fAA70235')
+                const result = await axios.get(`https://api.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`)
                 setReq1Result(result.data || {})
               }}>
                 Try it now!
@@ -157,10 +172,10 @@ const HomePage = () => {
             <Col span={24}>
               <div>
                 <h3>Demo 2: Side-by-side comparison with TheGraph</h3>
-                <p>GET https://api.theapis.io/api/v1/wallets?chain=ethereum&network=mainnet&address=0x49931C77832C91E7D6d2d20Ce5e6d986fAA70235</p>
+                <p style={{ lineBreak: 'anywhere' }}>GET {`https://api.theapis.io/api/v1/ethereum/methods?${qs.stringify(demo2Json)}`}</p>
               </div>
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <div>
                 <pre>{theGraphUSDCSubgraphQuery}</pre>
                 {/* <Button>
@@ -170,19 +185,18 @@ const HomePage = () => {
               </div>
             </Col>
 
-            <Col span={12}>
+            <Col span={12} style={{ overflowX: 'scroll' }}>
               <ReactJson
                 name="Query Parameters"
-                src={{
-                  chain: 'ethereum',
-                  network: 'mainnet',
-                  contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-                  limit: 5,
+                src={demo2Json}
+                onEdit={({ updated_src }) => {
+                  setDemo2Json(updated_src)
+                  return true
                 }}
               />
               <br />
               <Button onClick={async () => {
-                const result = await axios.get('https://api.theapis.io/api/v1/ethereum/methods?limit=5&contract=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48')
+                const result = await axios.get(`https://api.theapis.io/api/v1/ethereum/methods?${qs.stringify(demo2Json)}`)
                 setReq2Result(result.data || {})
               }}>
                 Try it now!
@@ -198,19 +212,20 @@ const HomePage = () => {
             <Col span={24}>
               <div>
                 <h3>Demo 3: Create wallet: Ethereum [& Solana coming soon]</h3>
-                <p>POST https://api.dev.theapis.io/api/v1/wallets?chain=ethereum&network=rinkeby</p>
+                <p style={{ lineBreak: 'anywhere' }}>POST {'https://api.dev.theapis.io/api/v1/wallets'}</p>
               </div>
             </Col>
-            <Col span={12}>
+            <Col span={12} style={{ overflowX: 'scroll' }}>
               <ReactJson
                 name="Request Body"
-                src={{
-                  chain: 'ethereum',
-                  network: 'rinkeby',
+                src={demo3Json}
+                onEdit={({ updated_src }) => {
+                  setDemo3Json(updated_src)
+                  return true
                 }}
               />
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Button style={{ margin: '8px 0' }} onClick={async () => {
                 const result = await axios.post('https://api.dev.theapis.io/api/v1/wallets', {
                   chain: 'ethereum',
@@ -231,10 +246,10 @@ const HomePage = () => {
             <Col span={24}>
               <div>
                 <h3>Demo 4: Launch your token [testnet only]</h3>
-                <p>POST https://api.dev.theapis.io/api/v1/tokens</p>
+                <p>POST {'https://api.dev.theapis.io/api/v1/tokens'}</p>
               </div>
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <ReactJson
                 style={{ overflowX: 'scroll' }}
                 name="Request Body"
@@ -245,7 +260,7 @@ const HomePage = () => {
                 }}
               />
             </Col>
-            <Col span={12}>
+            <Col span={12} style={{ overflowX: 'scroll' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Button
                   onClick={async () => {
