@@ -91,8 +91,8 @@ const HomePage = () => {
     address: '0x49931C77832C91E7D6d2d20Ce5e6d986fAA70235',
   })
   const [demo2Json, setDemo2Json] = React.useState({
-    chain: 'ethereum',
-    network: 'mainnet',
+    // chain: 'ethereum',
+    // network: 'mainnet',
     contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     limit: 5,
   })
@@ -141,7 +141,7 @@ const HomePage = () => {
                 <p style={{ lineBreak: 'anywhere' }}>GET {`https://api.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`}</p>
               </div>
             </Col>
-            <Col md={12} sm={24}>
+            <Col span={24}>
               <div>
                 <ReactJson
                   style={{ overflowX: 'scroll' }}
@@ -154,7 +154,7 @@ const HomePage = () => {
                 />
               </div>
             </Col>
-            <Col md={12} sm={24}>
+            <Col span={24}>
               <Button onClick={async () => {
                 const result = await axios.get(`https://api.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`)
                 setReq1Result(result.data || {})
@@ -175,7 +175,7 @@ const HomePage = () => {
                 <p style={{ lineBreak: 'anywhere' }}>GET {`https://api.theapis.io/api/v1/ethereum/methods?${qs.stringify(demo2Json)}`}</p>
               </div>
             </Col>
-            <Col md={12} sm={24}>
+            <Col span={24}>
               <div>
                 <pre>{theGraphUSDCSubgraphQuery}</pre>
                 {/* <Button>
@@ -185,7 +185,7 @@ const HomePage = () => {
               </div>
             </Col>
 
-            <Col span={12} style={{ overflowX: 'scroll' }}>
+            <Col span={24} style={{ overflowX: 'scroll' }}>
               <ReactJson
                 name="Query Parameters"
                 src={demo2Json}
@@ -215,7 +215,7 @@ const HomePage = () => {
                 <p style={{ lineBreak: 'anywhere' }}>POST {'https://api.dev.theapis.io/api/v1/wallets'}</p>
               </div>
             </Col>
-            <Col span={12} style={{ overflowX: 'scroll' }}>
+            <Col span={24} style={{ overflowX: 'scroll' }}>
               <ReactJson
                 name="Request Body"
                 src={demo3Json}
@@ -225,7 +225,7 @@ const HomePage = () => {
                 }}
               />
             </Col>
-            <Col md={12} sm={24}>
+            <Col span={24}>
               <Button style={{ margin: '8px 0' }} onClick={async () => {
                 const result = await axios.post('https://api.dev.theapis.io/api/v1/wallets', {
                   chain: 'ethereum',
@@ -249,7 +249,7 @@ const HomePage = () => {
                 <p>POST {'https://api.dev.theapis.io/api/v1/tokens'}</p>
               </div>
             </Col>
-            <Col md={12} sm={24}>
+            <Col span={24}>
               <ReactJson
                 style={{ overflowX: 'scroll' }}
                 name="Request Body"
@@ -260,7 +260,7 @@ const HomePage = () => {
                 }}
               />
             </Col>
-            <Col span={12} style={{ overflowX: 'scroll' }}>
+            <Col span={24} style={{ overflowX: 'scroll' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Button
                   onClick={async () => {
