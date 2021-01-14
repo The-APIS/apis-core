@@ -27,7 +27,7 @@ module.exports = (context) => {
       const client = new Client({ ...bitcoinCoreOptions });
 
       const address = await client.getNewAddress()
-      const privateKey = await client.dumpPrivKey({ address })
+      const privateKey = await client.dumpPrivKey(address)
 
       return res.status(200).json({
         address,
