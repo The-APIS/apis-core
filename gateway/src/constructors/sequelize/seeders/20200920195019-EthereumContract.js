@@ -43,6 +43,22 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        slug: 'wbtc',
+        address: '0x64ed1291fe07ade7bb261c7aa8491e4bc0e8de1c',
+        type: 'ERC20',
+        network: 'rinkeby',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        slug: 'bnb',
+        address: '0xe800da86830a012dbede538f834b3a1fcc9cb642',
+        type: 'ERC20',
+        network: 'rinkeby',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ]);
   },
 
