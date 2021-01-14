@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const get = require('lodash/get')
+const isEmpty = require('lodash/isEmpty')
 
 const RPC_ADDR_MAP = {
   bitcoin: process.env.BITCOIN_HTTPS_ADDR,
@@ -7,7 +8,7 @@ const RPC_ADDR_MAP = {
 }
 
 
-module.exports = ({ ethereum: { web3, buildContract }, ...context }) => {
+module.exports = ({ models, Sequelize, ethereum: { web3, buildContract }, ...context }) => {
   router.post('/', async (req, res, next) => {
     try {
       const { network, options = {} } = req.body
@@ -35,29 +36,40 @@ module.exports = ({ ethereum: { web3, buildContract }, ...context }) => {
         network,
         address,
         options = {},
-        erc20TokenContractAddresses = [],
-        tokens = [], // TODO
+        contracts = [],
+        tokens = [],
       } = req.query
 
       // TODO - network, address for ethereum query
 
-      const erc20TokenContractAddressesArray = Array.isArray(erc20TokenContractAddresses) ?
-        [...erc20TokenContractAddresses] : [erc20TokenContractAddresses]
+      const erc20TokenContractAddressesArray = isEmpty(contracts) ? [] : Array.isArray(contracts) ? contracts : [contracts]
 
       const ethBalanceWei = await web3.eth.getBalance(address)
       const ethBalance = web3.utils.fromWei(ethBalanceWei, 'ether')
 
+      const tokenRecords = isEmpty(tokens) ? [] : await models.EthereumContract.findAll({
+        where: {
+          slug: {
+            [Sequelize.Op.in]: Array.isArray(tokens) ? tokens : [],
+          },
+        },
+        raw: true,
+      })
+
+      console.log('tokenRecords', tokenRecords)
+
       const erc20TokenBalances = (await Promise.all(
-        erc20TokenContractAddressesArray.map(tokenContractAddress => {
+        [...tokenRecords.map(r => r.address), ...erc20TokenContractAddressesArray].map(tokenContractAddress => {
           return new Promise(async (resolve, reject) => {
             const contract = buildContract({ type: 'ERC20', address: tokenContractAddress })
             const balance = await contract
-                .methods
-                .balanceOf(address)
-                .call({ from: address })
+              .methods
+              .balanceOf(address)
+              .call({ from: address })
             const decimals = await contract.methods.decimals().call()
+            const slug = (tokenRecords.find(t => t.address === tokenContractAddress) || '').slug.toUpperCase()
             return resolve({
-              [tokenContractAddress]: {
+              [slug || tokenContractAddress]: {
                 balance,
                 uiBalance: (balance / Math.pow(10, (decimals || 0))).toString(),
               },

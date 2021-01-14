@@ -12,7 +12,7 @@ const RPC_ADDR_MAP = {
 module.exports = (context) => {
   router.post('/', [
     body('chain').trim().isIn(['bitcoin', 'ethereum']),
-    body('network').trim().isIn(['regtest', 'rinkeby', 'mainnet', /* TODO */]),
+    body('network').trim().isIn(['regtest', 'rinkeby', 'mainnet', 'testnet' /* TODO */]),
   ], async (req, res, next) => {
     // {
     //   "chain",
