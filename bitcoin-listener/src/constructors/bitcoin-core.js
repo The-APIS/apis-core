@@ -5,11 +5,11 @@ const Client = require('bitcoin-core');
 const bitcoinCoreUrl = url.parse(process.env.BITCOIN_RPC_ADDR)
 
 const bitcoinCoreOptions = {
-  network: process.env.BITCOIN_RPC_NETWORK,
+  network: process.env.BITCOIN_CORE_NETWORK,
   host: bitcoinCoreUrl.host,
-  version: process.env.BITCOIN_RPC_VERSION,
-  username: process.env.BITCOIN_RPC_USER,
-  password: process.env.BITCOIN_RPC_PASS,
+  version: process.env.BITCOIN_CORE_VERSION,
+  username: process.env.BITCOIN_CORE_USER,
+  password: process.env.BITCOIN_CORE_PASS,
   port: process.env.BITCOIN_PORT,
 }
 

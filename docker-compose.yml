@@ -196,17 +196,17 @@ services:
   #     - .env
 
 
-  # developers:
-  #   build:
-  #     context: .
-  #     dockerfile: ./developers/Dockerfile
-  #   command: npm run dev
-  #   environment:
-  #     NODE_ENV: development
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - /app/node_modules
-  #     - ./developers:/app
-  #   ports:
-  #     - "8099:3000"
+  developers:
+    build:
+      context: .
+      dockerfile: ./developers/Dockerfile
+    command: npm start
+    environment:
+      NODE_ENV: development
+    env_file:
+      - .env
+    volumes:
+      - /app/node_modules
+      - ./developers:/app
+    ports:
+      - "8099:3000"

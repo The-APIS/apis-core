@@ -11,7 +11,7 @@ const makeRPCRequest = async (req, res) => {
         url: process.env.BITCOIN_HTTPS_ADDR,
         data: req.body,
         headers: {
-          'Authorization': `Basic ${Buffer.from(`${process.env.BITCOIN_RPC_USER}:${process.env.BITCOIN_RPC_PASS}`).toString('base64')}`,
+          'Authorization': `Basic ${Buffer.from(`${process.env.BITCOIN_CORE_USER}:${process.env.BITCOIN_CORE_PASS}`).toString('base64')}`,
           'Content-Type': 'application/json',
         },
       })

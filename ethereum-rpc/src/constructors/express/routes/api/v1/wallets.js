@@ -65,7 +65,7 @@ module.exports = ({ models, Sequelize, ethereum: { web3, buildContract }, ...con
               .balanceOf(address)
               .call({ from: address })
             const decimals = await contract.methods.decimals().call()
-            const slug = (tokenRecords.find(t => t.address === tokenContractAddress).slug || '').toUpperCase()
+            const slug = ((tokenRecords.find(t => t.address === tokenContractAddress) || {}).slug || '').toUpperCase()
             return resolve({
               [slug || tokenContractAddress]: {
                 balance,

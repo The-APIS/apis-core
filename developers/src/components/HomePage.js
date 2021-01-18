@@ -89,6 +89,8 @@ const HomePage = () => {
     chain: 'ethereum',
     network: 'mainnet',
     address: '0x49931C77832C91E7D6d2d20Ce5e6d986fAA70235',
+    tokens: ['usdt', 'bnb', 'wbtc'],
+    contracts: ['0x6cbe14d7af0fc86c59f125c6506817d91d412582'],
   })
   const [demo2Json, setDemo2Json] = React.useState({
     // chain: 'ethereum',
