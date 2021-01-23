@@ -35,6 +35,8 @@
     "antd": "4.9.4",
     "axios": "0.21.1",
     "connected-react-router": "6.5.2",
+    "core-js": "3.8.2",
+    "mobx": "6.0.4",
     "object-assign": "4.1.1",
     "query-string": "6.13.8",
     "react": "16.11.0",
@@ -42,8 +44,10 @@
     "react-json-view": "1.19.1",
     "react-redux": "7.1.1",
     "react-router-dom": "5.1.2",
+    "redoc": "2.0.0-rc.45",
     "redux": "4.0.4",
-    "redux-thunk": "2.3.0"
+    "redux-thunk": "2.3.0",
+    "styled-components": "5.2.1"
   },
   "devDependencies": {
     "@babel/cli": "7.6.4",

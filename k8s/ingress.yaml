@@ -1,0 +1,17 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: apis
+  namespace: apis
+  annotations:
+    kubernetes.io/ingress.class:
+    cert-manager.io/cluster-issuer:
+spec:
+  backend:
+    serviceName:
+    servicePort:
+  tls:
+  - hosts:
+    secretName:
+  rules:

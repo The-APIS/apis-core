@@ -1,0 +1,114 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: bitcoin
+  name: bitcoin
+  namespace: apis
+spec:
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  selector:
+    run: bitcoin
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: bitcoin
+  name: bitcoin
+  namespace: apis
+spec:
+  revisionHistoryLimit: 0
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      run: bitcoin
+  template:
+    metadata:
+      labels:
+        run: bitcoin
+    spec:
+      containers:
+
+      - name: bitcoin-rpc
+        image: theapis/apis-core-bitcoin-rpc:latest
+        command: ["npm", "start"]
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 8102
+        livenessProbe:
+          exec:
+            command:
+            - echo
+            - "alive"
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - echo
+            - "alive"
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        envFrom:
+          - configMapRef:
+              name: apis
+        env:
+          - name: EXPRESS_PORT
+            value: "8102"
+          - name: POSTGRES_DATABASE
+            value: "BitcoinTestnet"
+
+      - name: bitcoin-listener
+        image: theapis/apis-core-bitcoin-listener:latest
+        command: ["npm", "start"]
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "2048Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 8101
+        livenessProbe:
+          exec:
+            command:
+            - echo
+            - "alive"
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - echo
+            - "alive"
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        envFrom:
+          - configMapRef:
+              name: apis
+        env:
+          - name: EXPRESS_PORT
+            value: "8101"
+          - name: POSTGRES_DATABASE
+            value: "BitcoinTestnet"

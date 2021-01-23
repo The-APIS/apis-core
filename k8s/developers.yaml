@@ -1,0 +1,72 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: developers
+  name: developers
+  namespace: apis
+spec:
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  selector:
+    run: developers
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: developers
+  name: developers
+  namespace: apis
+spec:
+  revisionHistoryLimit: 0
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      run: developers
+  template:
+    metadata:
+      labels:
+        run: developers
+    spec:
+      containers:
+
+      - name: web
+        image:
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          exec:
+            command:
+            - echo
+            - "alive"
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - echo
+            - "alive"
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        envFrom:
+          - configMapRef:
+              name: apis

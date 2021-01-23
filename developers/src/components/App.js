@@ -2,6 +2,7 @@
 import { Route, Switch } from "react-router-dom";
 
 import HomePage from "./HomePage";
+import ApiPage from "./ApiPage";
 import NotFoundPage from "./NotFoundPage";
 import PropTypes from "prop-types";
 import React from "react";
@@ -16,6 +17,7 @@ class App extends React.Component {
     return (
       <div>
         <Switch>
+          <Route exact path="/api" component={ApiPage} />
           <Route exact path="/" component={HomePage} />
           <Route component={NotFoundPage} />
         </Switch>

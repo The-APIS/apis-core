@@ -13,6 +13,7 @@ RUN apk add --no-cache \
 ADD ./bitcoin-rpc/src /app
 ADD ./share /app/share
 ADD ./share/models /app/constructors/sequelize/models
+ADD ./share/migrations /app/constructors/sequelize/migrations
 
 RUN npm install
 
