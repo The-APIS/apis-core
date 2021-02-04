@@ -1,0 +1,56 @@
+{
+  "name": "binance-smart-chain-rpc-service",
+  "version": "0.0.1",
+  "author": "Shain Lafazan",
+  "description": "",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "./node_modules/.bin/nodemon index.js",
+    "setup": "npm install",
+    "test:watch": "./node_modules/mocha/bin/mocha --recursive --watch",
+    "test": "./node_modules/mocha/bin/mocha --recursive"
+  },
+  "keywords": [],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@openzeppelin/contracts": "3.2.0",
+    "apicache": "1.5.3",
+    "axios": "0.21.1",
+    "body-parser": "1.19.0",
+    "connect-redis": "5.0.0",
+    "cors": "2.8.5",
+    "ethereum-checksum-address": "0.0.6",
+    "ethereum-input-data-decoder": "0.3.1",
+    "ethereumjs-abi": "0.6.7",
+    "ethereumjs-tx": "2.1.2",
+    "ethers": "5.0.21",
+    "express": "4.17.1",
+    "handlebars": "4.7.6",
+    "lodash": "^4.17.20",
+    "module-alias": "2.2.0",
+    "morgan": "^1.10.0",
+    "node-fetch": "2.6.1",
+    "pg": "8.3.3",
+    "query-string": "6.6.0",
+    "redis": "3.0.2",
+    "sequelize": "6.3.5",
+    "sequelize-cli": "6.2.0",
+    "socket.io": "2.2.0",
+    "solc": "0.7.4",
+    "truffle-hdwallet-provider": "1.0.15",
+    "truffle-privatekey-provider": "1.3.0",
+    "web3": "1.3.0",
+    "web3-providers-http": "1.3.1"
+  },
+  "devDependencies": {
+    "expect": "24.8.0",
+    "mocha": "6.1.4",
+    "nodemon": "1.18.10"
+  },
+  "_moduleAliases": {
+    "@": ".",
+    "~": "../"
+  }
+}

@@ -23,6 +23,27 @@ services:
       - postgres
       - redis
 
+  binance-smart-chain-rpc:
+    build:
+      context: .
+      dockerfile: ./binance-smart-chain-rpc/src/Dockerfile
+    command: npm run dev
+    environment:
+      NODE_ENV: development
+      EXPRESS_PORT: 80
+    ports:
+      - "${BINANCE_SMART_CHAIN_RPC_PORT:-8105}:80"
+    env_file:
+    - .env
+    volumes:
+      - /app/node_modules
+      - ./binance-smart-chain-rpc/src:/app
+      - ./share:/app/share
+      - ./share/models:/app/constructors/sequelize/models
+    links:
+      - postgres
+      - redis
+
   bitcoin-rpc:
     build:
       context: .
