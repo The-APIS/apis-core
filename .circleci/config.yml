@@ -15,6 +15,11 @@ workflows:
             branches:
               only:
                 - master
+      - binance-smart-chain-rpc:
+          filters:
+            branches:
+              only:
+                - master
       - ethereum-listener:
           filters:
             branches:
