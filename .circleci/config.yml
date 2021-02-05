@@ -73,6 +73,16 @@ jobs:
       - run:
           command: "docker push theapis/apis-core-bitcoin-rpc:latest"
 
+  binance-smart-chain-rpc:
+    executor: ubuntu
+    steps:
+      - checkout
+      - run:
+          command: "docker build -f binance-smart-chain-rpc/src/Dockerfile . -t 'theapis/apis-core-binance-smart-chain-rpc:latest'"
+      - docker_login
+      - run:
+          command: "docker push theapis/apis-core-binance-smart-chain-rpc:latest"
+
   ethereum-listener:
     executor: ubuntu
     steps:
