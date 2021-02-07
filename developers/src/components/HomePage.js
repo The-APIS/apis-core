@@ -90,7 +90,7 @@ const HomePage = () => {
     network: 'mainnet',
     address: '0x49931C77832C91E7D6d2d20Ce5e6d986fAA70235',
     tokens: ['usdt', 'bnb', 'wbtc'],
-    contracts: ['0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e'],
+    contracts: ['0x7d66cde53cc0a169cae32712fc48934e610aef14'],
   })
   const [demo2Json, setDemo2Json] = React.useState({
     // chain: 'ethereum',
@@ -140,7 +140,7 @@ const HomePage = () => {
             <Col span={24}>
               <div>
                 <h3>Demo 1: Input wallet address and get the balances (Ethereum Rinkeby)</h3>
-                <p style={{ lineBreak: 'anywhere' }}>GET {`https://dev.api.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`}</p>
+                <p style={{ lineBreak: 'anywhere' }}>GET {`https://api.dev.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`}</p>
               </div>
             </Col>
             <Col span={24}>
@@ -158,7 +158,7 @@ const HomePage = () => {
             </Col>
             <Col span={24}>
               <Button onClick={async () => {
-                const result = await axios.get(`https://api.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`)
+                const result = await axios.get(`https://api.dev.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`)
                 setReq1Result(result.data || {})
               }}>
                 Try it now!
@@ -174,7 +174,7 @@ const HomePage = () => {
             <Col span={24}>
               <div>
                 <h3>Demo 2: Side-by-side comparison with TheGraph</h3>
-                <p style={{ lineBreak: 'anywhere' }}>GET {`https://api.theapis.io/api/v1/ethereum/methods?${qs.stringify(demo2Json)}`}</p>
+                <p style={{ lineBreak: 'anywhere' }}>GET {`https://api.dev.theapis.io/api/v1/ethereum/methods?${qs.stringify(demo2Json)}`}</p>
               </div>
             </Col>
             <Col span={24}>
@@ -264,20 +264,9 @@ const HomePage = () => {
             </Col>
             <Col span={24} style={{ overflowX: 'scroll' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Button
-                  onClick={async () => {
-                    const result = await axios.post('https://api.dev.theapis.io/api/v1/tokens', demo4Json)
-                    console.log(result)
-                    setReq4Result(result.data || {})
-                  }}
-                >
-                  Try it now!
-                </Button>
-                <p style={{ marginLeft: '8px' }}>(Don&apos;t have testnet Ether? View <span
-                    style={{ color: 'blue', fontWeight: 500, cursor: 'pointer', '&:hover': { textDecoration: 'underline' }}}
-                    onClick={() => setReq4Result({ data: demo4ResultExample })}
-                  >an example</span> token creation response)
-                </p>
+                <Button onClick={() => setReq4Result({ data: demo4ResultExample })}>Try it now!</Button><span> ... to see an example, or</span>
+                <p style={{ marginLeft: '8px' }}>to see an example, or if you have testnet Ether and a disposable address, try editing the request and{' '}</p>
+                <Button onClick={() => setReq4Result({ data: demo4ResultExample })}>Create a Rinkeby Token</Button>
               </div>
               <br />
               {JSON.stringify(req4Result) === '{}' || console.log('req4Result', req4Result) ? <Empty /> : <ReactJson name="Response" style={{ overflowX: 'scroll' }} src={req4Result.data} />}
