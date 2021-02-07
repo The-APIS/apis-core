@@ -264,9 +264,13 @@ const HomePage = () => {
             </Col>
             <Col span={24} style={{ overflowX: 'scroll' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Button onClick={() => setReq4Result({ data: demo4ResultExample })}>Try it now!</Button><span> ... to see an example, or</span>
-                <p style={{ marginLeft: '8px' }}>to see an example, or if you have testnet Ether and a disposable address, try editing the request and{' '}</p>
-                <Button onClick={() => setReq4Result({ data: demo4ResultExample })}>Create a Rinkeby Token</Button>
+                <p>
+                  <Button onClick={() => setReq4Result({ data: demo4ResultExample })}>Try it now!</Button><span> ... to see an example, or</span>
+                </p>
+                <p>
+                  <span style={{ marginLeft: '8px' }}>... or if you have testnet Ether and a disposable address, try editing the request and{' '}</span>
+                  <Button onClick={() => setReq4Result({ data: demo4ResultExample })}>Create a Rinkeby Token</Button>
+                </p>
               </div>
               <br />
               {JSON.stringify(req4Result) === '{}' || console.log('req4Result', req4Result) ? <Empty /> : <ReactJson name="Response" style={{ overflowX: 'scroll' }} src={req4Result.data} />}
