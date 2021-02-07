@@ -139,8 +139,8 @@ const HomePage = () => {
           <Row style={{ padding: '24px' }}>
             <Col span={24}>
               <div>
-                <h3>Demo 1: Input wallet address and get the balances (Ethereum Mainnet)</h3>
-                <p style={{ lineBreak: 'anywhere' }}>GET {`https://api.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`}</p>
+                <h3>Demo 1: Input wallet address and get the balances (Ethereum Rinkeby)</h3>
+                <p style={{ lineBreak: 'anywhere' }}>GET {`https://dev.api.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`}</p>
               </div>
             </Col>
             <Col span={24}>
@@ -213,7 +213,7 @@ const HomePage = () => {
           <Row style={{ padding: '24px' }}>
             <Col span={24}>
               <div>
-                <h3>Demo 3: Create wallet: Ethereum [& Solana coming soon]</h3>
+                <h3>Demo 3: Create wallet: Ethereum, Binance Smart Chain [& Solana coming soon]</h3>
                 <p style={{ lineBreak: 'anywhere' }}>POST {'https://api.dev.theapis.io/api/v1/wallets'}</p>
               </div>
             </Col>
