@@ -87,7 +87,7 @@ const HomePage = () => {
   const [req4Result, setReq4Result] = React.useState({})
   const [demo1Json, setDemo1Json] = React.useState({
     chain: 'ethereum',
-    network: 'mainnet',
+    network: 'rinkeby',
     address: '0x49931C77832C91E7D6d2d20Ce5e6d986fAA70235',
     tokens: ['usdt', 'bnb', 'wbtc'],
     contracts: ['0x7d66cde53cc0a169cae32712fc48934e610aef14'],
