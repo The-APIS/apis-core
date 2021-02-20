@@ -9,11 +9,6 @@ volumes: [
   hostPathVolume(mountPath: '/app', hostPath: '/'),
 ]) {
   node(label) {
-    def gateway
-    def bitcoinRpc
-    def ethereumRpc
-    def bitcoinListener
-    def ethereumListener
     def staticServer
     def developers
 
@@ -24,21 +19,6 @@ volumes: [
     def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
     def registry = "registry.trustedlife.app"
 
-    def gatewayImageName = "apiscore-gateway"
-    def gatewayImage = "${registry}/${gatewayImageName}"
-
-    def bitcoinRpcImageName = "apiscore-bitcoin-rpc"
-    def bitcoinRpcImage = "${registry}/${bitcoinRpcImageName}"
-
-    def ethereumRpcImageName = "apiscore-ethereum-rpc"
-    def ethereumRpcImage = "${registry}/${ethereumRpcImageName}"
-
-    def bitcoinListenerImageName = "apiscore-bitcoin-listener"
-    def bitcoinListenerImage = "${registry}/${bitcoinListenerImageName}"
-
-    def ethereumListenerImageName = "apiscore-ethereum-listener"
-    def ethereumListenerImage = "${registry}/${ethereumListenerImageName}"
-
     def staticServerImageName = "apiscore-static"
     def staticServerImage = "${registry}/${staticServerImageName}"
 
@@ -48,21 +28,11 @@ volumes: [
     container('docker') {
       stage('Build') {
         checkout scm
-        gateway = docker.build("${gatewayImage}", "-f gateway/src/Dockerfile .")
-        bitcoinRpc = docker.build("${bitcoinRpcImage}", "-f bitcoin-rpc/src/Dockerfile .")
-        bitcoinListener = docker.build("${bitcoinListenerImage}", "-f bitcoin-listener/src/Dockerfile .")
-        ethereumRpc = docker.build("${ethereumRpcImage}", "-f ethereum-rpc/src/Dockerfile .")
-        ethereumListener = docker.build("${ethereumListenerImage}", "-f ethereum-listener/src/Dockerfile .")
         developers = docker.build("${developersImageName}", "-f developers/Production.Dockerfile ./developers")
         staticServer = docker.build("${staticServerImage}", "-f static/Dockerfile ./static/src")
       }
       stage('Push') {
         docker.withRegistry('https://registry.trustedlife.app') {
-          gateway.push("latest")
-          bitcoinRpc.push("latest")
-          ethereumRpc.push("latest")
-          bitcoinListener.push("latest")
-          ethereumListener.push("latest")
           developers.push("latest")
           staticServer.push("latest")
         }
@@ -76,11 +46,11 @@ volumes: [
           # patch, to force rollout (development envs only)
 
           kubectl set image -n apis deployment/gateway \
-            gateway=${gatewayImage}:latest \
-            bitcoin-rpc=${bitcoinRpcImage}:latest \
-            bitcoin-listener=${bitcoinListenerImage}:latest \
-            ethereum-rpc=${ethereumRpcImage}:latest \
-            ethereum-listener=${ethereumListenerImage}:latest
+            gateway=theapis/apis-core-gateway:latest \
+            bitcoin-rpc=theapis/apis-core-bitcoin-rpc:latest \
+            bitcoin-listener=theapis/apis-core-bitcoin-listener:latest \
+            ethereum-rpc=theapis/apis-core-ethereum-rpc:latest \
+            ethereum-listener=theapis/apis-core-ethereum-listener:latest
             # static=${staticServerImage}:latest # does not exist in dev
 
           kubectl set image -n apis deployment/developers \
