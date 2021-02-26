@@ -1,29 +1,17 @@
-/* eslint-disable import/default */
-
 import React from 'react';
-import { render } from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import configureStore, { history } from './store/configureStore';
-import Root from './components/Root';
-import './styles/styles.scss'; // Yep, that's right. You can import SASS/CSS files too! Webpack will run the associated loader and plug this into the page.
-require('./favicon.png'); // Tell webpack to load favicon.ico
-const store = configureStore();
+import ReactDOM from 'react-dom';
+import './index.scss';
+import App from './components/App';
+import reportWebVitals from './reportWebVitals';
 
-render(
-  <AppContainer>
-    <Root store={store} history={history} />
-  </AppContainer>,
-  document.getElementById('app')
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
 );
 
-if (module.hot) {
-  module.hot.accept('./components/Root', () => {
-    const NewRoot = require('./components/Root').default;
-    render(
-      <AppContainer>
-        <NewRoot store={store} history={history} />
-      </AppContainer>,
-      document.getElementById('app')
-    );
-  });
-}
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

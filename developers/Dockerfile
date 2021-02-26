@@ -16,4 +16,4 @@ RUN npm i -g eslint eslint-watch
 RUN npm i
 RUN npm rebuild node-sass
 
-CMD npm run dev
+CMD npm start

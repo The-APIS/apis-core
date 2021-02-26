@@ -32,4 +32,4 @@ RUN touch /usr/share/.well-known/test.html
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # Copy static files from build
-COPY --from=builder /usr/share/app/dist/ /usr/share/static/
+COPY --from=builder /usr/share/app/build/ /usr/share/static/

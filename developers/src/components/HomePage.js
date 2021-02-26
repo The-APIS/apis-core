@@ -1,11 +1,38 @@
-import React from 'react';
-import axios from 'axios';
-import qs from 'query-string';
-import { Layout, Button, Row, Col, Divider, Empty } from 'antd';
+import React from 'react'
+import axios from 'axios'
+import qs from 'query-string'
+import {
+  Anchor,
+  Layout,
+  // Menu,
+  // Breadcrumb,
+  Button,
+  Row,
+  Col,
+  Divider,
+  Empty,
+} from 'antd'
+// import {
+//   DesktopOutlined,
+//   PieChartOutlined,
+//   FileOutlined,
+//   TeamOutlined,
+//   UserOutlined,
+//   LaptopOutlined,
+//   NotificationOutlined,
+// } from '@ant-design/icons';
 import ReactJson from 'react-json-view'
+import { useMediaQuery } from 'beautiful-react-hooks';
 
 
-const { Header, Footer, Content } = Layout;
+const { Link } = Anchor
+// const { SubMenu } = Menu
+const {
+  Header,
+  Content,
+  // Sider,
+  Footer,
+} = Layout
 
 
 const theGraphUSDCSubgraphQuery = `{
@@ -80,7 +107,10 @@ const demo4ResultExample = {
 }
 
 
-const HomePage = () => {
+export const HomePage = () => {
+  const isMobile = useMediaQuery('screen and (max-width: 380px)');
+  // const isTablet = useMediaQuery('screen and (min-width: 381px) and (max-width: 680px)');
+  const isDesktop = useMediaQuery('screen and (min-width: 681px)');
   const [req1Result, setReq1Result] = React.useState({})
   const [req2Result, setReq2Result] = React.useState({})
   const [req3Result, setReq3Result] = React.useState({})
@@ -119,28 +149,55 @@ const HomePage = () => {
 
   return (
     <div>
-      <Layout>
-        <Header>
+      <Layout style={{ background: 'transparent' }}>
+        <Header
+          style={{
+            background: 'white',
+            padding: '0 24px',
+          }}
+        >
           <img
             className="logo"
-            src={'https://uploads-ssl.webflow.com/5f953ed01d99c01576df6c19/5fa9bb0a1246d708e4c02e69_Horizontal-configuration-p-500.png'}
+            src={'https://uploads-ssl.webflow.com/5f953ed01d99c01576df6c19/5fa52b099d56ab969a6db359_logo-A-p-500.png'}
             alt="The APIS"
             style={{
               cursor: 'pointer',
               height: '40px',
-              width: '145px',
             }}
             onClick={() => window.open('https://theapis.io', { target: '_blank', rel: 'noopener' })}
           />
-          <a href="https://docs.theapis.io" style={{ margin: '0 20px', color: 'white' }}>API Reference</a>
+          {!isMobile && <a href="https://docs.theapis.io" style={{ margin: '0 20px', color: 'black' }}>APIS Home</a>}
+          <a href="https://docs.theapis.io" style={{ margin: '0 20px', color: 'black' }}>API Reference</a>
         </Header>
-        <Content>
+        <Content style={{ background: 'transparent' }}>
+          {isDesktop && <>
+            <Anchor
+              affix
+              showInkInFixed
+              offsetTop={64}
+              style={{
+                position: 'fixed',
+                right: '20px',
+                width: 'fit-content',
+                background: 'white',
+              }}
+            >
+              <Link href="#get-wallet-balances" title="Get Wallet Balances" />
+              <Link href="#side-by-side-comparison-with-the-graph" title="Side By Side Comparison with The Graph" />
+              <Link href="#create-wallet" title="Create Wallet" />
+              <Link href="#launch-smart-contract" title="Launch Smart Contract" />
+            </Anchor>
+            <br />
+          </>}
 
-          <Row style={{ padding: '24px' }}>
+          <Row style={{ background: 'transparent', padding: '24px' }}>
             <Col span={24}>
               <div>
-                <h3>Demo 1: Input wallet address and get the balances (Ethereum Rinkeby)</h3>
-                <p style={{ lineBreak: 'anywhere' }}>GET {`https://api.dev.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`}</p>
+                <h2 id="get-wallet-balances">
+                  <span>Get Wallet Balances</span> <a href="#get-wallet-balances" className="anchor">#</a>
+                </h2>
+                <h3>Input wallet address and get the balances (Ethereum Rinkeby)</h3>
+                <p style={{ lineBreak: 'anywhere' }}>{`https://api.dev.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`}</p>
               </div>
             </Col>
             <Col span={24}>
@@ -157,6 +214,7 @@ const HomePage = () => {
               </div>
             </Col>
             <Col span={24}>
+              <br />
               <Button onClick={async () => {
                 const result = await axios.get(`https://api.dev.theapis.io/api/v1/wallets?${qs.stringify(demo1Json)}`)
                 setReq1Result(result.data || {})
@@ -168,13 +226,15 @@ const HomePage = () => {
             </Col>
           </Row>
 
-          <Divider />
+          <Divider style={{ background: 'transparent' }} />
 
-          <Row style={{ padding: '24px' }}>
+          <Row style={{ background: 'transparent', padding: '24px' }}>
             <Col span={24}>
               <div>
-                <h3>Demo 2: Side-by-side comparison with TheGraph</h3>
-                <p style={{ lineBreak: 'anywhere' }}>GET {`https://api.dev.theapis.io/api/v1/ethereum/methods?${qs.stringify(demo2Json)}`}</p>
+                <h2 id="side-by-side-comparison-with-the-graph">
+                  <span>Side-by-side comparison with TheGraph</span> <a href="#side-by-side-comparison-with-the-graph" className="anchor">#</a>
+                </h2>
+                <p style={{ lineBreak: 'anywhere' }}>{`https://api.dev.theapis.io/api/v1/ethereum/methods?${qs.stringify(demo2Json)}`}</p>
               </div>
             </Col>
             <Col span={24}>
@@ -208,13 +268,15 @@ const HomePage = () => {
             </Col>
           </Row>
 
-          <Divider />
+          <Divider style={{ background: 'transparent' }} />
 
-          <Row style={{ padding: '24px' }}>
+          <Row style={{ background: 'transparent', padding: '24px' }}>
             <Col span={24}>
               <div>
-                <h3>Demo 3: Create wallet: Ethereum, Binance Smart Chain [& Solana coming soon]</h3>
-                <p style={{ lineBreak: 'anywhere' }}>POST {'https://api.dev.theapis.io/api/v1/wallets'}</p>
+                <h2 id="create-wallet">
+                  <span>Create Wallet: Ethereum, Binance Smart Chain [& Solana coming soon]</span> <a href="#create-wallet" className="anchor">#</a>
+                </h2>
+                <p style={{ lineBreak: 'anywhere' }}>{'https://api.dev.theapis.io/api/v1/wallets'}</p>
               </div>
             </Col>
             <Col span={24} style={{ overflowX: 'scroll' }}>
@@ -228,6 +290,7 @@ const HomePage = () => {
               />
             </Col>
             <Col span={24}>
+              <br />
               <Button style={{ margin: '8px 0' }} onClick={async () => {
                 const result = await axios.post('https://api.dev.theapis.io/api/v1/wallets', {
                   chain: 'ethereum',
@@ -242,13 +305,15 @@ const HomePage = () => {
             </Col>
           </Row>
 
-          <Divider />
+          <Divider style={{ background: 'transparent' }} />
 
-          <Row style={{ padding: '24px' }}>
+          <Row style={{ background: 'transparent', padding: '24px' }}>
             <Col span={24}>
               <div>
-                <h3>Demo 4: Launch your token [testnet only]</h3>
-                <p>POST {'https://api.dev.theapis.io/api/v1/tokens'}</p>
+                <h2 id="launch-smart-contract">
+                  <span>Launch your token [testnet only]</span> <a href="#launch-smart-contract" className="anchor">#</a>
+                </h2>
+                <p style={{ lineBreak: 'anywhere' }}>POST {'https://api.dev.theapis.io/api/v1/tokens'}</p>
               </div>
             </Col>
             <Col span={24}>
@@ -263,12 +328,13 @@ const HomePage = () => {
               />
             </Col>
             <Col span={24} style={{ overflowX: 'scroll' }}>
+              <br />
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <p>
                   <Button onClick={() => setReq4Result({ data: demo4ResultExample })}>Try it now!</Button><span> ... to see an example, or</span>
                 </p>
                 <p>
-                  <span style={{ marginLeft: '8px' }}>... or if you have testnet Ether and a disposable address, try editing the request and{' '}</span>
+                  <span style={{ marginLeft: '8px' }}>... if you have testnet Ether and a disposable address, try editing the request and{' '}</span>
                   <Button onClick={() => setReq4Result({ data: demo4ResultExample })}>Create a Rinkeby Token</Button>
                 </p>
               </div>
@@ -277,57 +343,63 @@ const HomePage = () => {
             </Col>
           </Row>
         </Content>
+
         <Footer style={{
           padding: '24px 50px',
           color: 'white',
           background: '#001529',
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-            <ul style={{ listStyle: 'none' }}>
+          {/*<div style={{ display: 'flex', justifyContent: 'space-evenly' }}>*/}
+          <Row justify="center">
+            <Col xs={12} lg={4} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <b>Products</b>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/">Products</a></li>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/developers">Developers</a></li>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/roadmap">Roadmap</a></li>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/changelog">Changelog</a></li>
-            </ul>
-            <ul style={{ listStyle: 'none' }}>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/">Products</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/developers">Developers</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/roadmap">Roadmap</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/changelog">Changelog</a>
+            </Col>
+            <Col xs={12} lg={4} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <b>Team</b>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/team">Team</a></li>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/join-us">Join Us</a></li>
-            </ul>
-            <ul style={{ listStyle: 'none' }}>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/team">Team</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/join-us">Join Us</a>
+            </Col>
+            <Col xs={12} lg={4} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <b>Resources</b>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/community">Community</a></li>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/blog">Blog</a></li>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/faq">FAQ</a></li>
-            </ul>
-            <ul style={{ listStyle: 'none' }}>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/community">Community</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/blog">Blog</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/faq">FAQ</a>
+            </Col>
+            <Col xs={12} lg={4} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <b>Docs</b>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://docsend.com/view/fv4s2ju2xqeaj33e">One Pager</a></li>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://static.theapis.io/whitepaper.pdf">White Paper</a></li>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/token-economics">Token Economics</a></li>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://docsend.com/view/w5udyw5gkd2h3b7q">Security Audit</a></li>
-              <li><a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/logo-brand">Logo & Brand</a></li>
-            </ul>
-          </div>
-          <Divider />
-          <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-            <div>APIS is a project created by <a target="_blank" rel="noopener noreferrer" href="https://www.titans.finance/">Titans Finance, Inc.</a></div>
-            <div>8153 Elk Grove Blvd #20, Elk Grove, CA 95758, USA</div>
-           <div>
+              <a target="_blank" rel="noopener noreferrer" href="https://docsend.com/view/fv4s2ju2xqeaj33e">One Pager</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://static.theapis.io/whitepaper.pdf">White Paper</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/token-economics">Token Economics</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://docsend.com/view/w5udyw5gkd2h3b7q">Security Audit</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/logo-brand">Logo & Brand</a>
+            </Col>
+          </Row>
+          {/*</div>*/}
+          <Divider style={{ background: 'transparent' }} />
+          {/*<div style={{ display: 'flex', justifyContent: 'space-evenly' }}>*/}
+          <Row justify="center">
+            <Col span={24} style={{ textAlign: 'center' }}>APIS is a project created by{' '}
+              <a target="_blank" rel="noopener noreferrer" href="https://www.titans.finance/">Titans Finance, Inc.</a>
+              {' '}and the <a target="_blank" rel="noopener noreferrer" href="https://www.theapis.io/">APIS Foundation</a>.
+            </Col>
+            <Col span={24} style={{ textAlign: 'center' }}>8153 Elk Grove Blvd #20, Elk Grove, CA 95758, USA</Col>
+           <Col span={24} style={{ textAlign: 'center' }}>
               <a target="_blank" rel="noopener noreferrer" href="https://uploads-ssl.webflow.com/5f953ed01d99c01576df6c19/5fab7b15cb92787c75e1e42a_THE%20APIS%20TERMS%20OF%20SERVICE.pdf">
                 Terms of Service
               </a> | <a target="_blank" rel="noopener noreferrer" href="https://uploads-ssl.webflow.com/5f953ed01d99c01576df6c19/5fab7b150167eef5067906c8_THE%20APIS%20PRIVACY%20POLICY.pdf">
                 Privacy
               </a>
-            </div>
-          </div>
-
+            </Col>
+          </Row>
         </Footer>
       </Layout>
 
     </div>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage
