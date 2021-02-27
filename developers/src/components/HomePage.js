@@ -4,33 +4,20 @@ import qs from 'query-string'
 import {
   Anchor,
   Layout,
-  // Menu,
-  // Breadcrumb,
   Button,
   Row,
   Col,
   Divider,
   Empty,
 } from 'antd'
-// import {
-//   DesktopOutlined,
-//   PieChartOutlined,
-//   FileOutlined,
-//   TeamOutlined,
-//   UserOutlined,
-//   LaptopOutlined,
-//   NotificationOutlined,
-// } from '@ant-design/icons';
 import ReactJson from 'react-json-view'
 import { useMediaQuery } from 'beautiful-react-hooks';
 
 
 const { Link } = Anchor
-// const { SubMenu } = Menu
 const {
   Header,
   Content,
-  // Sider,
   Footer,
 } = Layout
 
@@ -166,7 +153,7 @@ export const HomePage = () => {
             }}
             onClick={() => window.open('https://theapis.io', { target: '_blank', rel: 'noopener' })}
           />
-          {!isMobile && <a href="https://docs.theapis.io" style={{ margin: '0 20px', color: 'black' }}>APIS Home</a>}
+          {!isMobile && <a href="https://www.theapis.io" style={{ margin: '0 20px', color: 'black' }}>APIS Home</a>}
           <a href="https://docs.theapis.io" style={{ margin: '0 20px', color: 'black' }}>API Reference</a>
         </Header>
         <Content style={{ background: 'transparent' }}>
