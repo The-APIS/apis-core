@@ -9,36 +9,43 @@ workflows:
           filters:
             branches:
               only:
+                - dev
                 - master
       - bitcoin-rpc:
           filters:
             branches:
               only:
+                - dev
                 - master
       - binance-smart-chain-rpc:
           filters:
             branches:
               only:
+                - dev
                 - master
       - ethereum-listener:
           filters:
             branches:
               only:
+                - dev
                 - master
       - ethereum-rpc:
           filters:
             branches:
               only:
+                - dev
                 - master
       - gateway:
           filters:
             branches:
               only:
+                - dev
                 - master
       - developers:
           filters:
             branches:
               only:
+                - dev
                 - master
 
 executors:
@@ -65,8 +72,18 @@ jobs:
       - run:
           command: "docker build -f bitcoin-listener/src/Dockerfile . -t 'theapis/apis-core-bitcoin-listener:latest'"
       - docker_login
-      - run:
-          command: "docker push theapis/apis-core-bitcoin-listener:latest"
+      - when:
+          condition:
+            equal: [ "dev", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-bitcoin-listener:latest"
+      - when:
+          condition:
+            equal: [ "master", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-bitcoin-listener:stable"
 
   bitcoin-rpc:
     executor: ubuntu
@@ -75,8 +92,18 @@ jobs:
       - run:
           command: "docker build -f bitcoin-rpc/src/Dockerfile . -t 'theapis/apis-core-bitcoin-rpc:latest'"
       - docker_login
-      - run:
-          command: "docker push theapis/apis-core-bitcoin-rpc:latest"
+      - when:
+          condition:
+            equal: [ "dev", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-bitcoin-rpc:latest"
+      - when:
+          condition:
+            equal: [ "master", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-bitcoin-rpc:stable"
 
   binance-smart-chain-rpc:
     executor: ubuntu
@@ -85,8 +112,18 @@ jobs:
       - run:
           command: "docker build -f binance-smart-chain-rpc/src/Dockerfile . -t 'theapis/apis-core-binance-smart-chain-rpc:latest'"
       - docker_login
-      - run:
-          command: "docker push theapis/apis-core-binance-smart-chain-rpc:latest"
+      - when:
+          condition:
+            equal: [ "dev", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-binance-smart-chain-rpc:latest"
+      - when:
+          condition:
+            equal: [ "master", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-binance-smart-chain-rpc:stable"
 
   ethereum-listener:
     executor: ubuntu
@@ -95,8 +132,18 @@ jobs:
       - run:
           command: "docker build -f ethereum-listener/src/Dockerfile . -t 'theapis/apis-core-ethereum-listener:latest'"
       - docker_login
-      - run:
-          command: "docker push theapis/apis-core-ethereum-listener:latest"
+      - when:
+          condition:
+            equal: [ "dev", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-ethereum-listener:latest"
+      - when:
+          condition:
+            equal: [ "master", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-ethereum-listener:stable"
 
   ethereum-rpc:
     executor: ubuntu
@@ -105,8 +152,18 @@ jobs:
       - run:
           command: "docker build -f ethereum-rpc/src/Dockerfile . -t 'theapis/apis-core-ethereum-rpc:latest'"
       - docker_login
-      - run:
-          command: "docker push theapis/apis-core-ethereum-rpc:latest"
+      - when:
+          condition:
+            equal: [ "dev", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-ethereum-rpc:latest"
+      - when:
+          condition:
+            equal: [ "master", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-ethereum-rpc:stable"
 
   gateway:
     executor: ubuntu
@@ -115,8 +172,18 @@ jobs:
       - run:
           command: "docker build -f gateway/src/Dockerfile . -t 'theapis/apis-core-gateway:latest'"
       - docker_login
-      - run:
-          command: "docker push theapis/apis-core-gateway:latest"
+      - when:
+          condition:
+            equal: [ "dev", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-gateway:latest"
+      - when:
+          condition:
+            equal: [ "master", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-gateway:stable"
 
   developers:
     executor: ubuntu
@@ -125,5 +192,15 @@ jobs:
       - run:
           command: "docker build -f developers/Production.Dockerfile ./developers -t 'theapis/apis-core-developers:latest'"
       - docker_login
-      - run:
-          command: "docker push theapis/apis-core-developers:latest"
+      - when:
+          condition:
+            equal: [ "dev", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-developers:latest"
+      - when:
+          condition:
+            equal: [ "master", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                command: "docker push theapis/apis-core-developers:stable"
