@@ -12,6 +12,7 @@ module.exports = async (
   try {
     const url = process.env.REDIS_URL || `${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
     console.log(`[Redis] Connecting to redis host ${url}...`)
+
     /* Use promises for Redis methods */
     bluebird.promisifyAll(RedisClient.prototype)
     bluebird.promisifyAll(Multi.prototype)

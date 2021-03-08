@@ -8,8 +8,8 @@ module.exports = async (
     postgres,
     redis,
   ] = await Promise.all([
-    await require(`@/constructors/postgres`)(),
-    await require(`@/constructors/redis`)({
+    await require(`@/share/constructors/postgres`)(),
+    await require(`@/share/constructors/redis`)({
       url: process.env.REDIS_URL,
       prefix: 'bitcoin-listener',
     }),
@@ -31,6 +31,8 @@ module.exports = async (
     postgres,
     redis,
   }
+
+  if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/bin/sequelizeMigrate')()
 
   require('./lib/listener')(context)
 

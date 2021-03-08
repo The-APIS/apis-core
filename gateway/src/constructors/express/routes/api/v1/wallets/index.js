@@ -1,24 +1,19 @@
 const axios = require('axios')
 const { query, body, validationResult, ...rest } = require('express-validator');
 const router = require('express').Router()
-
-
-const RPC_ADDR_MAP = {
-  bitcoin: process.env.BITCOIN_RPC_SVC_ADDR,
-  ethereum: process.env.ETHEREUM_RPC_SVC_ADDR,
-  binance_smart_chain: process.env.BINANCE_SMART_CHAIN_RPC_SVC_ADDR,
-}
-
-// const getRpcAddr = (chain, network) => {
-//   if (!chain || !network) throw new Error('Invalid chain or network')
-
-// }
+const {
+  getRPCServiceAddress,
+} = require('@/share/lib')
+const {
+  SUPPORTED_CHAINS,
+  SUPPORTED_NETWORKS,
+} = require('@/share/constants')
 
 
 module.exports = (context) => {
   router.post('/', [
-    body('chain').trim().isIn(['bitcoin', 'ethereum', 'binance_smart_chain']),
-    body('network').trim().isIn(['regtest', 'rinkeby', 'mainnet', 'testnet' /* TODO */]),
+    body('chain').trim().isIn(SUPPORTED_CHAINS),
+    body('network').trim().isIn(SUPPORTED_NETWORKS),
   ], async (req, res, next) => {
     // {
     //   "chain",
@@ -38,7 +33,7 @@ module.exports = (context) => {
 
       const { chain, network, options = {} } = req.body
 
-      const { data, status } = await axios.post(`${RPC_ADDR_MAP[chain]}${req.originalUrl}`, req.body)
+      const { data, status } = await axios.post(`${getRPCServiceAddress({ chain, network })}${req.originalUrl}`, req.body)
 
       return res.status(status).json(data)
     } catch (e) {
@@ -48,8 +43,8 @@ module.exports = (context) => {
   })
 
   router.get('/', [
-    query('chain').trim().isIn(['bitcoin', 'ethereum', 'binance_smart_chain']),
-    query('network').trim().isIn(['regtest', 'rinkeby', 'mainnet', 'testnet' /* TODO */]),
+    query('chain').trim().isIn(SUPPORTED_CHAINS),
+    query('network').trim().isIn(SUPPORTED_NETWORKS),
   ], async (req, res, next) => {
     try {
       const errors = validationResult(req);
@@ -60,7 +55,7 @@ module.exports = (context) => {
 
       const { chain, network, options = {} } = req.query
 
-      const { data, status } = await axios.get(`${RPC_ADDR_MAP[chain]}${req.originalUrl}`)
+      const { data, status } = await axios.post(`${getRPCServiceAddress({ chain, network })}${req.originalUrl}`, req.body)
 
       return res.status(status).json(data)
     } catch (e) {

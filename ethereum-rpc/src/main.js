@@ -5,7 +5,7 @@ module.exports.run = async () => {
   const [
     postgres,
   ] = await Promise.all([
-    await require(`@/constructors/postgres`)(),
+    await require(`@/share/constructors/postgres`)(),
   ])
 
   const {
@@ -25,5 +25,7 @@ module.exports.run = async () => {
 
   console.log('[ethereum-rpc] Starting Express...')
   await require('@/constructors/express')(context)
+
+  if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/bin/sequelizeMigrate')()
 
 }

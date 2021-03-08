@@ -1,3 +1,31 @@
 # ethereum-listener
 
 > https://www.rinkeby.io/#stats
+
+
+## Setup
+
+
+### Environment
+
+
+```bash
+NODE_ENV=""
+
+POSTGRES_HOST=""
+POSTGRES_PORT=""
+POSTGRES_USER=""
+POSTGRES_PASSWORD=""
+POSTGRES_DATABASE=""
+
+REDIS_URL=""
+REDIS_HOST=""
+REDIS_PORT=""
+REDIS_PREFIX=""
+
+ETHEREUM_WSS_USER=""
+ETHEREUM_WSS_PASS=""
+ETHEREUM_WSS_ADDR=""
+
+ETHEREUM_MIN_BLOCK_NUMBER=""
+```

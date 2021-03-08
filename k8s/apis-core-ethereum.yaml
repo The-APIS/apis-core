@@ -3,8 +3,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: ethereum
-  name: ethereum
+    run: ethereum-rpc
+  name: ethereum-rpc
   namespace: apis
 spec:
   ports:
@@ -13,15 +13,15 @@ spec:
     port: 80
     targetPort: 80
   selector:
-    run: ethereum
+    run: ethereum-rpc
   type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    run: ethereum
-  name: ethereum
+    run: ethereum-rpc
+  name: ethereum-rpc
   namespace: apis
 spec:
   revisionHistoryLimit: 0
@@ -33,11 +33,11 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      run: ethereum
+      run: ethereum-rpc
   template:
     metadata:
       labels:
-        run: ethereum
+        run: ethereum-rpc
     spec:
       containers:
 
@@ -76,6 +76,31 @@ spec:
             value: "8103"
           - name: POSTGRES_DATABASE
             value: "EthereumRinkeby"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: ethereum-listener
+  name: ethereum-listener
+  namespace: apis
+spec:
+  revisionHistoryLimit: 0
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      run: ethereum-listener
+  template:
+    metadata:
+      labels:
+        run: ethereum-listener
+    spec:
+      containers:
 
       - name: ethereum-listener
         image: theapis/apis-core-ethereum-listener:latest
@@ -108,7 +133,35 @@ spec:
           - configMapRef:
               name: apis
         env:
-          - name: EXPRESS_PORT
-            value: "8104"
+          # - name: NODE_ENV
+          #   value: ""
+
+          # - name: POSTGRES_HOST
+          #   value: ""
+          # - name: POSTGRES_PORT
+          #   value: ""
+          # - name: POSTGRES_USER
+          #   value: ""
+          # - name: POSTGRES_PASSWORD
+          #   value: ""
           - name: POSTGRES_DATABASE
             value: "EthereumRinkeby"
+
+          # - name: REDIS_URL
+          #   value: ""
+          # - name: REDIS_HOST
+          #   value: ""
+          # - name: REDIS_PORT
+          #   value: ""
+          - name: REDIS_PREFIX
+            value: "ethereum-rinkeby"
+
+          # - name: ETHEREUM_WSS_USER
+          #   value: ""
+          # - name: ETHEREUM_WSS_PASS
+          #   value: ""
+          - name: ETHEREUM_WSS_ADDR
+            value: ""
+
+          - name: ETHEREUM_MIN_BLOCK_NUMBER
+            value: "0"

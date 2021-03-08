@@ -2,11 +2,6 @@ const router = require('express').Router()
 const get = require('lodash/get')
 const isEmpty = require('lodash/isEmpty')
 
-const RPC_ADDR_MAP = {
-  bitcoin: process.env.BITCOIN_HTTPS_ADDR,
-  ethereum: process.env.ETHEREUM_HTTPS_ADDR,
-}
-
 
 module.exports = ({ models, Sequelize, ethereum: { web3, buildContract }, ...context }) => {
   router.post('/', async (req, res, next) => {

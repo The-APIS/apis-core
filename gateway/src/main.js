@@ -3,7 +3,7 @@ module.exports.run = async () => {
   const [
     postgres,
   ] = await Promise.all([
-    await require(`@/constructors/postgres`)(),
+    await require(`@/share/constructors/postgres`)(),
   ])
 
   const {
@@ -20,8 +20,9 @@ module.exports.run = async () => {
     session: true,
   }
 
+  if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/bin/sequelizeMigrate')()
+
   console.log('[Gateway][Main] Starting Express Server...')
   await require('@/constructors/express')({})
 
-  if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('./bin/sequelizeMigrate')()
 }

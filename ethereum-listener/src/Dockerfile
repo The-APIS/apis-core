@@ -14,6 +14,7 @@ RUN apk add --no-cache \
 ADD ./ethereum-listener/src /app
 ADD ./share /app/share
 ADD ./share/models /app/constructors/sequelize/models
+ADD ./share/migrations/ethereum /app/constructors/sequelize/migrations
 
 RUN yarn install
 

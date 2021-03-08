@@ -47,10 +47,33 @@ cp .env-example .env
 ## Run
 
 
+TL;DR: Using task runner:
+
+
 ```bash
 npm run build-development
 npm run start-development
 ```
+
+
+By service or chain:
+
+
+```bash
+# ex: run just the gateway
+docker-compose up gateway
+
+# ex: run all ethereum services
+docker-compose up ethereum*
+
+# ex: run all bitcoin services
+docker-compose up bitcoin*
+
+# ex: run everything
+docker-compose up
+
+```
+
 
 
 # Production
