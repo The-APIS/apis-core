@@ -55,7 +55,7 @@ module.exports = (context) => {
 
       const { chain, network, options = {} } = req.query
 
-      const { data, status } = await axios.post(`${getRPCServiceAddress({ chain, network })}${req.originalUrl}`, req.body)
+      const { data, status } = await axios.get(`${getRPCServiceAddress({ chain, network })}${req.originalUrl}`, req.body)
 
       return res.status(status).json(data)
     } catch (e) {
