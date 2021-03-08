@@ -20,21 +20,20 @@ const createInput = ({
   templateOptions: { token },
   type,
 }) => {
-  const content = type === 'APIS_ERC20' ? apisErc20Template({ token }) : erc20Template({ token })
   return {
     language: 'Solidity',
     sources: {
       [`${token.name}.sol`]: {
-        content,
-      }
+        content: type === 'APIS_ERC20' ? apisErc20Template({ token }) : erc20Template({ token }),
+      },
     },
     settings: {
       outputSelection: {
         '*': {
-          '*': ['*']
-        }
-      }
-    }
+          '*': ['*'],
+        },
+      },
+    },
   }
 }
 
@@ -71,8 +70,8 @@ async function deployContractInternal({
   sendOptions,
   deployArgs = [],
 }) {
-  const provider = new ethers.providers.WebSocketProvider(process.env.ETHEREUM_WSS_ADDR, (process.env.ETHEREUM_NETWORK || 'rinkeby'))
-  // const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_HTTPS_ADDR || 'http://127.0.0.1:8545', (process.env.ETHEREUM_NETWORK || 'rinkeby'))
+  console.log(process.env.BINANCE_SMART_CHAIN_HTTPS_ADDR, process.env.BINANCE_SMART_CHAIN_NETWORK || 97)
+  const provider = new ethers.providers.WebSocketProvider(process.env.BINANCE_SMART_CHAIN_HTTPS_ADDR, parseInt(process.env.BINANCE_SMART_CHAIN_NETWORK || 97))
   const wallet = new ethers.Wallet(privateKey, provider);
   console.log('contractJson.abi', contractJson.abi)
   console.log('contractJson.evm.bytecode.object', contractJson.evm.bytecode.object)
@@ -81,19 +80,18 @@ async function deployContractInternal({
   return factory.deploy(...(deployArgs || []))
 }
 
-async function deployStaticContract({
-  abi,
-  bytecode,
-  privateKey,
-  sendOptions,
-  deployArgs = [],
-}) {
-  // const provider = new ethers.providers.WebSocketProvider(process.env.ETHEREUM_WSS_ADDR, (process.env.ETHEREUM_NETWORK || 'rinkeby'))
-  const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_HTTPS_ADDR || 'http://127.0.0.1:8545', (process.env.ETHEREUM_NETWORK || 'rinkeby'))
-  const wallet = new ethers.Wallet(privateKey, provider);
-  const factory = new ethers.ContractFactory(abi, bytecode, wallet);
-  return factory.deploy(...(deployArgs || []))
-}
+// async function deployStaticContract({
+//   abi,
+//   bytecode,
+//   privateKey,
+//   sendOptions,
+//   deployArgs = [],
+// }) {
+//   const provider = new ethers.providers.JsonRpcProvider(process.env.BINANCE_SMART_CHAIN_HTTPS_ADDR, process.env.BINANCE_SMART_CHAIN_NETWORK || 97)
+//   const wallet = new ethers.Wallet(privateKey, provider);
+//   const factory = new ethers.ContractFactory(abi, bytecode, wallet);
+//   return factory.deploy(...(deployArgs || []))
+// }
 
 const deployContract = (params = {
   token: {
@@ -107,7 +105,7 @@ const deployContract = (params = {
   sender: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
   privateKey: '0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d',
   sendOptions: {
-    gasLimit: web3.utils.toHex(100000),
+    gasLimit: web3.utils.toHex(500000),
     gasPrice: web3.utils.toHex(50e9),
   },
 }) => {

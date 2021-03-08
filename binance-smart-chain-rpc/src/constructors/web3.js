@@ -1,5 +1,5 @@
 const Web3 = require('web3')
-const Web3WsProvider = require('web3-providers-ws');
+// const Web3WsProvider = require('web3-providers-ws');
 
 const options = {
   timeout: 30000, // ms
