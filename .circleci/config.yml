@@ -134,13 +134,13 @@ jobs:
             equal: [ "dev", << pipeline.git.branch >> ]
           steps:
             - run:
-                command: "docker build -f binance-smart-chain-rpc/src/Dockerfile . -t 'theapis/apis-core-binance-smart-chain:latest'"
+                command: "docker build -f binance-smart-chain-rpc/src/Dockerfile . -t 'theapis/apis-core-binance-smart-chain-rpc:latest'"
       - when:
           condition:
             equal: [ "master", << pipeline.git.branch >> ]
           steps:
             - run:
-                command: "docker build -f binance-smart-chain-rpc/src/Dockerfile . -t 'theapis/apis-core-binance-smart-chain:stable'"
+                command: "docker build -f binance-smart-chain-rpc/src/Dockerfile . -t 'theapis/apis-core-binance-smart-chain-rpc:stable'"
       - docker_login
       - when:
           condition:
