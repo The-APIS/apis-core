@@ -10,7 +10,8 @@ module.exports = async ({
   web3,
 }) => {
   try {
-    console.log('[ethereum-listener][syncBlocks] default block is ', process.env.ETHEREUM_MIN_BLOCK_NUMBER || 0)
+    const minBlockNumber = parseInt(process.env.ETHEREUM_MIN_BLOCK_NUMBER) || 0
+    console.log('[ethereum-listener][syncBlocks] default block is ', minBlockNumber)
     const latestBlock = await models.EthereumBlock.findOne({
       limit: 1,
       order: [[ 'number', 'DESC' ]],
@@ -18,7 +19,7 @@ module.exports = async ({
     console.log('[ethereum-listener][syncBlocks] latest block is ', get(latestBlock, 'number', -1))
     // TOOD - confirm all blocks exist in db
 
-    const start = Math.max(get(latestBlock, 'number', -1), (process.env.ETHEREUM_MIN_BLOCK_NUMBER || 0))
+    const start = Math.max(get(latestBlock, 'number', -1), minBlockNumber)
     console.log('[ethereum-listener][syncBlocks] start block is ', start)
     const end = await web3.eth.getBlockNumber() || 0
     console.log('[ethereum-listener][syncBlocks] end block is ', end)
