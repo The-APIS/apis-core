@@ -17,7 +17,7 @@ volumes: [
     def gitBranch = myRepo.GIT_BRANCH
     def shortGitCommit = "${gitCommit[0..10]}"
     def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
-    def registry = "registry.trustedlife.app"
+    def registry = env.DOCKER_REGISTRY
 
     def staticServerImageName = "apiscore-static"
     def staticServerImage = "${registry}/${staticServerImageName}"
@@ -32,7 +32,7 @@ volumes: [
         staticServer = docker.build("${staticServerImage}", "-f static/Dockerfile ./static/src")
       }
       stage('Push') {
-        docker.withRegistry('https://registry.trustedlife.app') {
+        docker.withRegistry('https://' + env.DOCKER_REGISTRY) {
           developers.push("latest")
           staticServer.push("latest")
         }
