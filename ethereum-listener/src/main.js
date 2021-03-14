@@ -1,5 +1,6 @@
 const web3 = require('@/constructors/web3')
 const ethereum = require('@/constructors/ethereum')
+const debug = require('debug')('ethereum-listener:main')
 
 // Allow for clean nodemon restarts (see https://github.com/remy/nodemon/issues/1025#issuecomment-308049864)
 process.on('SIGINT', () => {
@@ -12,7 +13,7 @@ process.on('uncaughtException', (e) => {
 
 
 module.exports = async () => {
-  console.info('[ethereum-listener] Starting...')
+  debug('[ethereum-listener] Starting...')
   try {
     const [
       postgres,
@@ -43,12 +44,13 @@ module.exports = async () => {
 
     if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/bin/sequelizeMigrate')()
 
+    await require('./lib/sync/syncBlocks')(context)
+    // require('./lib/sync/syncMethods').syncMethods(context)
+
+    require('./lib/sync/syncPendingTransactions')(context)
     require('./lib/listeners/ETH/newBlockHeaders')(context)
     require('./lib/listeners/ETH/pendingTransactions')(context)
 
-    require('./lib/sync/syncBlocks')(context)
-    // require('./lib/sync/syncMethods').syncMethods(context)
-    require('./lib/sync/syncPendingTransactions')(context)
   } catch (e) {
     console.error('[ethereum-listener] Error.')
     console.error(e)
