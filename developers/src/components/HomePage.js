@@ -110,9 +110,7 @@ export const HomePage = () => {
     contracts: ['0x7d66cde53cc0a169cae32712fc48934e610aef14'],
   })
   const [demo2Json, setDemo2Json] = React.useState({
-    // chain: 'ethereum',
-    // network: 'mainnet',
-    contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    network: 'mainnet',
     limit: 5,
   })
   const [demo3Json, setDemo3Json] = React.useState({
@@ -209,7 +207,7 @@ export const HomePage = () => {
                 Try it now!
               </Button>
               <br />
-              {JSON.stringify(req1Result) === '{}' ? <Empty /> : <ReactJson name="Response"style={{ margin: '8px 0', overflowX: 'scroll' }} src={req1Result} />}
+              {JSON.stringify(req1Result) === '{}' ? <Empty /> : <ReactJson name="Response" style={{ margin: '8px 0', overflowX: 'scroll' }} src={req1Result} />}
             </Col>
           </Row>
 
@@ -245,7 +243,7 @@ export const HomePage = () => {
               />
               <br />
               <Button onClick={async () => {
-                const result = await axios.get(`https://api.theapis.io/api/v1/ethereum/methods?${qs.stringify(demo2Json)}`)
+                const result = await axios.get(`https://api.theapis.io/api/v1/ethereum/transactions?${qs.stringify(demo2Json)}`)
                 setReq2Result(result.data || {})
               }}>
                 Try it now!
