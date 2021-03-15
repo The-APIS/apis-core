@@ -44,7 +44,7 @@ module.exports = async () => {
 
     if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/bin/sequelizeMigrate')()
 
-    await require('./lib/sync/syncBlocks')(context)
+    if (process.env.SYNC_BLOCKS !== 'false') await require('./lib/sync/syncBlocks')(context)
     // require('./lib/sync/syncMethods').syncMethods(context)
 
     require('./lib/sync/syncPendingTransactions')(context)

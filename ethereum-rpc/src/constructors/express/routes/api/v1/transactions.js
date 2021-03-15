@@ -1,5 +1,6 @@
 const axios = require('axios')
 const { Op } = require("sequelize")
+const isEmpty = require('lodash/isEmpty')
 const router = require('express').Router()
 const EthereumTx = require('ethereumjs-tx').Transaction
 const { web3, buildContract } = require('@/constructors/ethereum')
@@ -134,23 +135,28 @@ module.exports = ({ models, ...context }) => {
   router.get('/', async (req, res, next) => {
     try {
       let {
-        chain = 'ethereum',
-        network = 'rinkeby',
+        chain,
+        network,
         limit = 100,
         offset = 0,
         ...query
       } = req.query
 
-      const txs = await models.EthereumTx.findAll({
-        where: {
-          [Op.or]: {
-            ...query,
-          },
-        },
+      const options = {
         limit: Math.min(limit, 1000),
         offset,
         raw: true,
-      })
+      }
+
+      if (!isEmpty(query)) {
+        options.where = {
+          [Op.or]: {
+            ...query,
+          },
+        }
+      }
+
+      const txs = await models.EthereumTx.findAll(options)
 
       return res.status(200).json({
         data: txs,
