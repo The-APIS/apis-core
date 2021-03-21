@@ -25,6 +25,8 @@ module.exports = ({ models, sequelize, ...context }) => {
         startBlock = 0,
         endBlock,
         excludeConfirmationCount = 0,
+        chain,
+        network,
         ...query
       } = { ...req.query }
 

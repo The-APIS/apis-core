@@ -6,7 +6,7 @@ const isEmpty = require('lodash/isEmpty')
 module.exports = ({ models, Sequelize, ethereum: { web3, buildContract }, ...context }) => {
   router.post('/', async (req, res, next) => {
     try {
-      const { network, options = {} } = req.body
+      const { chain, network, options = {} } = req.body
 
       // TODO - network
 
@@ -28,6 +28,7 @@ module.exports = ({ models, Sequelize, ethereum: { web3, buildContract }, ...con
   router.get('/', async (req, res, next) => {
     try {
       const {
+        chain,
         network,
         address,
         options = {},
