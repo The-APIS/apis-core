@@ -1,4 +1,5 @@
 const get = require('lodash/get')
+const debug = require('debug')('ethereum-listener:lib:sync:syncMethods')
 
 const syncMethodsForBlockNumber = async ({
   ethereum,
@@ -11,13 +12,15 @@ const syncMethodsForBlockNumber = async ({
       blockNumber,
     },
   })
-  console.log('[sync-methods] num transactions', transactions && transactions.length || 0)
+  debug('[sync-methods] num transactions', transactions && transactions.length || 0)
   if (transactions && transactions.length) {
     try {
       const methods = transactions
         .filter(({ input }) => input && ethereum.decoder.decodeMethod(input))
         .map(tx => {
+          debug('tx', tx)
           const decoded = ethereum.decoder.decodeMethod(tx.input)
+          debug('decoded', decoded)
           return {
             contract: tx.to,
             method: decoded.name,
@@ -28,7 +31,7 @@ const syncMethodsForBlockNumber = async ({
 
       if (methods && methods.length) {
         const bulkMethods = await models.EthereumMethod.bulkCreate(methods)
-        console.log('[sync-methods] bulkMethods', bulkMethods)
+        debug('[sync-methods] num bulkMethods', bulkMethods.length)
       }
     } catch (e) {
       console.error('[ethereum-listener][syncMethods] EthereumMethod.bulkCreate', e)
@@ -53,9 +56,9 @@ const syncMethods = async ({
       ],
     })
     const start = get(latestMethod, 'EthereumTx.EthereumBlock.number', process.env.ETHEREUM_MIN_BLOCK_NUMBER || 0)
-    console.log('[ethereum-listener][syncMethods] start block is ', start)
+    debug('[ethereum-listener][syncMethods] start block is ', start)
     const end = await web3.eth.getBlockNumber()
-    console.log('[ethereum-listener][syncMethods] end block is ', end)
+    debug('[ethereum-listener][syncMethods] end block is ', end)
     let current = start
 
     while (current <= end) {
