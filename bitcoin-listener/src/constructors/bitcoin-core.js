@@ -2,7 +2,7 @@ const url = require('url');
 const Client = require('bitcoin-core');
 
 
-const bitcoinCoreUrl = url.parse(process.env.BITCOIN_RPC_ADDR)
+const bitcoinCoreUrl = url.parse(process.env.BITCOIN_HTTPS_ADDR)
 
 const bitcoinCoreOptions = {
   network: process.env.BITCOIN_CORE_NETWORK,
