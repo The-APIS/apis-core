@@ -158,4 +158,5 @@ override.tf.json
 # !example_override.tf
 
 *.gitignore*
+!.gitignore
 
