@@ -15,10 +15,12 @@ module.exports = (sequelize, DataTypes) => {
   };
   BitcoinBlock.init({
     hash: {
+      // The unique, identifying block hash
       type: DataTypes.STRING,
       unique: true,
     },
     confirmations: {
+      // The number of block confirmations (confirmed blocks after this block)
       type: DataTypes.INTEGER,
     },
     strippedsize: {

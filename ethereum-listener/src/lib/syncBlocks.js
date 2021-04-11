@@ -1,6 +1,6 @@
 const syncBlock = require('./syncBlock')
 const debug = require('debug')('ethereum-listener:lib:sync:syncBlocks')
-const getSyncStartAndEndBlocks = require('../getSyncStartAndEndBlocks')
+const getSyncStartAndEndBlocks = require('./getSyncStartAndEndBlocks')
 
 // TODO share logic with newBlockHeaders to simplify
 

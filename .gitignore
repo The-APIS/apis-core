@@ -1,5 +1,6 @@
 dist
 data
+.data
 tmp
 *.pyc
 *.pyo

@@ -44,10 +44,10 @@ module.exports = async () => {
 
     if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/sequelize/bin/sequelizeMigrate')()
 
-    if (process.env.SYNC_BLOCKS !== 'false') await require('./lib/sync/syncBlocks')(context)
-    // require('./lib/sync/syncMethods').syncMethods(context)
+    if (process.env.SYNC_BLOCKS !== 'false') await require('./lib/syncBlocks')(context)
+    // require('./lib/syncMethods').syncMethods(context)
 
-    require('./lib/sync/syncPendingTransactions')(context)
+    require('./lib/syncPendingTransactions')(context)
     require('./lib/listeners/ETH/newBlockHeaders')(context)
     require('./lib/listeners/ETH/pendingTransactions')(context)
 
