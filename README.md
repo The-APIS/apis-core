@@ -51,8 +51,8 @@ TL;DR: Using task runner:
 
 
 ```bash
-npm run build-development
-npm run start-development
+npm run build
+npm run start
 ```
 
 
