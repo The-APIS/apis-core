@@ -42,7 +42,7 @@ module.exports = async () => {
       ethereum,
     }
 
-    if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/bin/sequelizeMigrate')()
+    if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/sequelize/bin/sequelizeMigrate')()
 
     if (process.env.SYNC_BLOCKS !== 'false') await require('./lib/sync/syncBlocks')(context)
     // require('./lib/sync/syncMethods').syncMethods(context)

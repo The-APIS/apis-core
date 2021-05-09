@@ -7,7 +7,7 @@ module.exports = async () => {
       env: process.env,
       stdio: 'inherit',
     })
-    console.log('[Sequelize-Migrate] Success.')
+    console.log('[Sequelize-Seed] Success.')
   } catch (error) {
     console.error(error)
   }

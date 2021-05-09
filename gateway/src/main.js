@@ -10,7 +10,7 @@ module.exports.run = async () => {
     sequelize,
     Sequelize,
     models,
-  } = require('@/constructors/sequelize')({})
+  } = require('@/share/sequelize')({})
 
   const expressContext = {
     postgres,
@@ -20,7 +20,7 @@ module.exports.run = async () => {
     session: true,
   }
 
-  if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/bin/sequelizeMigrate')()
+  if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/sequelize/bin/sequelizeMigrate')()
 
   console.log('[Gateway][Main] Starting Express Server...')
   await require('@/constructors/express')({})

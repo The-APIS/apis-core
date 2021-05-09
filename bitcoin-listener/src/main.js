@@ -32,7 +32,7 @@ module.exports = async (
     redis,
   }
 
-  if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/bin/sequelizeMigrate')()
+  if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/sequelize/bin/sequelizeMigrate')()
 
   require('./lib/listener')(context)
 

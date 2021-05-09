@@ -16,8 +16,8 @@ services:
       - /app/node_modules
       - ./gateway/src:/app
       - ./share:/app/share
-      - ./share/models:/app/constructors/sequelize/models
-      - ./share/migrations:/app/constructors/sequelize/migrations
+      - ./share/models:/app/share/models
+      - ./share/migrations:/app/share/sequelize/migrations
     ports:
       - "8100:80"
     links:
