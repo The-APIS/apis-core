@@ -23,7 +23,7 @@
     "module-alias": "2.2.0",
     "node-fetch": "2.6.1",
     "pg": "7.8.1",
-    "redis": "3.0.2",
+    "redis": "3.1.1",
     "sequelize": "6.3.5",
     "sequelize-cli": "6.2.0",
     "web3": "1.2.11",
