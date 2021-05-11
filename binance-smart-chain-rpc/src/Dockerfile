@@ -13,7 +13,7 @@ RUN apk add --no-cache \
 ADD ./ethereum-rpc/src /app
 ADD ./share /app/share
 ADD ./share/models /app/constructors/sequelize/models
-ADD ./share/migrations /app/constructors/sequelize/migrations
+ADD ./share/sequelize/migrations /app/constructors/sequelize/migrations
 
 RUN npm install
 

@@ -26,6 +26,6 @@ module.exports.run = async () => {
   console.log('[ethereum-rpc] Starting Express...')
   await require('@/constructors/express')(context)
 
-  if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/bin/sequelizeMigrate')()
+  if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/sequelize/bin/sequelizeMigrate')()
 
 }
