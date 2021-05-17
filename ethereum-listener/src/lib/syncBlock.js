@@ -1,7 +1,7 @@
 const get = require('lodash/get')
-const ethereum = require('@/constructors/ethereum')
+const ethereum = require('/app/constructors/ethereum')
 const { syncMethodsForBlockNumber } = require('./syncMethods')
-const debug = require('debug')('ethereum-listener:lib:sync:syncBlock')
+const debug = require('debug')('ethereum-listener:lib:syncBlock')
 
 
 module.exports = async ({

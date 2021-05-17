@@ -136,8 +136,6 @@ services:
       - /app/node_modules
       - ./ethereum-listener/src:/app
       - ./share:/app/share
-      - ./share/models:/app/constructors/sequelize/models
-      - ./share/migrations/ethereum:/app/constructors/sequelize/migrations
     links:
       - postgres
       - redis

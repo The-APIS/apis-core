@@ -30,7 +30,7 @@ module.exports = async () => {
       sequelize,
       Sequelize,
       models,
-    } = require('@/constructors/sequelize')({})
+    } = require('@/share/sequelize')({})
 
     const context = {
       sequelize,
@@ -44,12 +44,12 @@ module.exports = async () => {
 
     if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/sequelize/bin/sequelizeMigrate')()
 
-    if (process.env.SYNC_BLOCKS !== 'false') await require('./lib/syncBlocks')(context)
+    if (process.env.SYNC_BLOCKS !== 'false') await require('./lib/syncHandler')(context)
     // require('./lib/syncMethods').syncMethods(context)
 
-    require('./lib/syncPendingTransactions')(context)
-    require('./lib/listeners/ETH/newBlockHeaders')(context)
-    require('./lib/listeners/ETH/pendingTransactions')(context)
+    //require('./lib/syncPendingTransactions')(context)
+    //require('./lib/listeners/ETH/newBlockHeaders')(context)
+    //require('./lib/listeners/ETH/pendingTransactions')(context)
 
   } catch (e) {
     console.error('[ethereum-listener] Error.')

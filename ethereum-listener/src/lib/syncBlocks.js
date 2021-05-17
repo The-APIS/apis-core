@@ -1,24 +1,28 @@
 const syncBlock = require('./syncBlock')
-const debug = require('debug')('ethereum-listener:lib:sync:syncBlocks')
+const debug = require('debug')('ethereum-listener:lib:syncBlocks')
 const getSyncStartAndEndBlocks = require('./getSyncStartAndEndBlocks')
 
 // TODO share logic with newBlockHeaders to simplify
 
 
 module.exports = async ({
+  startBlockNumber,
   models,
   sequelize,
   web3,
 }) => {
+  console.log(`Starting block number ${startBlockNumber}`)
   try {
-    const { start, end } = await getSyncStartAndEndBlocks({ models, sequelize, web3, models })
+    let end = startBlockNumber + 10000;
 
-    let current = start
-
-    while (current <= end) {
-      debug(`syncing block ${current}`)
-      await syncBlock({ blockNumber: current, withMethods: true, web3, models })
-      current += 1;
+    for ( current = startBlockNumber; current < end; current++) {
+      console.log(`syncing block ${current}`)
+      await syncBlock({
+        blockNumber: current,
+        withMethods: true,
+        web3,
+        models
+      })
     }
 
   } catch (e) {

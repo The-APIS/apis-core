@@ -1,5 +1,5 @@
 const get = require('lodash/get')
-const debug = require('debug')('ethereum-listener:lib:sync:syncMethods')
+const debug = require('debug')('ethereum-listener:lib:syncMethods')
 
 const syncMethodsForBlockNumber = async ({
   ethereum,
