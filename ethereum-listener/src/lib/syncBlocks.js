@@ -1,4 +1,6 @@
 const syncBlock = require('./syncBlock')
+const { getDate } = require("/app/share/lib")
+const date = require("date-and-time")
 const debug = require('debug')('ethereum-listener:lib:syncBlocks')
 const getSyncStartAndEndBlocks = require('./getSyncStartAndEndBlocks')
 
@@ -11,18 +13,19 @@ module.exports = async ({
   sequelize,
   web3,
 }) => {
-  console.log(`Starting block number ${startBlockNumber}`)
+  debug(`Starting block number ${startBlockNumber}`)
   try {
-    let end = startBlockNumber + 10000;
+    let end = startBlockNumber + process.env.BLOCK_STEP_COUNT;
 
     for ( current = startBlockNumber; current < end; current++) {
-      console.log(`syncing block ${current}`)
+      debug(`[${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}] START syncing block ${current}`)
       await syncBlock({
         blockNumber: current,
         withMethods: true,
         web3,
-        models
+        models  
       })
+      debug(`[${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}] END syncing block ${current}`)
     }
 
   } catch (e) {
