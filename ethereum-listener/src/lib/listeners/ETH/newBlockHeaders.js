@@ -1,5 +1,5 @@
 const get = require('lodash/get')
-const { syncMethodsForBlockNumber } = require('@/lib/sync/syncMethods')
+const { syncMethodsForBlockNumber } = require('@/lib/syncMethods')
 
 const subscriptionKey = 'newBlockHeaders'
 let lastCalled = null

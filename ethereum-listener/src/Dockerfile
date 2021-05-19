@@ -1,4 +1,4 @@
-FROM node:10-alpine
+FROM node:12-alpine
 
 WORKDIR /app
 
@@ -13,8 +13,6 @@ RUN apk add --no-cache \
 
 ADD ./ethereum-listener/src /app
 ADD ./share /app/share
-ADD ./share/models /app/constructors/sequelize/models
-ADD ./share/sequelize/migrations/ethereum /app/constructors/sequelize/migrations
 
 RUN yarn install
 

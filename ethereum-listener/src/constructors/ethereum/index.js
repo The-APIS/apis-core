@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const decoder = require('abi-decoder')
 
-const web3 = require('@/constructors/web3')
+const web3 = require('/app/constructors/web3')
 
 
 const readABIFilenamesFromPath = (dirPath) => (
