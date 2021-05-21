@@ -7,10 +7,10 @@ const database = process.env.POSTGRES_DATABASE || 'postgres'
 const dialect = 'postgres'
 const user = process.env.POSTGRES_USER || 'postgres'
 const password = process.env.POSTGRES_PASSWORD || 'password'
-const poolMax = (process.env.SEQUELIZE_WORKER_POOL_MAX || 10)
-const poolMin = (process.env.SEQUELIZE_WORKER_POOL_MIN || 0)
-const poolAcquire = (process.env.SEQUELIZE_WORKER_POOL_ACQUIRE || 30000)
-const poolIdle = (process.env.SEQUELIZE_WORKER_POOL_IDLE || 10000)
+const poolMax = parseInt(process.env.SEQUELIZE_WORKER_POOL_MAX || 10)
+const poolMin = parseInt(process.env.SEQUELIZE_WORKER_POOL_MIN || 0)
+const poolAcquire = parseInt(process.env.SEQUELIZE_WORKER_POOL_ACQUIRE || 30000)
+const poolIdle = parseInt(process.env.SEQUELIZE_WORKER_POOL_IDLE || 10000)
 
 // `postgresql://${user}:${password}@${host}:${port}/${database}`
 
