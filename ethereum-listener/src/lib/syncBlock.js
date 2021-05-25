@@ -21,7 +21,7 @@ module.exports = async ({
     await models.EthereumBlock.create(block)
 
     if (withMethods !== false && get(block, 'transactions', []).length) {
-      const txs = await models.EthereumTx.bulkCreate(block.transactions)
+      await models.EthereumTx.bulkCreate(block.transactions)
       await syncMethodsForBlockNumber({
         models,
         web3,

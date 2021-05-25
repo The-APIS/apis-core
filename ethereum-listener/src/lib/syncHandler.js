@@ -3,6 +3,7 @@ const { StaticPool } = require("node-worker-threads-pool")
 const debug = require('debug')('ethereum-listener:lib:syncHandler')
 const getSyncStartAndEndBlocks = require('./getSyncStartAndEndBlocks')
 
+
 module.exports = async ({
   models,
   sequelize,
@@ -14,18 +15,35 @@ module.exports = async ({
     console.warn(`bad block numbers, cannot sync: Start-> ${start}, End-> ${end}`)
     return
   }
-  debug(`number of cores for multi indexing: ${process.env.NUMBER_OF_CORES}`)
-  debug(`number of blocks processed by each worker: ${process.env.BLOCK_STEP_COUNT}`)
+
+  const blockStep = process.env.BLOCK_STEP_COUNT
+  const noOfCores = parseInt(process.env.NUMBER_OF_CORES) || 1
+
+  debug(`number of blocks processed by each worker: ${blockStep}`)
+  debug(`number of cores for multi indexing: ${noOfCores}`)
+
   try {
-    const blockStep = process.env.BLOCK_STEP_COUNT
-    const noOfCores = process.env.NUMBER_OF_CORES ? parseInt(process.env.NUMBER_OF_CORES) : 1
     const staticPool = new StaticPool({
       size: noOfCores,
+      shareEnv: process.env.WORKER_POOL_SHARE_ENV === 'true',
       task(startBlockNumber) {
         const syncBlocks = this.require('/app/lib/syncBlocks.js')
-        const { sequelize, models } = this.require('/app/share/sequelize')({})
+        const { sequelize, models } = this.require('/app/share/sequelize')({
+          host: process.env.POSTGRES_HOST || '127.0.0.1',
+          port: parseInt(process.env.POSTGRES_PORT || 5432),
+          database: process.env.POSTGRES_DATABASE || 'postgres',
+          dialect: process.env.POSTGRES_DIALECT || 'postgres',
+          user: process.env.POSTGRES_USER || 'postgres',
+          password: process.env.POSTGRES_PASSWORD || 'password',
+          poolMax: parseInt(process.env.SEQUELIZE_WORKER_POOL_MAX || 10),
+          poolMin: parseInt(process.env.SEQUELIZE_WORKER_POOL_MIN || 0),
+          poolAcquire: parseInt(process.env.SEQUELIZE_WORKER_POOL_ACQUIRE || 30000),
+          poolIdle: parseInt(process.env.SEQUELIZE_WORKER_POOL_IDLE || 10000),
+        })
+
         const web3 = this.require('/app/constructors/web3')
 
+        debug(`syncing blocks starting from ${startBlockNumber}`)
         syncBlocks({
           startBlockNumber,
           models,
@@ -38,7 +56,6 @@ module.exports = async ({
     debug(`starting sync for blocks between: Start-> ${start}, End-> ${end}`)
 
     for (let startBlockNumber = start; startBlockNumber <= end; startBlockNumber += blockStep) {
-      //debug(`syncing 10000 blocks starting from ${current}`)
       staticPool.exec(startBlockNumber)
     }
   } catch (e) {
