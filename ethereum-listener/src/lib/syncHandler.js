@@ -43,7 +43,7 @@ module.exports = async ({
 
         const web3 = this.require('/app/constructors/web3')
 
-        debug(`syncing blocks starting from ${startBlockNumber}`)
+        console.log(`syncing blocks starting from ${startBlockNumber}`)
         syncBlocks({
           startBlockNumber,
           models,
