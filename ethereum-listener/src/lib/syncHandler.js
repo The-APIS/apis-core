@@ -16,7 +16,7 @@ module.exports = async ({
     return
   }
 
-  const blockStep = process.env.BLOCK_STEP_COUNT
+  const blockStep = parseInt(process.env.BLOCK_STEP_COUNT)
   const noOfCores = parseInt(process.env.NUMBER_OF_CORES) || 1
 
   debug(`number of blocks processed by each worker: ${blockStep}`)
@@ -57,9 +57,6 @@ module.exports = async ({
 
     for (let startBlockNumber = start; startBlockNumber <= end; startBlockNumber += blockStep) {
       (async () => {
-        // This will choose one idle worker in the pool
-        // to execute your heavy task without blocking
-        // the main thread!
         await staticPool.exec(startBlockNumber)
       })()
     }
