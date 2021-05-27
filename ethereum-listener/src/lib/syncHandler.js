@@ -56,7 +56,12 @@ module.exports = async ({
     debug(`starting sync for blocks between: Start-> ${start}, End-> ${end}`)
 
     for (let startBlockNumber = start; startBlockNumber <= end; startBlockNumber += blockStep) {
-      staticPool.exec(startBlockNumber)
+      (async () => {
+        // This will choose one idle worker in the pool
+        // to execute your heavy task without blocking
+        // the main thread!
+        await staticPool.exec(startBlockNumber)
+      })()
     }
   } catch (e) {
     console.error(e)
