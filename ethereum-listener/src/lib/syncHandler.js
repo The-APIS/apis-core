@@ -16,7 +16,7 @@ module.exports = async ({
     return
   }
 
-  const blockStep = process.env.BLOCK_STEP_COUNT
+  const blockStep = parseInt(process.env.BLOCK_STEP_COUNT)
   const noOfCores = parseInt(process.env.NUMBER_OF_CORES) || 1
 
   debug(`number of blocks processed by each worker: ${blockStep}`)
@@ -56,7 +56,9 @@ module.exports = async ({
     debug(`starting sync for blocks between: Start-> ${start}, End-> ${end}`)
 
     for (let startBlockNumber = start; startBlockNumber <= end; startBlockNumber += blockStep) {
-      staticPool.exec(startBlockNumber)
+      (async () => {
+        await staticPool.exec(startBlockNumber)
+      })()
     }
   } catch (e) {
     console.error(e)
