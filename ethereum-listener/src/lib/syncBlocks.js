@@ -8,15 +8,15 @@ const getSyncStartAndEndBlocks = require('./getSyncStartAndEndBlocks')
 
 module.exports = async ({
   startBlockNumber,
+  endBlockNumber,
   models,
   sequelize,
   web3,
 }) => {
   debug(`Starting block number ${startBlockNumber}`)
   try {
-    let end = startBlockNumber + process.env.BLOCK_STEP_COUNT;
 
-    for ( current = startBlockNumber; current < end; current++) {
+    for ( current = startBlockNumber; current < endBlockNumber; current++) {
       debug(`START syncing block ${current}`)
       await syncBlock({
         blockNumber: current,
