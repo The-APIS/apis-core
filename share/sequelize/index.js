@@ -21,7 +21,7 @@ const sequelize = new Sequelize(
   {
     host,
     dialect,
-    logging: console.log,
+    logging: false,
 
     pool: {
       max: poolMax,

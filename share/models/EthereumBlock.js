@@ -18,12 +18,18 @@ module.exports = (sequelize, DataTypes) => {
     extraData: DataTypes.TEXT,
     gasLimit: DataTypes.INTEGER,
     blockGasUsed: DataTypes.STRING,
-    hash: DataTypes.STRING,
+    hash: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     logsBloom: DataTypes.TEXT,
     miner: DataTypes.STRING,
     mixHash: DataTypes.STRING,
     nonce: DataTypes.STRING,
-    number: DataTypes.INTEGER,
+    number: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     parentHash: DataTypes.STRING,
     receiptsRoot: DataTypes.STRING,
     sha3Uncles: DataTypes.STRING,
