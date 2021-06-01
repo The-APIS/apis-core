@@ -46,6 +46,7 @@ module.exports = async ({
         console.log(`syncing blocks starting from ${startBlockNumber}`)
         syncBlocks({
           startBlockNumber,
+          endBlockNumber: Math.min(startBlockNumber + blockStep, end),
           models,
           sequelize,
           web3
