@@ -1,10 +1,12 @@
 const router = require('express').Router()
-const bsc = require('./bsc')
+
 
 module.exports = (context) => {
-  router.use('/bitcoin', require('./bitcoin')(context))
-  router.use('/ethereum', require('./ethereum')(context))
-  router.use('/bsc', bsc(context))
-  router.use('/binance-smart-chain', bsc(context))
+  router.use('/bitcoin', require('./rpcHandler')(context))
+  router.use('/ethereum', require('./rpcHandler')(context))
+  router.use('/bsc', require('./rpcHandler')(context))
+  router.use('/binance-smart-chain', require('./rpcHandler')(context))
+
+
   return router
 }
