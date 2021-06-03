@@ -18,6 +18,13 @@ module.exports = async ({
   try {
     const block = await web3.eth.getBlock(blockNumber, true) /* true: include transactions */
 
+    if (!block 
+          || !get(block, 'number')
+          || !get(block, 'hash')) 
+    {
+      throw new Error(`Cannot sync block: ${blockNumber}`)
+    }
+
     await models.EthereumBlock.create(block)
 
     if (withMethods !== false && get(block, 'transactions', []).length) {
@@ -31,6 +38,7 @@ module.exports = async ({
     }
 
   } catch (e) {
-    console.error(e)
+    //log block numbers when it fails
+    console.error(e.message)
   }
 }
