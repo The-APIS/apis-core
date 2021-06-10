@@ -6,7 +6,7 @@ module.exports = ({ models, ...context }) => {
 
   router.get('/rates', async (req, res, next) => {
     try {
-      const { status, data } = await axios.get(DEFI_RATES_ADDR)
+      const { status, data } = await axios.get(process.env.DEFI_RATES_ADDR)
       return res.status(status).json({
         data: {
           rates: data,
@@ -20,7 +20,7 @@ module.exports = ({ models, ...context }) => {
 
   router.get('/compound/*', async (req, res, next) => {
     try {
-      const { status, data } = await axios.get(`${COMPOUND_RATES_ADDR}${req.originalUrl.replace(/api\/v1\/query\/defi\/compound\//gi, '')}`)
+      const { status, data } = await axios.get(`${process.env.COMPOUND_RATES_ADDR}${req.originalUrl.replace(/api\/v1\/query\/defi\/compound\//gi, '')}`)
       return res.status(status).json({ rates: data })
     } catch (e) {
       console.error(e)
