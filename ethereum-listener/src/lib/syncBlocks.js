@@ -10,7 +10,7 @@ module.exports = async ({
   startBlockNumber,
   endBlockNumber,
   models,
-  sequelize,
+  // sequelize,
   web3,
 }) => {
   debug(`Starting block number ${startBlockNumber}`)
@@ -22,7 +22,7 @@ module.exports = async ({
         blockNumber: current,
         withMethods: true,
         web3,
-        models  
+        models,
       })
       debug(`END syncing block ${current}`)
     }

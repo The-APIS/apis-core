@@ -26,7 +26,7 @@ module.exports = async ({
     const staticPool = new StaticPool({
       size: noOfCores,
       shareEnv: process.env.WORKER_POOL_SHARE_ENV === 'true',
-      task(startBlockNumber, blockStep, end) {
+      task({ startBlockNumber, endBlockNumber }) {
         const syncBlocks = this.require('/app/lib/syncBlocks.js')
         const { sequelize, models } = this.require('/app/share/sequelize')({
           host: process.env.POSTGRES_HOST || '127.0.0.1',
@@ -46,10 +46,10 @@ module.exports = async ({
         console.log(`syncing blocks starting from ${startBlockNumber}`)
         syncBlocks({
           startBlockNumber,
-          endBlockNumber: Math.min(startBlockNumber + blockStep, end),
+          endBlockNumber,
           models,
           sequelize,
-          web3
+          web3,
         })
       }
     });
@@ -58,7 +58,10 @@ module.exports = async ({
 
     for (let startBlockNumber = start; startBlockNumber <= end; startBlockNumber += blockStep) {
       (async () => {
-        await staticPool.exec(startBlockNumber, blockStep, end)
+        await staticPool.exec({
+          startBlockNumber,
+          endBlockNumber: Math.min(startBlockNumber + blockStep, end),
+        })
       })()
     }
   } catch (e) {
