@@ -57,19 +57,19 @@ module.exports = ({
       if (!web3.utils.isAddress(address)) {
         return res.status(500).json({ error: "invalid address" });
       }
-      let tokenType = type.toString();
-      if (!(tokenType == "erc20" || tokenType == "erc721")) {
+      const tokenType = type.toString().toUpperCase();
+      if (!(tokenType == "ERC20" || tokenType == "ERC721")) {
         return res.status(500).json({ error: "invalid token type" });
       }
       const contractAbi =
-        tokenType == "erc20" ? abi.APIS_ERC20 : abi.APIS_ERC721;
+        tokenType == "ERC20" ? abi.APIS_ERC20 : abi.APIS_ERC721;
       const Contract = new web3.eth.Contract(
         contractAbi,
         tokenContractAddress,
         {
-          from: address, 
+          from: address,
           gasLimit: web3.utils.toHex(100000),
-          gasPrice: web3.utils.toHex(50e9), 
+          gasPrice: web3.utils.toHex(50e9),
         }
       );
       Contract.methods
@@ -77,9 +77,9 @@ module.exports = ({
         .call()
         .then(async function (result) {
           let balance;
-          if (tokenType === "erc20") {
+          if (tokenType === "ERC20") {
             balance = await web3.utils.fromWei(result, "ether");
-          } else if (tokenType === "erc721") {
+          } else if (tokenType === "ERC721") {
             balance = result;
           }
           return res.status(200).json({ balance });
@@ -108,9 +108,9 @@ module.exports = ({
         contractAbi,
         tokenContractAddress,
         {
-          from: address, 
+          from: address,
           gasLimit: web3.utils.toHex(100000),
-          gasPrice: web3.utils.toHex(50e9), 
+          gasPrice: web3.utils.toHex(50e9),
         }
       );
       Contract.methods
@@ -126,7 +126,7 @@ module.exports = ({
       return res.status(500).json({ errors: [e] });
     }
   });
-
+  
   router.get("/:address/owner", async (req, res, next) => {
     try {
       const { address = "*" } = req.params;
@@ -145,9 +145,9 @@ module.exports = ({
         contractAbi,
         tokenContractAddress,
         {
-          from: address, 
+          from: address,
           gasLimit: web3.utils.toHex(100000),
-          gasPrice: web3.utils.toHex(50e9), 
+          gasPrice: web3.utils.toHex(50e9),
         }
       );
       Contract.methods
@@ -163,6 +163,5 @@ module.exports = ({
       return res.status(500).json({ errors: [e] });
     }
   });
-
   return router;
 };
