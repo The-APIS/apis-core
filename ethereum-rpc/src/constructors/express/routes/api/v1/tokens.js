@@ -1,26 +1,31 @@
-const axios = require('axios')
-const router = require('express').Router()
+const axios = require("axios");
+const router = require("express").Router();
 
+const prefixContractAddress = (address) =>
+  address.startsWith("0x") ? address : `0x${address}`;
 
-module.exports = ({ models, ethereum: { web3, buildContract, compiler }, ...context }) => {
-
-  router.post('/', async (req, res, next) => {
+module.exports = ({
+  models,
+  ethereum: { web3, buildContract, compiler, abi },
+  ...context
+}) => {
+  router.post("/", async (req, res, next) => {
     try {
       const {
-        network = 'mainnet',
-        type = 'UNISWAP',
+        network = "mainnet",
+        type = "UNISWAP",
         amount = 0,
-        sender = '',
-        recipient = '',
-        tokenContractAddress = '',
-        privateKey = '',
+        sender = "",
+        recipient = "",
+        tokenContractAddress = "",
+        privateKey = "",
         sendOptions = {
           gasLimit: web3.utils.toHex(100000),
           gasPrice: web3.utils.toHex(50e9),
         },
         token = {},
         ...body
-      } = req.body
+      } = req.body;
 
       const result = await compiler.deployContract({
         token,
@@ -28,16 +33,135 @@ module.exports = ({ models, ethereum: { web3, buildContract, compiler }, ...cont
         sender,
         privateKey,
         sendOptions,
-      })
+      });
 
-      console.log('result', result)
+      console.log("result", result);
 
-      return res.status(200).json(result.deployTransaction)
+      return res.status(200).json(result.deployTransaction);
     } catch (e) {
-      console.error(e)
-      return res.status(500).json({ errors: [e] })
+      console.error(e);
+      return res.status(500).json({ errors: [e] });
     }
-  })
+  });
 
-  return router
-}
+  router.get("/:address/balance", async (req, res, next) => {
+    try {
+      const { address = "*" } = req.params;
+      let { tokenAddress = "", type = "erc20" } = { ...req.query };
+      const tokenContractAddress = prefixContractAddress(
+        tokenAddress.toString("hex")
+      );
+      if (!web3.utils.isAddress(tokenContractAddress)) {
+        return res.status(500).json({ error: "invalid contract address" });
+      }
+      if (!web3.utils.isAddress(address)) {
+        return res.status(500).json({ error: "invalid address" });
+      }
+      const tokenType = type.toString().toUpperCase();
+      if (!(tokenType == "ERC20" || tokenType == "ERC721")) {
+        return res.status(500).json({ error: "invalid token type" });
+      }
+      const contractAbi =
+        tokenType == "ERC20" ? abi.APIS_ERC20 : abi.APIS_ERC721;
+      const Contract = new web3.eth.Contract(
+        contractAbi,
+        tokenContractAddress,
+        {
+          from: address,
+          gasLimit: web3.utils.toHex(100000),
+          gasPrice: web3.utils.toHex(50e9),
+        }
+      );
+      Contract.methods
+        .balanceOf(address)
+        .call()
+        .then(async function (result) {
+          let balance;
+          if (tokenType === "ERC20") {
+            balance = await web3.utils.fromWei(result, "ether");
+          } else if (tokenType === "ERC721") {
+            balance = result;
+          }
+          return res.status(200).json({ balance });
+        });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ errors: [e] });
+    }
+  });
+
+  router.get("/:address/id", async (req, res, next) => {
+    try {
+      const { address = "*" } = req.params;
+      let { tokenAddress = "" } = { ...req.query };
+      const tokenContractAddress = prefixContractAddress(
+        tokenAddress.toString("hex")
+      );
+      if (!web3.utils.isAddress(tokenContractAddress)) {
+        return res.status(500).json({ error: "invalid contract address" });
+      }
+      if (!web3.utils.isAddress(address)) {
+        return res.status(500).json({ error: "invalid address" });
+      }
+      const contractAbi = abi.APIS_ERC721;
+      const Contract = new web3.eth.Contract(
+        contractAbi,
+        tokenContractAddress,
+        {
+          from: address,
+          gasLimit: web3.utils.toHex(100000),
+          gasPrice: web3.utils.toHex(50e9),
+        }
+      );
+      Contract.methods
+        .getTokenID(address)
+        .call()
+        .then(async function (result) {
+          let id;
+          id = result;
+          return res.status(200).json({ id });
+        });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ errors: [e] });
+    }
+  });
+  
+  router.get("/:address/owner", async (req, res, next) => {
+    try {
+      const { address = "*" } = req.params;
+      let { tokenAddress = "", tokenId = "" } = { ...req.query };
+      const tokenContractAddress = prefixContractAddress(
+        tokenAddress.toString("hex")
+      );
+      if (!web3.utils.isAddress(tokenContractAddress)) {
+        return res.status(500).json({ error: "invalid contract address" });
+      }
+      if (!web3.utils.isAddress(address)) {
+        return res.status(500).json({ error: "invalid address" });
+      }
+      const contractAbi = abi.APIS_ERC721;
+      const Contract = new web3.eth.Contract(
+        contractAbi,
+        tokenContractAddress,
+        {
+          from: address,
+          gasLimit: web3.utils.toHex(100000),
+          gasPrice: web3.utils.toHex(50e9),
+        }
+      );
+      Contract.methods
+        .ownerOf(tokenId)
+        .call()
+        .then(async function (result) {
+          let owner;
+          owner = result;
+          return res.status(200).json({ owner });
+        });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ errors: [e] });
+    }
+  });
+  return router;
+};
