@@ -26,7 +26,6 @@ module.exports = ({
         token = {},
         ...body
       } = req.body;
-
       const result = await compiler.deployContract({
         token,
         type,
@@ -34,9 +33,7 @@ module.exports = ({
         privateKey,
         sendOptions,
       });
-
       console.log("result", result);
-
       return res.status(200).json(result.deployTransaction);
     } catch (e) {
       console.error(e);
@@ -126,7 +123,7 @@ module.exports = ({
       return res.status(500).json({ errors: [e] });
     }
   });
-  
+
   router.get("/:address/owner", async (req, res, next) => {
     try {
       const { address = "*" } = req.params;
@@ -160,6 +157,54 @@ module.exports = ({
         });
     } catch (e) {
       console.error(e);
+      return res.status(500).json({ errors: [e] });
+    }
+  });
+
+  router.post("/:address/mint", async (req, res, next) => {
+    try {
+      const { address = "*" } = req.params;
+      let {
+        tokenAddress = "",
+        toAddress = "",
+        id = "",
+        privateKey = "",
+      } = { ...req.query };
+      const tokenContractAddress = prefixContractAddress(
+        tokenAddress.toString("hex")
+      );
+      const recieverAddress = prefixContractAddress(toAddress.toString("hex"));
+      if (!web3.utils.isAddress(address)) {
+        return res.status(500).json({ error: "invalid address" });
+      }
+      if (!web3.utils.isAddress(toAddress)) {
+        return res.status(500).json({ error: "invalid address" });
+      }
+      if (!web3.utils.isAddress(tokenAddress)) {
+        return res.status(500).json({ error: "invalid contract address" });
+      }
+      const contractAbi = abi.APIS_ERC721;
+      const wallet = web3.eth.accounts.wallet.add({
+        privateKey,
+        address,
+      });
+      const walletList = web3.eth.accounts.wallet;
+      const Contract = new web3.eth.Contract(
+        contractAbi,
+        tokenContractAddress,
+        {
+          from: address,
+          gasLimit: web3.utils.toHex(1000000),
+          gasPrice: web3.utils.toHex(50e9), // 10 Gwei
+        }
+      );
+      Contract.methods
+        .safeMint(recieverAddress, id)
+        .send({ from: address })
+        .then(async function (result) {
+          return res.status(200).json({ result });
+        });
+    } catch (e) {
       return res.status(500).json({ errors: [e] });
     }
   });
