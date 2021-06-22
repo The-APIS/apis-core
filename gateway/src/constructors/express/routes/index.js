@@ -7,7 +7,7 @@ module.exports = (context = {}) => {
  const APIRouter = require("./api")(context);
 
  router.use("/api", async (req, res, next) => {
-  console.log("TODO - authenticate...");
+  console.log("TODO - authenticate....");
   try {
    const { apiKey = "*" } = req.query;
    const Op = sequelize.Op;
