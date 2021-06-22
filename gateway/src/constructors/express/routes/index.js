@@ -3,23 +3,25 @@ const cors = require('cors')
 const router = require('express').Router()
 
 module.exports = (context = {}) => {
+  const { sequelize, models } = context
   const APIRouter = require('./api')(context)
 
   router.use('/api', (req, res, next) => {
     console.log('TODO - authenticate...')
-    try{
-     const {apikey = "" } = {...req.query};
-    console.log(" sequelize......",context);
-    const Op = context.expressContext.sequelize.Op;
-    const clientDb = context.expressContext.models;
-     console.log(" clientDb...",clientDb);
-     clientDb.User.findAll()
-     .then((result) => { console.log("result.......",result)})
+    try {
+      const {apikey = "" } = {...req.query};
+      console.log(" sequelize......", context);
+      const Op = sequelize.Op;
+      console.log("models...", models);
+      models.User.findAll()
+      .then((result) => {
+       console.log("result.......", result)
+      })
       .catch(e => console.log(e))
     
-     //  clientDb.User.findAll({where : {firstName : { [Op.like] : '%' + apikey + '%'}}})
-     // .then((result) => { console.log("result.......",result)})
-     // .catch(e => console.log(e))
+      //  models.User.findAll({where : {firstName : { [Op.like] : '%' + apikey + '%'}}})
+      // .then((result) => { console.log("result.......",result)})
+      // .catch(e => console.log(e))
      
     }
     catch (e){
