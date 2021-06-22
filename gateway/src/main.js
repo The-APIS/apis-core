@@ -23,6 +23,6 @@ module.exports.run = async () => {
   if (process.env.MIGRATE_ON_BOOTSTRAP === 'true') await require('@/share/sequelize/bin/sequelizeMigrate')()
 
   console.log('[Gateway][Main] Starting Express Server...')
-  await require('@/constructors/express')({})
+  await require('@/constructors/express')({expressContext})
 
 }
