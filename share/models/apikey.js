@@ -14,15 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   APIKey.init({
-    uid: {
+    api_key:{
      type :DataTypes.UUID,
      defaultValue:DataTypes.UUIDV4
-    },
-     api_key: DataTypes.STRING
+    }
   }, {
     sequelize,
     modelName: 'APIKey',
   });
   return APIKey;
 };
-

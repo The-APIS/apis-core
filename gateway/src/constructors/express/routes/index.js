@@ -5,6 +5,7 @@ const router = require("express").Router();
 module.exports = (context = {}) => {
  const { sequelize, models } = context;
  const APIRouter = require("./api")(context);
+ const KEYRouter = require("./key")(context);
 
  router.use("/api", async (req, res, next) => {
   console.log("TODO - authenticate....");
@@ -21,6 +22,8 @@ module.exports = (context = {}) => {
    return res.status(401).json({ error: [e] });
   }
  });
+
+ router.use("/model/api/key", KEYRouter)
 
  if (process.env.NODE_ENV === "development") {
   router.use("/api", cors(), APIRouter);
