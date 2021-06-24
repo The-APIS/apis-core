@@ -21,5 +21,3 @@ module.exports = {
    return queryInterface.bulkDelete('APIKey', null, {});
  }
 };
-
-

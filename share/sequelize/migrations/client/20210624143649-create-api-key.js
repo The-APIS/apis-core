@@ -9,8 +9,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       api_key: {
-       type: Sequelize.UUID,
-       defaultValue:Sequelize.UUIDV4
+        type: Sequelize.UUID,
+        defaultValue:Sequelize.UUIDV4
       },
       createdAt: {
         allowNull: false,
@@ -26,4 +26,3 @@ module.exports = {
     await queryInterface.dropTable('APIKey');
   }
 };
-

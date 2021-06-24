@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   APIKey.init({
-    api_key:{
-     type :DataTypes.UUID,
-     defaultValue:DataTypes.UUIDV4
+    api_key: {
+     type:DataTypes.UUID,
+    defaultValue:DataTypes.UUIDV4
     }
   }, {
     sequelize,
