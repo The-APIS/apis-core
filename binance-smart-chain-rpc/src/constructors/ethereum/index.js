@@ -23,7 +23,7 @@ const requireABIs = () => {
   const abiFilenames = readABIFilenamesFromPath(abiPath)
   return abiFilenames.reduce((acc, filename) => ({
     ...acc,
-    [filename.slice(0, 5)]: importABI(filename),
+    [filename.slice(0,-5)]: importABI(filename),
   }), {})
 }
 
