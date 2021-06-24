@@ -27,7 +27,7 @@ services:
   binance-smart-chain-rpc:
     build:
       context: .
-      dockerfile: ./binance-smart-chain-rpc/src/Dockerfile
+      dockerfile: ./ethereum-rpc/src/Dockerfile
     command: npm run dev
     environment:
       NODE_ENV: development
@@ -40,9 +40,10 @@ services:
     - .env
     volumes:
       - /app/node_modules
-      - ./binance-smart-chain-rpc/src:/app
+      - ./ethereum-rpc/src:/app
       - ./share:/app/share
       - ./share/models:/app/constructors/sequelize/models
+      - ./share/migrations/ethereum:/app/constructors/sequelize/migrations
     links:
       - postgres
       - redis
