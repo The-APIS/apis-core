@@ -55,7 +55,6 @@ const createInput = ({ templateOptions: { token }, type }) => {
   },
  };
 };
-
 function findImports(importFile) {
  let contents;
  try {
@@ -87,11 +86,7 @@ async function deployContractInternal({
  sendOptions,
  deployArgs = [],
 }) {
- const provider = new ethers.providers.WebSocketProvider(
-  process.env.ETHEREUM_WSS_ADDR,
-  process.env.ETHEREUM_NETWORK || "rinkeby"
- );
- // const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_HTTPS_ADDR || 'http://127.0.0.1:8545', (process.env.ETHEREUM_NETWORK || 'rinkeby'))
+ let provider = new ethers.providers.JsonRpcProvider(process.env.BINANCE_SMART_CHAIN_HTTPS_ADDR)
  const wallet = new ethers.Wallet(privateKey, provider);
  const factory = new ethers.ContractFactory(
   contractJson.abi,
@@ -108,10 +103,7 @@ async function deployStaticContract({
  deployArgs = [],
 }) {
  // const provider = new ethers.providers.WebSocketProvider(process.env.ETHEREUM_WSS_ADDR, (process.env.ETHEREUM_NETWORK || 'rinkeby'))
- const provider = new ethers.providers.JsonRpcProvider(
-  process.env.ETHEREUM_HTTPS_ADDR || "http://127.0.0.1:8545",
-  process.env.ETHEREUM_NETWORK || "rinkeby"
- );
+ let provider = new ethers.providers.JsonRpcProvider(process.env.BINANCE_SMART_CHAIN_HTTPS_ADDR)
  const wallet = new ethers.Wallet(privateKey, provider);
  const factory = new ethers.ContractFactory(abi, bytecode, wallet);
  return factory.deploy(...(deployArgs || []));
