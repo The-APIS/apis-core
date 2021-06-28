@@ -24,4 +24,9 @@ const options = {
   },
 };
 
-module.exports = new Web3(new Web3WsProvider(process.env.ETHEREUM_WSS_ADDR || 'http://127.0.0.1:8546', options))
+const web3 = new Web3(new Web3WsProvider(process.env.ETHEREUM_WSS_ADDR || 'http://127.0.0.1:8546', options))
+const bscWeb3 = new Web3(process.env.BINANCE_SMART_CHAIN_HTTPS_ADDR || 'http://127.0.0.1:8546', options)
+module.exports = {
+web3,
+bscWeb3
+}

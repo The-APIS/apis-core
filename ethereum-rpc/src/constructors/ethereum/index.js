@@ -3,7 +3,8 @@ const path = require('path')
 const checksum = require('ethereum-checksum-address')
 // const decoder = require('abi-decoder')
 
-const web3 = require('@/constructors/web3')
+const web3Connection = require('@/constructors/web3')
+const {web3,bscWeb3} = web3Connection;
 const compiler = require('./compiler')
 
 
@@ -34,6 +35,7 @@ const abi = requireABIs()
 
 const ethereum = module.exports = {
   web3,
+  bscWeb3,
   abi,
   // decoder,
   checksum,
