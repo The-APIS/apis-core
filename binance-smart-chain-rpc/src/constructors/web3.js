@@ -1,4 +1,5 @@
 const Web3 = require('web3')
+// const Web3WsProvider = require('web3-providers-ws');
 
 const options = {
   timeout: 30000, // ms
@@ -23,9 +24,4 @@ const options = {
   },
 };
 
-const web3 = new Web3(process.env.ETHEREUM_HTTPS_ADDR || 'http://127.0.0.1:8546', options)
-const bscWeb3 = new Web3(process.env.BINANCE_SMART_CHAIN_HTTPS_ADDR || 'http://127.0.0.1:8546', options)
-module.exports = {
-web3,
-bscWeb3
-}
+module.exports = new Web3(process.env.BINANCE_SMART_CHAIN_HTTPS_ADDR || 'http://127.0.0.1:8546', options)
