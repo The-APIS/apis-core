@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const solc = require("solc");
 const ethers = require("ethers"); 
-const {web3} = require('@/constructors/web3')
+const web3 = require("@/constructors/web3");
 const EthereumTx = require("ethereumjs-tx").Transaction;
 const handlebars = require("handlebars");
 
@@ -89,12 +89,8 @@ async function deployContractInternal({
  sendOptions,
  deployArgs = [],
 }) {
- 
- const provider = chain === "ethereum" ? new ethers.providers.JsonRpcProvider(
-  process.env.ETHEREUM_HTTPS_ADDR,
-  process.env.ETHEREUM_NETWORK || "rinkeby"
- ) : new ethers.providers.JsonRpcProvider(process.env.BINANCE_SMART_CHAIN_HTTPS_ADDR) ; 
- //let provider = new ethers.providers.JsonRpcProvider(process.env.BINANCE_SMART_CHAIN_HTTPS_ADDR)
+
+ let provider = new ethers.providers.JsonRpcProvider(process.env.CHAIN_NETWORK_HTTPS_ADDR)
  // const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_HTTPS_ADDR || 'http://127.0.0.1:8545', (process.env.ETHEREUM_NETWORK || 'rinkeby'))
  const wallet = new ethers.Wallet(privateKey, provider);
  const factory = new ethers.ContractFactory(
