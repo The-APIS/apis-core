@@ -2,7 +2,7 @@ const axios = require("axios");
 const router = require("express").Router();
 const { body, query, param, validationResult } = require("express-validator");
 
-const prefixPrivateKey = key => key.startsWith('0x') ? key : `0x${key}`
+const prefixPrivateKey = (key) => (key.startsWith("0x") ? key : `0x${key}`);
 const prefixContractAddress = (address) =>
  address.startsWith("0x") ? address : `0x${address}`;
 
@@ -19,12 +19,13 @@ module.exports = ({
   });
   return instance;
  };
- 
+
  router.post(
   "/",
-  [body("type").trim().isIn(["APIS_ERC20", "APIS_ERC721"]),
-  body("chain").trim().isIn(["ethereum", "binance_smart_chain"])
- ],
+  [
+   body("type").trim().isIn(["APIS_ERC20", "APIS_ERC721"]),
+   body("chain").trim().isIn(["ethereum", "binance_smart_chain"]),
+  ],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -117,7 +118,7 @@ module.exports = ({
    }
   }
  );
- 
+
  router.get(
   "/:address/id",
   [param("address").trim().isString(), query("tokenAddress").trim().isString()],
@@ -623,6 +624,257 @@ module.exports = ({
    } catch (e) {
     console.error(e);
     return res.status(500).json({ error: [e] });
+   }
+  }
+ );
+
+ router.get(
+  "/:address/erc1155/balance",
+  [
+   param("address").trim().isString(),
+   query("type").trim().isIn(["erc1155"]),
+   query("tokenAddress").trim().isString(),
+  ],
+  async (req, res, next) => {
+   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+     return res.status(400).json({ errors: errors.array() });
+    }
+    const { address = "*" } = req.params;
+    let { tokenAddress = "", type = "erc1155", id = "" } = { ...req.query };
+    const tokenContractAddress = prefixContractAddress(
+     tokenAddress.toString("hex")
+    );
+    if (!web3.utils.isAddress(tokenContractAddress)) {
+     return res.status(500).json({ error: "invalid contract address" });
+    }
+    if (!web3.utils.isAddress(address)) {
+     return res.status(500).json({ error: "invalid address" });
+    }
+    const tokenType = type.toString().toUpperCase();
+    if (!(tokenType == "ERC1155")) {
+     return res.status(500).json({ error: "invalid token type" });
+    }
+    const contractAbi = abi.APIS_ERC1155;
+    const contract = await contractInstance(
+     contractAbi,
+     tokenContractAddress,
+     address
+    );
+    contract.methods
+     .balanceOf(address, id)
+     .call()
+     .then(async function (result) {
+      return res.status(200).json({ result });
+     });
+   } catch (e) {
+    console.error(e);
+    return res.status(500).json({ errors: [e] });
+   }
+  }
+ );
+
+ router.get(
+  "/:address/erc1155/contract",
+  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  async (req, res, next) => {
+   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+     return res.status(400).json({ errors: errors.array() });
+    }
+    const { address = "*" } = req.params;
+    let { tokenAddress = "" } = { ...req.query };
+    const tokenContractAddress = prefixContractAddress(
+     tokenAddress.toString("hex")
+    );
+    if (!web3.utils.isAddress(tokenContractAddress)) {
+     return res.status(500).json({ error: "invalid contract address" });
+    }
+    if (!web3.utils.isAddress(address)) {
+     return res.status(500).json({ error: "invalid address" });
+    }
+    const contractAbi = abi.APIS_ERC1155;
+    const contract = await contractInstance(
+     contractAbi,
+     tokenContractAddress,
+     address
+    );
+    contract.methods
+     .owner()
+     .call()
+     .then((result) => {
+      res.status(200).json({ result });
+     });
+   } catch (e) {
+    console.error(e);
+    return res.status(500).json({ errors: [e] });
+   }
+  }
+ );
+
+ router.get(
+  "/:address/erc1155/uri",
+  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  async (req, res, next) => {
+   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+     return res.status(400).json({ errors: errors.array() });
+    }
+    const { address = "*" } = req.params;
+    let { tokenAddress = "", id = "" } = { ...req.query };
+    const tokenContractAddress = prefixContractAddress(
+     tokenAddress.toString("hex")
+    );
+    if (!web3.utils.isAddress(tokenContractAddress)) {
+     return res.status(500).json({ error: "invalid contract address" });
+    }
+    if (!web3.utils.isAddress(address)) {
+     return res.status(500).json({ error: "invalid address" });
+    }
+    const contractAbi = abi.APIS_ERC1155;
+    const contract = await contractInstance(
+     contractAbi,
+     tokenContractAddress,
+     address
+    );
+    contract.methods
+     .uri(id)
+     .call()
+     .then((result) => {
+      res.status(200).json({ result });
+     });
+   } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: [e] });
+   }
+  }
+ );
+
+ router.post(
+  "/:address/erc1155/mint",
+  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  async (req, res, next) => {
+   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+     return res.status(400).json({ errors: errors.array() });
+    }
+    const { address = "*" } = req.params;
+    let {
+     tokenAddress = "",
+     toAddress = "",
+     id = "",
+     privateKey = "",
+     data = "",
+     amount = "",
+    } = { ...req.query };
+    const tokenContractAddress = prefixContractAddress(
+     tokenAddress.toString("hex")
+    );
+    const recieverAddress = prefixContractAddress(toAddress.toString("hex"));
+    if (!web3.utils.isAddress(address)) {
+     return res.status(500).json({ error: "invalid address" });
+    }
+    if (!web3.utils.isAddress(toAddress)) {
+     return res.status(500).json({ error: "invalid address" });
+    }
+    if (!web3.utils.isAddress(tokenAddress)) {
+     return res.status(500).json({ error: "invalid contract address" });
+    }
+    //const bytesData = web3.utils.asciiToHex(data);
+    const contractAbi = abi.APIS_ERC1155;
+    const wallet = web3.eth.accounts.wallet.add({
+     privateKey,
+     address,
+    });
+    const contract = await contractInstance(
+     contractAbi,
+     tokenContractAddress,
+     address
+    );
+    contract.methods
+     .mint(recieverAddress, id, amount, data)
+     .send({ from: address })
+     .then((result) => {
+      res.status(200).json({ result });
+     });
+   } catch (e) {
+    return res.status(500).json({ errors: [e] });
+   }
+  }
+ );
+
+ router.post(
+  "/:address/erc1155/mint/batch",
+  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  async (req, res, next) => {
+   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+     return res.status(400).json({ errors: errors.array() });
+    }
+    const { address = "*" } = req.params;
+    let {
+     tokenAddress = "",
+     toAddress = "",
+     ids = "",
+     privateKey = "",
+     data = "",
+     amounts = "",
+    } = { ...req.query };
+
+    const amountArray = amounts.split(",").map(Number);
+    const idArray = ids.split(",").map(Number);
+    if (amountArray.length != idArray.length) {
+     return res
+      .status(500)
+      .json({ error: "NO: OF ID's NOT EQUAL TO NO OF AMOUNTS" });
+    }
+    for (i = 0; i < amountArray.length; i++) {
+     if (amountArray[i] == "") {
+      return res.status(500).json({ error: "AMOUNT CANNOT BE NULL" });
+     }
+    }
+    for (i = 0; i < idArray.length; i++) {
+     if (idArray[i] == "") {
+      return res.status(500).json({ error: "ID CANNOT BE NULL" });
+     }
+    }
+    const tokenContractAddress = prefixContractAddress(
+     tokenAddress.toString("hex")
+    );
+    const recieverAddress = prefixContractAddress(toAddress.toString("hex"));
+    if (!web3.utils.isAddress(address)) {
+     return res.status(500).json({ error: "invalid address" });
+    }
+    if (!web3.utils.isAddress(toAddress)) {
+     return res.status(500).json({ error: "invalid address" });
+    }
+    if (!web3.utils.isAddress(tokenAddress)) {
+     return res.status(500).json({ error: "invalid contract address" });
+    }
+    //const bytesData = web3.utils.asciiToHex(data);
+    const contractAbi = abi.APIS_ERC1155;
+    const wallet = web3.eth.accounts.wallet.add({
+     privateKey,
+     address,
+    });
+    const contract = await contractInstance(
+     contractAbi,
+     tokenContractAddress,
+     address
+    );
+    contract.methods
+     .mintBatch(recieverAddress, idArray, amountArray, data)
+     .send({ from: address })
+     .then((result) => {
+      res.status(200).json({ result });
+     });
+   } catch (e) {
+    return res.status(500).json({ errors: [e] });
    }
   }
  );
