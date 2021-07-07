@@ -1115,7 +1115,6 @@ module.exports = ({
     const tokenContractAddress = prefixContractAddress(
      tokenAddress.toString("hex")
     );
-    
     if (!web3.utils.isAddress(tokenAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
     }

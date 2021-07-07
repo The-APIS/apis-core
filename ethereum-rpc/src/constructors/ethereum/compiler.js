@@ -25,6 +25,11 @@ const apisErc721TemplateText = fs.readFileSync(
  "utf8"
 );
 const apisErc721Template = handlebars.compile(apisErc721TemplateText);
+const apisErc1155TemplateText = fs.readFileSync(
+ path.resolve(__dirname, "./contracts/APIS_ERC1155.sol"),
+ "utf8"
+);
+const apisErc1155Template = handlebars.compile(apisErc1155TemplateText);
 const apisErc20Abi = fs.readFileSync(
  path.resolve(__dirname, "./abi/APIS_ERC20.json"),
  "utf8"
@@ -36,9 +41,8 @@ const apisErc20Compiled = fs.readFileSync(
 
 const createInput = ({ templateOptions: { token }, type }) => {
  const content =
-  type === "APIS_ERC20"
-   ? apisErc20Template({ token })
-   : apisErc721Template({ token });
+  type === "APIS_ERC20" ? apisErc20Template({ token }) :
+  type === "APIS_ERC721" ? apisErc721Template({ token }) : apisErc1155Template({ token })
  return {
   language: "Solidity",
   sources: {
@@ -121,6 +125,7 @@ const deployContract = (params) => {
   if (
    params.type === "APIS_ERC20" ||
    params.type === "APIS_ERC721" ||
+   params.type === "APIS_ERC1155" ||
    !params.type
   ) {
    // return deployStaticContract({
@@ -135,7 +140,7 @@ const deployContract = (params) => {
    //     (params.supply || false),
    //   ],
    // })
-   let deployArgsErc20, deployArgsErc721;
+   let deployArgsErc20, deployArgsErc721, deployArgsErc115;
    if (params.type === "APIS_ERC20") {
     deployArgsErc20 = [
      params.token.name,
@@ -151,6 +156,11 @@ const deployContract = (params) => {
      params.token.uri.toString(),
     ];
    }
+   else if (params.type === "APIS_ERC1155") {
+    deployArgsErc1155 = [
+     params.token.uri.toString(),
+    ];
+   }
    const input = createInput({
     templateOptions: { token: params.token },
     type: params.type,
@@ -159,8 +169,10 @@ const deployContract = (params) => {
    return deployContractInternal({
     contractJson:
      params.type === "APIS_ERC20"
-      ? output.contracts[`${params.token.name}.sol`].ERC20
-      : output.contracts[`${params.token.name}.sol`].APIS_ERC721,
+     ? output.contracts[`${params.token.name}.sol`].ERC20
+     :params.type === "APIS_ERC721"
+     ? output.contracts[`${params.token.name}.sol`].APIS_ERC721
+     : output.contracts[`${params.token.name}.sol`].APIS_ERC1155,
     sender: params.sender,
     privateKey: params.privateKeyHex,
     chain:params.chain,
@@ -169,7 +181,7 @@ const deployContract = (params) => {
      ...params.sendOptions,
     },
     deployArgs:
-     params.type === "APIS_ERC20" ? deployArgsErc20 : deployArgsErc721,
+    params.type === "APIS_ERC20" ? deployArgsErc20 : params.type === "APIS_ERC721" ? deployArgsErc721: deployArgsErc1155,
    });
   } else {
    throw new Error("Invalid type");
