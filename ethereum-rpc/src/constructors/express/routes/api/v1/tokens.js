@@ -23,7 +23,7 @@ module.exports = ({
  router.post(
   "/",
   [
-   body("type").trim().isIn(["APIS_ERC20", "APIS_ERC721"]),
+   body("type").trim().isIn(["APIS_ERC20", "APIS_ERC721","APIS_ERC1155"]),
    body("chain").trim().isIn(["ethereum", "binance_smart_chain"]),
   ],
   async (req, res, next) => {
@@ -1093,6 +1093,50 @@ module.exports = ({
    } catch (e) {
     console.error(e);
     return res.status(500).json({ error: [e] });
+   }
+  }
+ );
+
+ router.post(
+  "/:address/erc1155/uri",
+  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  async (req, res, next) => {
+   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+     return res.status(400).json({ errors: errors.array() });
+    }
+    const { address = "*" } = req.params;
+    let {
+     tokenAddress = "",
+     uri = "",
+     privateKey = ""
+    } = { ...req.query };
+    const tokenContractAddress = prefixContractAddress(
+     tokenAddress.toString("hex")
+    );
+    
+    if (!web3.utils.isAddress(tokenAddress)) {
+     return res.status(500).json({ error: "invalid contract address" });
+    }
+    const contractAbi = abi.APIS_ERC1155;
+    const wallet = web3.eth.accounts.wallet.add({
+     privateKey,
+     address,
+    });
+    const contract = await contractInstance(
+     contractAbi,
+     tokenContractAddress,
+     address
+    );
+    contract.methods
+     .setURI(uri)
+     .send({ from: address })
+     .then((result) => {
+      res.status(200).json({ result });
+     });
+   } catch (e) {
+    return res.status(500).json({ errors: [e] });
    }
   }
  );
