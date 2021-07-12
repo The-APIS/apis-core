@@ -17,12 +17,6 @@ workflows:
               only:
                 - master
                 - stable
-      - binance-smart-chain-rpc:
-          filters:
-            branches:
-              only:
-                - master
-                - stable
       - ethereum-listener:
           filters:
             branches:
@@ -124,36 +118,6 @@ jobs:
           steps:
             - run:
                 command: "docker push theapis/apis-core-bitcoin-rpc:stable"
-
-  binance-smart-chain-rpc:
-    executor: ubuntu
-    steps:
-      - checkout
-      - when:
-          condition:
-            equal: [ "master", << pipeline.git.branch >> ]
-          steps:
-            - run:
-                command: "docker build -f binance-smart-chain-rpc/src/Dockerfile . -t 'theapis/apis-core-binance-smart-chain-rpc:latest'"
-      - when:
-          condition:
-            equal: [ "stable", << pipeline.git.branch >> ]
-          steps:
-            - run:
-                command: "docker build -f binance-smart-chain-rpc/src/Dockerfile . -t 'theapis/apis-core-binance-smart-chain-rpc:stable'"
-      - docker_login
-      - when:
-          condition:
-            equal: [ "master", << pipeline.git.branch >> ]
-          steps:
-            - run:
-                command: "docker push theapis/apis-core-binance-smart-chain-rpc:latest"
-      - when:
-          condition:
-            equal: [ "stable", << pipeline.git.branch >> ]
-          steps:
-            - run:
-                command: "docker push theapis/apis-core-binance-smart-chain-rpc:stable"
 
   ethereum-listener:
     executor: ubuntu
