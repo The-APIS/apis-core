@@ -1,9 +1,0 @@
-require('module-alias/register')
-const path = require('path')
-
-module.exports = {
-  'config': path.resolve('./constructors/sequelize/config', 'postgres.js'),
-  'models-path': path.resolve('./constructors/sequelize', 'models'),
-  'seeders-path': path.resolve('./constructors/sequelize', 'seeders'),
-  'migrations-path': path.resolve('./constructors/sequelize', 'migrations'),
-}
