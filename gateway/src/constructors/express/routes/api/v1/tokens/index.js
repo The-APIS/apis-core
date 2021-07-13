@@ -16,9 +16,9 @@ module.exports = (context) => {
   router.post('/', [
     body('chain').trim().isIn(SUPPORTED_CHAINS),
     body('network').trim().isIn(SUPPORTED_NETWORKS),
-    body('type').trim().isIn(['APIS_ERC20', /* TODO */]),
+    body('type').trim().isIn(['APIS_ERC20', 'APIS_ERC721','APIS_ERC1155']),
     body('sender').trim().isString(),
-    // body('token').shape(), // TODO
+    body('token').shape(), // TODO
     body('privateKey').trim().isString(),
   ], async (req, res, next) => {
 
