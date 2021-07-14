@@ -21,7 +21,7 @@ module.exports = (context = {}) => {
     if (apiKey.length != 36) {
      return res.status(401).json({ error: `INVALID API KEY: ${apiKey}`});
     }
-    const result = await axios.get(`https://app.dev.theapis.io/api/v1/apikeys/${apiKey}/verify`);
+    const result = await axios.get(`${process.env.APIS_PORTAL_GATEWAY}/api/v1/apikeys/${apiKey}/verify`);
     if (result.status !== 200) {
      return res.status(401).json({ message: `Unauthorized api key : ${apiKey}` });
     }
