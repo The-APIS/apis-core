@@ -37,26 +37,14 @@ volumes: [
     stage('Deploy (kubectl)') {
       container('kubectl') {
         sh """
-          # without tagging, rollout will not be triggered
-          # patch, to force rollout (development envs only)
-
-          # kubectl set image -n apis deployment/gateway \
-          #   gateway=theapis/apis-core-gateway:latest \
-          #   bitcoin-rpc=theapis/apis-core-bitcoin-rpc:latest \
-          #   bitcoin-listener=theapis/apis-core-bitcoin-listener:latest \
-          #   ethereum-rpc=theapis/apis-core-ethereum-rpc:latest \
-          #   ethereum-listener=theapis/apis-core-ethereum-listener:latest
-          #   # static=${staticServerImage}:latest # does not exist in dev
-
-          # kubectl patch -n apis deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
-
           kubectl rollout restart -n apis deployment \
-            gateway \
-            ethereum-listener-mainnet \
-            ethereum-listener-rinkeby \
-            ethereum-rpc-mainnet \
-            ethereum-rpc-rinkeby
-
+            apis-core-binance-smart-chain-mainnet \
+            apis-core-binance-smart-chain-testnet \
+            apis-core-bitcoin-mainnet \
+            apis-core-bitcoin-testnet \
+            apis-core-ethereum-mainnet \
+            apis-core-ethereum-rinkeby \
+            apis-core-gateway
           """
       }
     }
