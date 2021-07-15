@@ -22,18 +22,13 @@ volumes: [
     def staticServerImageName = "apiscore-static"
     def staticServerImage = "${registry}/${staticServerImageName}"
 
-    def developersImageName = "apiscore-developers"
-    def developersImage = "${registry}/${developersImageName}"
-
     container('docker') {
       stage('Build') {
         checkout scm
-        developers = docker.build("${developersImageName}", "-f developers/Production.Dockerfile ./developers")
         staticServer = docker.build("${staticServerImage}", "-f static/Dockerfile ./static/src")
       }
       stage('Push') {
         docker.withRegistry('https://' + env.DOCKER_REGISTRY) {
-          developers.push("latest")
           staticServer.push("latest")
         }
       }
@@ -45,19 +40,22 @@ volumes: [
           # without tagging, rollout will not be triggered
           # patch, to force rollout (development envs only)
 
-          kubectl set image -n apis deployment/gateway \
-            gateway=theapis/apis-core-gateway:latest \
-            bitcoin-rpc=theapis/apis-core-bitcoin-rpc:latest \
-            bitcoin-listener=theapis/apis-core-bitcoin-listener:latest \
-            ethereum-rpc=theapis/apis-core-ethereum-rpc:latest \
-            ethereum-listener=theapis/apis-core-ethereum-listener:latest
-            # static=${staticServerImage}:latest # does not exist in dev
+          # kubectl set image -n apis deployment/gateway \
+          #   gateway=theapis/apis-core-gateway:latest \
+          #   bitcoin-rpc=theapis/apis-core-bitcoin-rpc:latest \
+          #   bitcoin-listener=theapis/apis-core-bitcoin-listener:latest \
+          #   ethereum-rpc=theapis/apis-core-ethereum-rpc:latest \
+          #   ethereum-listener=theapis/apis-core-ethereum-listener:latest
+          #   # static=${staticServerImage}:latest # does not exist in dev
 
-          kubectl set image -n apis deployment/developers \
-            web=${developersImage}:latest
+          # kubectl patch -n apis deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
 
-          kubectl patch -n apis deployment/gateway -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
-          kubectl patch -n apis deployment/developers -p '{"spec":{"template":{"metadata":{"labels":{"date":"${label}"}}}}}'
+          kubectl rollout restart -n apis deployment \
+            gateway \
+            ethereum-listener-mainnet \
+            ethereum-listener-rinkeby \
+            ethereum-rpc-mainnet \
+            ethereum-rpc-rinkeby
 
           """
       }
