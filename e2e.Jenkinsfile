@@ -10,9 +10,11 @@ volumes: [
     container('cypress') {
       stage('Test e2e') {
         checkout scm
-        sh """
-          cd e2e && cypress run
-        """
+        ansiColor('xterm') {
+          sh """
+            cd e2e && cypress run
+          """
+        }
       }
     }
   }
