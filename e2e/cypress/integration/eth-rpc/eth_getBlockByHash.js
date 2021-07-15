@@ -1,7 +1,7 @@
 describe('Ethereum RPC', () => {
   it('blockinfo', () => {
     // expect(true).to.equal(true)
-    cy.request('POST', `${Cypress.config('baseUrl')}/api/v1/rpc/ethereum`, {
+    cy.request('POST', `${Cypress.config('baseUrl')}/api/v1/rpc/ethereum?apiKey=dfa7f9ea-b0e1-4029-8df8-fe0308ce1af7&chain=ethereum&network=rinkeby`, {
       "jsonrpc": "2.0",
       "method": "eth_getBlockByHash",
       "params": [

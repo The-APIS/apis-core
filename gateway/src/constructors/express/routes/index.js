@@ -1,6 +1,6 @@
 const cors = require("cors");
 const router = require("express").Router();
-const {  query, validationResult } = require("express-validator");
+const { query, validationResult } = require("express-validator");
 
 module.exports = (context = {}) => {
  const { sequelize, models } = context;
@@ -8,7 +8,12 @@ module.exports = (context = {}) => {
  const PublicRouter = require("./public")(context);
 
  router.use("/api", 
- [query("apiKey").notEmpty().withMessage('API KEY MUST NOT BE EMPTY').trim()],
+  [
+    oneOf([
+      query("apiKey").notEmpty().withMessage('API KEY MUST NOT BE EMPTY').trim(),
+      query("apikey").notEmpty().withMessage('API KEY MUST NOT BE EMPTY').trim(),
+    ]),
+  ],
  async (req, res, next) => {
   try {
    const errors = validationResult(req);
