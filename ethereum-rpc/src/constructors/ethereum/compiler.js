@@ -140,7 +140,7 @@ const deployContract = (params) => {
    //     (params.supply || false),
    //   ],
    // })
-   let deployArgsErc20, deployArgsErc721, deployArgsErc115;
+   let deployArgsErc20, deployArgsErc721, deployArgsErc1155;
    if (params.type === "APIS_ERC20") {
     deployArgsErc20 = [
      params.token.name,
