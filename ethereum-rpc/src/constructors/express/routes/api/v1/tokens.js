@@ -784,7 +784,7 @@ module.exports = ({
     if (!web3.utils.isAddress(tokenAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
     }
-    //const bytesData = web3.utils.asciiToHex(data);
+    const bytesData = web3.utils.asciiToHex(data);
     const contractAbi = abi.APIS_ERC1155;
     const wallet = web3.eth.accounts.wallet.add({
      privateKey,
@@ -796,7 +796,7 @@ module.exports = ({
      address
     );
     contract.methods
-     .mint(recieverAddress, id, amount, data)
+     .mint(recieverAddress, id, amount, bytesData)
      .send({ from: address })
      .then((result) => {
       res.status(200).json({ result });
@@ -856,6 +856,7 @@ module.exports = ({
     if (!web3.utils.isAddress(tokenAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
     }
+    const bytesData = web3.utils.asciiToHex(data);
     const contractAbi = abi.APIS_ERC1155;
     const wallet = web3.eth.accounts.wallet.add({
      privateKey,
@@ -867,7 +868,7 @@ module.exports = ({
      address
     );
     contract.methods
-     .mintBatch(recieverAddress, idArray, amountArray, data)
+     .mintBatch(recieverAddress, idArray, amountArray, bytesData)
      .send({ from: address })
      .then((result) => {
       res.status(200).json({ result });
@@ -909,6 +910,7 @@ module.exports = ({
     if (!web3.utils.isAddress(recieverAddress)) {
      return res.status(500).json({ error: "invalid address" });
     }
+    const bytesData = web3.utils.asciiToHex(data);
     const contractAbi = abi.APIS_ERC1155;
     const wallet = web3.eth.accounts.wallet.add({
      privateKey,
@@ -920,7 +922,7 @@ module.exports = ({
      address
     );
     contract.methods
-     .safeTransferFrom(address, recieverAddress, id,amount,data)
+     .safeTransferFrom(address, recieverAddress, id,amount,bytesData)
      .send({ from: address })
      .then((result) => {
       res.status(200).json({ result });
@@ -980,13 +982,14 @@ module.exports = ({
      privateKey,
      address,
     });
+    const bytesData = web3.utils.asciiToHex(data);
     const contract = await contractInstance(
      contractAbi,
      tokenContractAddress,
      address
     );
     contract.methods
-     .safeBatchTransferFrom(address, recieverAddress, idArray,amountArray,data)
+     .safeBatchTransferFrom(address, recieverAddress, idArray,amountArray,bytesData)
      .send({ from: address })
      .then((result) => {
       res.status(200).json({ result });
