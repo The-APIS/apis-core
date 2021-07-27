@@ -5,7 +5,7 @@ describe('Ethereum RPC - Retrieving blocks', () => {
      method :'POST',
      url : `${Cypress.config('baseUrl')}/api/v1/rpc/ethereum`,
      qs : { 
-      'apiKey' : 'dfa7f9ea-b0e1-4029-8df8-fe0308ce1af7',
+      'apiKey' : Cypress.config("apisCoreApiKey"),
       'chain' : 'ethereum',
       'network' :'rinkeby',
      },
@@ -26,7 +26,7 @@ describe('Ethereum RPC - Retrieving blocks', () => {
     method :'POST',
     url : `${Cypress.config('baseUrl')}/api/v1/rpc/ethereum`,
     qs : { 
-     'apiKey' : 'dfa7f9ea-b0e1-4029-8df8-fe0308ce1af7',
+     'apiKey' : Cypress.config("apisCoreApiKey"),
      'chain' : 'ethereum',
      'network' :'rinkeby',
     },

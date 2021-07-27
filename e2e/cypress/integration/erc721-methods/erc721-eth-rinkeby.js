@@ -9,7 +9,7 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     qs: {
      tokenAddress: "0xde30ffcf679896f119dec2c0aa330638e1d97526",
      type: "erc721",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -27,7 +27,7 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     )}/api/v1/tokens/0xA0C0Fc0a9F63e06c798591633587003ad75DdA2f/id`,
     qs: {
      tokenAddress: "0x05c07cf797e3dc2422e833f7d2f7e53510e24218",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -46,7 +46,7 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     qs: {
      tokenAddress: "0x05c07cf797e3dc2422e833f7d2f7e53510e24218",
      id: "1",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -64,7 +64,7 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     )}/api/v1/tokens/0xb08efdD94a2b705a12272Ae985Bc293d75aB70c9/name`,
     qs: {
      tokenAddress: "0xde30ffcf679896f119dec2c0aa330638e1d97526",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -82,7 +82,7 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     )}/api/v1/tokens/0xb08efdD94a2b705a12272Ae985Bc293d75aB70c9/symbol`,
     qs: {
      tokenAddress: "0xde30ffcf679896f119dec2c0aa330638e1d97526",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -100,7 +100,7 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     )}/api/v1/tokens/0xb08efdD94a2b705a12272Ae985Bc293d75aB70c9/supply`,
     qs: {
      tokenAddress: "0xde30ffcf679896f119dec2c0aa330638e1d97526",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -118,7 +118,7 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     )}/api/v1/tokens/0xb08efdD94a2b705a12272Ae985Bc293d75aB70c9/contract`,
     qs: {
      tokenAddress: "0xde30ffcf679896f119dec2c0aa330638e1d97526",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -137,7 +137,7 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     qs: {
      tokenAddress: "0xde30ffcf679896f119dec2c0aa330638e1d97526",
      id: "5",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -156,7 +156,7 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     qs: {
      tokenAddress: "0xde30ffcf679896f119dec2c0aa330638e1d97526",
      id: "5",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
