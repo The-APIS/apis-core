@@ -68,13 +68,13 @@ describe("Unified - Ethereum Rinkeby", () => {
      token: {
       name: "The APIS",
       symbol: "API",
-      minter: "0x0c623F6164Fca9a5d146917a93497E5946CC7340",
-      account: "0x0c623F6164Fca9a5d146917a93497E5946CC7340",
+      minter: "0xb08efdD94a2b705a12272Ae985Bc293d75aB70c9",
+      account: "0xb08efdD94a2b705a12272Ae985Bc293d75aB70c9",
       initialSupply: "10000000000000000000000000",
      },
-     sender: "0x0c623F6164Fca9a5d146917a93497E5946CC7340",
+     sender: "0xb08efdD94a2b705a12272Ae985Bc293d75aB70c9",
      privateKey:
-      "4b414498530f3e4fe8254e7584bcb8176c53d925185a1aaf6d3af88f1d129e74",
+      "6143bba50362ca9f80d1148a33aafd5789a5d97e8e4501837f8eadad48627e98",
     },
    })
    .should((response) => {
@@ -102,9 +102,9 @@ describe("Unified - Ethereum Rinkeby", () => {
       symbol: "APIS",
       uri: "erc721 from apis",
      },
-     sender: "0x408bd85004D9f70e333c46745e93b7D175762b0d",
+     sender: "0xb08efdD94a2b705a12272Ae985Bc293d75aB70c9",
      privateKey:
-      "475769e52afb2f8d56fe0e3cee75ea20379dfb7910e3aa56ce00ec409f6ecca7",
+      "6143bba50362ca9f80d1148a33aafd5789a5d97e8e4501837f8eadad48627e98",
     },
    })
    .should((response) => {
