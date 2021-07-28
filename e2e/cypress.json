@@ -1,5 +1,6 @@
 {
   "baseUrl": "https://api.dev.theapis.io",
+  "apisCoreApiKey": "58fc282a-498f-4695-88ac-f694fa98df9d",
   "pluginsFile": false,
   "supportFile": false,
   "fixturesFolder": false,

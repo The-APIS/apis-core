@@ -5,7 +5,7 @@ describe("Unified - Ethereum Rinkeby", () => {
     method: "POST",
     url: `${Cypress.config("baseUrl")}/api/v1/wallets`,
     qs: {
-     apiKey: "dfa7f9ea-b0e1-4029-8df8-fe0308ce1af7",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -26,7 +26,7 @@ describe("Unified - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config("baseUrl")}/api/v1/wallets`,
     qs: {
-     apiKey: "dfa7f9ea-b0e1-4029-8df8-fe0308ce1af7",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
      address: "0xCDd0F0eE873195dfed20fc8AE7b11860CaE1799c",
@@ -42,7 +42,7 @@ describe("Unified - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config("baseUrl")}/api/v1/ethereum/defi/rates`,
     qs: {
-     apiKey: "dfa7f9ea-b0e1-4029-8df8-fe0308ce1af7",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -57,7 +57,7 @@ describe("Unified - Ethereum Rinkeby", () => {
     method: "POST",
     url: `${Cypress.config("baseUrl")}/api/v1/tokens`,
     qs: {
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -89,7 +89,7 @@ describe("Unified - Ethereum Rinkeby", () => {
     method: "POST",
     url: `${Cypress.config("baseUrl")}/api/v1/tokens`,
     qs: {
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -119,7 +119,7 @@ describe("Unified - Ethereum Rinkeby", () => {
     method: "POST",
     url: `${Cypress.config("baseUrl")}/api/v1/tokens`,
     qs: {
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -153,7 +153,7 @@ describe("Unified - Ethereum Rinkeby", () => {
     qs: {
      tokenAddress: "0xB904c75e1B615B93bcb4f089322E0c12464900fc",
      type: "erc20",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -172,7 +172,7 @@ describe("Unified - Ethereum Rinkeby", () => {
     qs: {
      tokenAddress: "0xde30ffcf679896f119dec2c0aa330638e1d97526",
      type: "erc721",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
@@ -192,7 +192,7 @@ describe("Unified - Ethereum Rinkeby", () => {
      tokenAddress: "0x85c95902239797b69beab4e617411fb94981a2a9",
      type: "erc1155",
      id: "1",
-     apiKey: "58fc282a-498f-4695-88ac-f694fa98df9d",
+     apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
     },
