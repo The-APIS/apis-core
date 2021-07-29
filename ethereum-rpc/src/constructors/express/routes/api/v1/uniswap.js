@@ -32,7 +32,6 @@ module.exports = ({
         const tokenAddressRinkebyDai = '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735'
         const tokenAddressRinkebyUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
         const tokenAddressRinkebyMaker = '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85';
-        const tokenAddressRinkebyWrappedEther = '0xc778417E063141139Fce010982780140Aa0cD5Ab';
         const tokenAddressRinkebyRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 
         const DAI = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyDai);
