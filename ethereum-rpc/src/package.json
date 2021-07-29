@@ -15,7 +15,12 @@
   "keywords": [],
   "license": "UNLICENSED",
   "dependencies": {
+    "@ethersproject/address": "5.4.0",
+    "@ethersproject/contracts": "5.4.0",
+    "@ethersproject/providers": "5.4.1",
+    "@ethersproject/solidity": "5.4.0",
     "@openzeppelin/contracts": "3.2.0",
+    "@uniswap/sdk": "3.0.3",
     "apicache": "1.5.3",
     "axios": "0.21.1",
     "body-parser": "1.19.0",
