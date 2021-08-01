@@ -38,3 +38,41 @@ module.exports.getRPCServiceAddress = getRPCServiceAddress = (params = {}) => {
   network = standardizeParameterString(network)
   return process.env[`${chain.toUpperCase()}_${network.toUpperCase()}_RPC_SVC_ADDR`]
 }
+
+module.exports.RPC_HANDLER_DEFAULTS = RPC_HANDLER_DEFAULTS = {
+  ethereum: {
+    defaults: {
+      chain: "ethereum",
+      network: "rinkeby",
+    },
+  },
+  bitcoin: {
+    defaults: {
+      chain: "bitcoin",
+      network: "testnet",
+    },
+  },
+  binance_smart_chain: {
+    defaults: {
+      chain: "binance_smart_chain",
+      network: "testnet",
+    },
+  },
+};
+
+module.exports.normalizeChain = normalizeChain = (chain = '') => {
+  if (!chain || typeof chain !== 'string') return null
+  switch (chain.toLowerCase()) {
+    case 'eth':
+    case 'ether':
+    case 'ethereum': return 'ethereum'
+    case 'binance_smart_chain':
+    case 'binance-smart-chain':
+    case 'bsc': return 'binance_smart_chain'
+    case 'bitcoin':
+    case 'btc': return 'bitcoin'
+    default: return null
+  }
+}
+
+module.exports.chainIsSupported = chainIsSupported = (chain) => Object.keys(RPC_HANDLER_DEFAULTS).indexOf(normalizeChain(chain)) !== -1
