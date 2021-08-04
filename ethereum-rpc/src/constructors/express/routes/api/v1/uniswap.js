@@ -62,7 +62,7 @@ module.exports = ({
         const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw // needs to be converted to e.g. hex
         const path = [weth.address, token.address]
         const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
-        const valueInput = trade.inputAmount.raw // // needs to be converted to e.g. hex
+        const valueInput = trade.inputAmount.raw // needs to be converted to e.g. hex
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
         const value = ethers.BigNumber.from(valueInput.toString()).toHexString();
         const wallet = web3.eth.accounts.wallet.add({
@@ -136,11 +136,11 @@ module.exports = ({
         const route = new Route([pair], token)
         const amountIn = web3.utils.toWei(amount);
         const trade = new Trade(route, new TokenAmount(token, amountIn), TradeType.EXACT_INPUT)
-        const slippageTolerance = new Percent('50', '10000') // 50 bips, or 0.50%
-        const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw // needs to be converted to e.g. hex
+        const slippageTolerance = new Percent('50', '10000')
+        const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw
         const path = [token.address, weth.address]
-        const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
-        const valueInput = trade.inputAmount.raw // // needs to be converted to e.g. hex
+        const deadline = Math.floor(Date.now() / 1000) + 60 * 20
+        const valueInput = trade.inputAmount.raw
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
         const value = ethers.BigNumber.from(valueInput.toString()).toHexString();
         const wallet = web3.eth.accounts.wallet.add({
@@ -187,10 +187,10 @@ module.exports = ({
         }
         const { address = "*" } = req.params;
         const { privateKey = "", amount = "", tokenFrom = "", tokenTo = "" } = { ...req.query };
-        if (tokenFrom === tokenTo){
-          res.status(500).json({ error : "tokenFrom and tokenTo cannot be same"})
+        if (tokenFrom === tokenTo) {
+          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
         }
-        
+
         const tokenTypeFrom = tokenFrom.toString().toUpperCase();
         const tokenTypeTo = tokenTo.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
@@ -248,11 +248,11 @@ module.exports = ({
         const route = new Route([pair], tokenFromInstance)
         const amountIn = web3.utils.toWei(amount);
         const trade = new Trade(route, new TokenAmount(tokenFromInstance, amountIn), TradeType.EXACT_INPUT)
-        const slippageTolerance = new Percent('50', '10000') // 50 bips, or 0.50%
-        const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw // needs to be converted to e.g. hex
+        const slippageTolerance = new Percent('50', '10000')
+        const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw
         const path = [tokenFromInstance.address, tokenToInstance.address]
-        const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
-        const valueInput = trade.inputAmount.raw // // needs to be converted to e.g. hex
+        const deadline = Math.floor(Date.now() / 1000) + 60 * 20
+        const valueInput = trade.inputAmount.raw
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
         const value = ethers.BigNumber.from(valueInput.toString()).toHexString();
 
@@ -287,8 +287,8 @@ module.exports = ({
   router.get(
     "/:address/swap/price", [
     param("address").trim().isString(),
-    query("tokenFrom").trim().isIn(["eth"]),
-    query("tokenTo").trim().isIn(["dai", "mkr", "uni"]),
+    query("tokenFrom").trim().isIn(["dai", "mkr", "uni", "weth", "eth"]),
+    query("tokenTo").trim().isIn(["dai", "mkr", "uni", "weth", "eth"]),
     query("chain").trim().isIn(["ethereum"]),
     query("network").trim().isIn(["rinkeby", "mainnet"]),
   ],
@@ -300,8 +300,11 @@ module.exports = ({
         }
         const { address = "*" } = req.params;
         const { amount = "", tokenFrom = "", tokenTo = "", network = "" } = { ...req.query };
-        const tokenType = tokenTo.toString().toUpperCase();
-        const routerAbi = abi.UNISWAP_ROUTER.abi
+        if (tokenFrom === tokenTo) {
+          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
+        }
+        const tokenTypeFrom = tokenFrom.toString().toUpperCase();
+        const tokenTypeTo = tokenTo.toString().toUpperCase();
         const networkType = network.toString().toUpperCase();
 
         let chainIds = {}
@@ -313,48 +316,80 @@ module.exports = ({
             chainIds = ChainId.RINKEBY;
             break;
         }
-        let tokenAddressDai, tokenAddressUniswap, tokenAddressMaker
+        let tokenAddressDai, tokenAddressUniswap, tokenAddressMaker, tokenAddressWrappedEther
         if (networkType === "MAINNET") {
           tokenAddressDai = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
           tokenAddressUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
           tokenAddressMaker = '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2';
           tokenAddressRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+          tokenAddressWrappedEther = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
         }
         else if (networkType === "RINKEBY") {
           tokenAddressDai = '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735'
           tokenAddressUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
           tokenAddressMaker = '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85';
           tokenAddressRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+          tokenAddressWrappedEther = '0xc778417E063141139Fce010982780140Aa0cD5Ab';
         }
         const DAI = await Fetcher.fetchTokenData(chainIds, tokenAddressDai);
         const UNISWAP = await Fetcher.fetchTokenData(chainIds, tokenAddressUniswap);
         const MAKER = await Fetcher.fetchTokenData(chainIds, tokenAddressMaker);
-        const weth = WETH[chainIds]
+        const WETHS = await Fetcher.fetchTokenData(chainIds, tokenAddressWrappedEther);
 
-        let token = {}
-        switch (tokenType) {
+        let tokenFromInstance = {};
+        switch (tokenTypeFrom) {
           case 'DAI':
-            token = DAI;
+            tokenFromInstance = DAI;
             break;
           case 'UNI':
-            token = UNISWAP;
+            tokenFromInstance = UNISWAP;
             break;
           case 'MKR':
-            token = MAKER
+            tokenFromInstance = MAKER
+            break;
+          case 'WETH':
+            tokenFromInstance = WETHS
+            break;
+          case 'ETH':
+            tokenFromInstance = WETHS
             break;
         }
-        if (!Object.keys(token).length) {
-          return res.status(500).json({ error: "token value cannot be empty" })
+        if (!Object.keys(tokenFromInstance).length) {
+          return res.status(500).json({ error: "token cannot be empty" })
         }
-        const pair = await Fetcher.fetchPairData(token, weth)
-        const route = new Route([pair], weth)
+        let tokenToInstance = {};
+        switch (tokenTypeTo) {
+          case 'DAI':
+            tokenToInstance = DAI;
+            break;
+          case 'UNI':
+            tokenToInstance = UNISWAP;
+            break;
+          case 'MKR':
+            tokenToInstance = MAKER
+            break;
+          case 'WETH':
+            tokenToInstance = WETHS
+            break;
+          case 'ETH':
+            tokenToInstance = WETHS
+            break;
+        }
+        if (!Object.keys(tokenToInstance).length) {
+          return res.status(500).json({ error: "token cannot be empty" })
+        }
+        const pair = await Fetcher.fetchPairData(tokenFromInstance, tokenToInstance)
+        const route = new Route([pair], tokenFromInstance)
         const amountIn = web3.utils.toWei(amount);
-        const trade = new Trade(route, new TokenAmount(weth, amountIn), TradeType.EXACT_INPUT)
+        const slippageTolerance = new Percent('50', '10000')
+        const trade = new Trade(route, new TokenAmount(tokenFromInstance, amountIn), TradeType.EXACT_INPUT)
+        const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw
         const result = {
           "Route Mid Price ": route.midPrice.toSignificant(6),
           "Route Mid Price Invert ": route.midPrice.invert().toSignificant(6),
           "Trade Execution Price ": trade.executionPrice.toSignificant(6),
-          "Trade Next Mid Price ": trade.nextMidPrice.toSignificant(6)
+          "Trade Next Mid Price ": trade.nextMidPrice.toSignificant(6),
+          "Mininum Amount Out ": trade.minimumAmountOut(slippageTolerance).toSignificant(6)
         }
         return res.status(200).json({ result })
       } catch (e) {
@@ -364,6 +399,109 @@ module.exports = ({
     }
   );
 
+
+  router.get(
+    "/:address/swap/pair", [
+    param("address").trim().isString(),
+    query("tokenFrom").trim().isIn(["dai", "mkr", "uni", "weth", "eth"]),
+    query("tokenTo").trim().isIn(["dai", "mkr", "uni", "weth", "eth"]),
+    query("chain").trim().isIn(["ethereum"]),
+    query("network").trim().isIn(["rinkeby", "mainnet"]),
+  ],
+    async (req, res, next) => {
+      try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        const { address = "*" } = req.params;
+        const { amount = "", tokenFrom = "", tokenTo = "", network = "" } = { ...req.query };
+        if (tokenFrom === tokenTo) {
+          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
+        }
+        const tokenTypeFrom = tokenFrom.toString().toUpperCase();
+        const tokenTypeTo = tokenTo.toString().toUpperCase();
+        const networkType = network.toString().toUpperCase();
+
+        let chainIds = {}
+        switch (networkType) {
+          case 'MAINNET':
+            chainIds = ChainId.MAINNET;
+            break;
+          case 'RINKEBY':
+            chainIds = ChainId.RINKEBY;
+            break;
+        }
+        let tokenAddressDai, tokenAddressUniswap, tokenAddressMaker, tokenAddressWrappedEther
+        if (networkType === "MAINNET") {
+          tokenAddressDai = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+          tokenAddressUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
+          tokenAddressMaker = '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2';
+          tokenAddressRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+          tokenAddressWrappedEther = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+        }
+        else if (networkType === "RINKEBY") {
+          tokenAddressDai = '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735'
+          tokenAddressUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
+          tokenAddressMaker = '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85';
+          tokenAddressRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+          tokenAddressWrappedEther = '0xc778417E063141139Fce010982780140Aa0cD5Ab';
+        }
+        const DAI = await Fetcher.fetchTokenData(chainIds, tokenAddressDai);
+        const UNISWAP = await Fetcher.fetchTokenData(chainIds, tokenAddressUniswap);
+        const MAKER = await Fetcher.fetchTokenData(chainIds, tokenAddressMaker);
+        const WETHS = await Fetcher.fetchTokenData(chainIds, tokenAddressWrappedEther);
+
+        let tokenFromInstance = {};
+        switch (tokenTypeFrom) {
+          case 'DAI':
+            tokenFromInstance = DAI;
+            break;
+          case 'UNI':
+            tokenFromInstance = UNISWAP;
+            break;
+          case 'MKR':
+            tokenFromInstance = MAKER
+            break;
+          case 'WETH':
+            tokenFromInstance = WETHS
+            break;
+          case 'ETH':
+            tokenFromInstance = WETHS
+            break;
+        }
+        if (!Object.keys(tokenFromInstance).length) {
+          return res.status(500).json({ error: "token cannot be empty" })
+        }
+        let tokenToInstance = {};
+        switch (tokenTypeTo) {
+          case 'DAI':
+            tokenToInstance = DAI;
+            break;
+          case 'UNI':
+            tokenToInstance = UNISWAP;
+            break;
+          case 'MKR':
+            tokenToInstance = MAKER
+            break;
+          case 'WETH':
+            tokenToInstance = WETHS
+            break;
+          case 'ETH':
+            tokenToInstance = WETHS
+            break;
+        }
+        if (!Object.keys(tokenToInstance).length) {
+          return res.status(500).json({ error: "token cannot be empty" })
+        }
+        const pair = await Fetcher.fetchPairData(tokenFromInstance, tokenToInstance)
+        return res.status(200).json({ pair })
+      } catch (e) {
+        console.error(e);
+        return res.status(500).json({ errors: [e] });
+      }
+    }
+  );
   return router;
 };
 
