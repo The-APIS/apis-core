@@ -14,6 +14,7 @@ const makeApiRouter = context => {
   router.use('/v1/tokens', require('./api/v1/tokens')(context))
   router.use('/v1/methods', require('./api/v1/methods')(context))
   router.use('/v1/defi', require('./api/v1/defi')(context))
+  router.use('/v1/uniswap', require('./api/v1/uniswap')(context))
   return router
 }
 
