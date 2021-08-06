@@ -16,6 +16,8 @@ module.exports = ({
     query("tokenFrom").trim().isIn(["eth"]),
     query("tokenTo").trim().isIn(["dai", "mkr", "uni"]),
     query("privateKey").trim().isString(),
+    query("chain").trim().isIn(["ethereum"]),
+    query("network").trim().isIn(["rinkeby", "mainnet"])
   ],
     async (req, res, next) => {
       try {
@@ -93,6 +95,8 @@ module.exports = ({
     query("tokenFrom").trim().isIn(["dai", "mkr", "uni"]),
     query("tokenTo").trim().isIn(["eth"]),
     query("privateKey").trim().isString(),
+    query("chain").trim().isIn(["ethereum"]),
+    query("network").trim().isIn(["rinkeby", "mainnet"])
   ],
     async (req, res, next) => {
       try {
@@ -178,6 +182,8 @@ module.exports = ({
     query("tokenFrom").trim().isIn(["dai", "mkr", "uni", "weth"]),
     query("tokenTo").trim().isIn(["dai", "mkr", "uni", "weth"]),
     query("privateKey").trim().isString(),
+    query("chain").trim().isIn(["ethereum"]),
+    query("network").trim().isIn(["rinkeby", "mainnet"])
   ],
     async (req, res, next) => {
       try {
