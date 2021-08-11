@@ -16,7 +16,23 @@ module.exports = ({
       RINKEBY: ChainId.RINKEBY
     }
     return chainIdValue
-  } 
+  }
+  const userWallet = (privateKey, address) => {
+    const wallet = web3.eth.accounts.wallet.add({
+      privateKey,
+      address,
+    });
+    return wallet
+  }
+  const sendOptions = (address) => {
+    const options = {
+      from: address,
+      gasLimit: web3.utils.toHex(10000000),
+      gasPrice: web3.utils.toHex(50e9)
+    }
+    return options
+  }
+  
   router.post(
     "/:address/swap/eth", [
     param("address").trim().isString(),
@@ -55,17 +71,10 @@ module.exports = ({
         const valueInput = trade.inputAmount.raw // needs to be converted to e.g. hex
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
         const value = ethers.BigNumber.from(valueInput.toString()).toHexString();
-        const wallet = web3.eth.accounts.wallet.add({
-          privateKey,
-          address,
-        });
 
-        const contractInstance = await new web3.eth.Contract(routerAbi, tokenAddressRouter, {
-          from: address,
-          gasLimit: web3.utils.toHex(10000000),
-          gasPrice: web3.utils.toHex(50e9),
-        });
-        const result = await contractInstance.methods.swapExactETHForTokens(amountOutMinHex, path, address, deadline)
+        const wallet = userWallet(privateKey, address)
+        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, tokenAddressRouter, sendOptions(address));
+        const result = await contractInstanceRouter.methods.swapExactETHForTokens(amountOutMinHex, path, address, deadline)
           .send({ from: address, value: value, })
         return res.status(200).json({ result })
       } catch (e) {
@@ -115,25 +124,14 @@ module.exports = ({
         const valueInput = trade.inputAmount.raw
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
         const value = ethers.BigNumber.from(valueInput.toString()).toHexString();
-        const wallet = web3.eth.accounts.wallet.add({
-          privateKey,
-          address,
-        });
+        const wallet = userWallet(privateKey, address)
 
-        const contractInstanceToken = await new web3.eth.Contract(tokenAbi, tokenFromInstance.address, {
-          from: address,
-          gasLimit: web3.utils.toHex(10000000),
-          gasPrice: web3.utils.toHex(50e9),
-        });
+        const contractInstanceToken = await new web3.eth.Contract(tokenAbi, tokenFromInstance.address, sendOptions(address));
         const transferring = await contractInstanceToken.methods.transfer(tokenFromInstance.address, amountIn)
           .send({ from: address })
         const approving = await contractInstanceToken.methods.approve(tokenAddressRouter, amountIn)
           .send({ from: address })
-        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, tokenAddressRouter, {
-          from: address,
-          gasLimit: web3.utils.toHex(10000000),
-          gasPrice: web3.utils.toHex(50e9),
-        });
+        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, tokenAddressRouter, sendOptions(address));
         const result = await contractInstanceRouter.methods.swapExactTokensForETH(amountIn, amountOutMinHex, path, address, deadline)
           .send({ from: address })
         return res.status(200).json({ result })
@@ -190,25 +188,13 @@ module.exports = ({
         const valueInput = trade.inputAmount.raw
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
         const value = ethers.BigNumber.from(valueInput.toString()).toHexString();
-
-        const wallet = web3.eth.accounts.wallet.add({
-          privateKey,
-          address,
-        });
-        const contractInstanceToken = await new web3.eth.Contract(tokenAbi, tokenFromInstance.address, {
-          from: address,
-          gasLimit: web3.utils.toHex(10000000),
-          gasPrice: web3.utils.toHex(50e9),
-        });
+        const wallet = userWallet(privateKey, address)
+        const contractInstanceToken = await new web3.eth.Contract(tokenAbi, tokenFromInstance.address, sendOptions(address));
         const transferring = await contractInstanceToken.methods.transfer(tokenFromInstance.address, amountIn)
           .send({ from: address })
         const approving = await contractInstanceToken.methods.approve(tokenAddressRouter, amountIn)
           .send({ from: address })
-        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, tokenAddressRouter, {
-          from: address,
-          gasLimit: web3.utils.toHex(10000000),
-          gasPrice: web3.utils.toHex(50e9),
-        });
+        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, tokenAddressRouter, sendOptions(address));
         const result = await contractInstanceRouter.methods.swapExactTokensForTokens(amountIn, amountOutMinHex, path, address, deadline)
           .send({ from: address })
         return res.status(200).json({ result })
