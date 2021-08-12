@@ -11,8 +11,8 @@ module.exports.SUPPORTED_NETWORKS = [
   'testnet',
 ]
 
-module.exports.UNISWAP_SUPPORTED_CHAIN = ['ethereum']
+module.exports.UNISWAP_SUPPORTED_CHAINS = ['ethereum']
 
-module.exports.UNISWAP_SUPPORTED_NETWORK = ['mainnet','rinkeby']
+module.exports.UNISWAP_SUPPORTED_NETWORKS = ['mainnet','rinkeby']
 
 module.exports.UNISWAP_ROUTER_ADDRESS = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"

@@ -3,7 +3,7 @@ const ethers = require('ethers');
 const { ChainId, WETH, Fetcher, Trade, Route, TokenAmount, TradeType, Percent } = require('@uniswap/sdk')
 const { query, param, validationResult } = require("express-validator");
 
-const { UNISWAP_ROUTER_ADDRESS, UNISWAP_SUPPORTED_CHAIN, UNISWAP_SUPPORTED_NETWORK } = require('@/share/constants');
+const { UNISWAP_ROUTER_ADDRESS, UNISWAP_SUPPORTED_CHAINS, UNISWAP_SUPPORTED_NETWORKS } = require('@/share/constants');
 
 module.exports = ({
   models,
@@ -37,8 +37,8 @@ module.exports = ({
     "/:address/swap/eth", [
     param("address").trim().isString(),
     query("privateKey").trim().isString(),
-    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAIN),
-    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORK),
+    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
+    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
   ],
     async (req, res, next) => {
       try {
@@ -49,12 +49,11 @@ module.exports = ({
         const { address = "*" } = req.params;
         const { privateKey = "", amount = "", tokenFrom = "", tokenTo = "", tokenToAddress = "", network = "" } = { ...req.query };
         if (tokenFrom === tokenTo) {
-          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
+         return res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
         }
         const networkType = network.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
         const chainIds = chainNetwork()[networkType]
-        const tokenAddressRouter = UNISWAP_ROUTER_ADDRESS
         const weth = WETH[chainIds]
         const tokenToInstance = await Fetcher.fetchTokenData(chainIds, tokenToAddress);
         if (!Object.keys(tokenToInstance).length) {
@@ -73,7 +72,7 @@ module.exports = ({
         const value = ethers.BigNumber.from(valueInput.toString()).toHexString();
 
         const wallet = userWallet(privateKey, address)
-        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, tokenAddressRouter, sendOptions(address));
+        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
         const result = await contractInstanceRouter.methods.swapExactETHForTokens(amountOutMinHex, path, address, deadline)
           .send({ from: address, value: value, })
         return res.status(200).json({ result })
@@ -88,8 +87,8 @@ module.exports = ({
     "/:address/swap/token", [
     param("address").trim().isString(),
     query("privateKey").trim().isString(),
-    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAIN),
-    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORK),
+    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
+    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
   ],
     async (req, res, next) => {
       try {
@@ -100,13 +99,12 @@ module.exports = ({
         const { address = "*" } = req.params;
         const { privateKey = "", amount = "", network = "", tokenFrom = "", tokenTo = "", tokenFromAddress = "" } = { ...req.query };
         if (tokenFrom === tokenTo) {
-          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
+          return res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
         }
         const networkType = network.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
         const tokenAbi = abi.APIS_ERC20
         const chainIds = chainNetwork()[networkType]
-        const tokenAddressRouter = UNISWAP_ROUTER_ADDRESS
         const weth = WETH[chainIds]
         const tokenFromInstance = await Fetcher.fetchTokenData(chainIds, tokenFromAddress);
         if (!Object.keys(tokenFromInstance).length) {
@@ -129,9 +127,9 @@ module.exports = ({
         const contractInstanceToken = await new web3.eth.Contract(tokenAbi, tokenFromInstance.address, sendOptions(address));
         const transferring = await contractInstanceToken.methods.transfer(tokenFromInstance.address, amountIn)
           .send({ from: address })
-        const approving = await contractInstanceToken.methods.approve(tokenAddressRouter, amountIn)
+        const approving = await contractInstanceToken.methods.approve(UNISWAP_ROUTER_ADDRESS, amountIn)
           .send({ from: address })
-        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, tokenAddressRouter, sendOptions(address));
+        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
         const result = await contractInstanceRouter.methods.swapExactTokensForETH(amountIn, amountOutMinHex, path, address, deadline)
           .send({ from: address })
         return res.status(200).json({ result })
@@ -146,8 +144,8 @@ module.exports = ({
     "/:address/swap", [
     param("address").trim().isString(),
     query("privateKey").trim().isString(),
-    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAIN),
-    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORK),
+    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
+    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
   ],
     async (req, res, next) => {
       try {
@@ -158,16 +156,15 @@ module.exports = ({
         const { address = "*" } = req.params;
         const { privateKey = "", amount = "", network = "", tokenFrom = "", tokenTo = "", tokenFromAddress = "", tokenToAddress = "" } = { ...req.query };
         if (tokenFrom === tokenTo) {
-          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
+          return res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
         }
         if (tokenFromAddress === tokenToAddress) {
-          res.status(500).json({ error: "tokenFromAddress and tokenToAddress cannot be same" })
+          return res.status(500).json({ error: "tokenFromAddress and tokenToAddress cannot be same" })
         }
         const networkType = network.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
         const tokenAbi = abi.APIS_ERC20
         const chainIds = chainNetwork()[networkType]
-        const tokenAddressRouter = UNISWAP_ROUTER_ADDRESS
         const tokenFromInstance = await Fetcher.fetchTokenData(chainIds, tokenFromAddress);
         const tokenToInstance = await Fetcher.fetchTokenData(chainIds, tokenToAddress);
         if (!Object.keys(tokenFromInstance).length) {
@@ -192,9 +189,9 @@ module.exports = ({
         const contractInstanceToken = await new web3.eth.Contract(tokenAbi, tokenFromInstance.address, sendOptions(address));
         const transferring = await contractInstanceToken.methods.transfer(tokenFromInstance.address, amountIn)
           .send({ from: address })
-        const approving = await contractInstanceToken.methods.approve(tokenAddressRouter, amountIn)
+        const approving = await contractInstanceToken.methods.approve(UNISWAP_ROUTER_ADDRESS, amountIn)
           .send({ from: address })
-        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, tokenAddressRouter, sendOptions(address));
+        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
         const result = await contractInstanceRouter.methods.swapExactTokensForTokens(amountIn, amountOutMinHex, path, address, deadline)
           .send({ from: address })
         return res.status(200).json({ result })
@@ -207,8 +204,8 @@ module.exports = ({
 
   router.get(
     "/price", [
-    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAIN),
-    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORK),
+    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
+    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
   ],
     async (req, res, next) => {
       try {
@@ -218,10 +215,10 @@ module.exports = ({
         }
         const { amount = "", tokenFrom = "", tokenTo = "", network = "", tokenFromAddress = "", tokenToAddress = "" } = { ...req.query };
         if (tokenFrom === tokenTo) {
-          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
+          return res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
         }
         if (tokenFromAddress === tokenToAddress) {
-          res.status(500).json({ error: "tokenFromAddress and tokenToAddress cannot be same" })
+          return res.status(500).json({ error: "tokenFromAddress and tokenToAddress cannot be same" })
         }
         const networkType = network.toString().toUpperCase();
         const chainIds = chainNetwork()[networkType]
@@ -256,8 +253,8 @@ module.exports = ({
 
   router.get(
     "/pair", [
-    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAIN),
-    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORK),
+    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
+    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
   ],
     async (req, res, next) => {
       try {
@@ -267,10 +264,10 @@ module.exports = ({
         }
         const { tokenFrom = "", tokenTo = "", network = "", tokenFromAddress = "", tokenToAddress = "" } = { ...req.query };
         if (tokenFrom === tokenTo) {
-          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
+          return res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
         }
         if (tokenFromAddress === tokenToAddress) {
-          res.status(500).json({ error: "tokenFromAddress and tokenToAddress cannot be same" })
+          return res.status(500).json({ error: "tokenFromAddress and tokenToAddress cannot be same" })
         }
         const networkType = network.toString().toUpperCase();
         const chainIds = chainNetwork()[networkType]
