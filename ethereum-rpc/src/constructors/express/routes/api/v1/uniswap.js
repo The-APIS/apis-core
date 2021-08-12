@@ -32,13 +32,19 @@ module.exports = ({
     }
     return options
   }
-  
+
   router.post(
     "/:address/swap/eth", [
     param("address").trim().isString(),
     query("privateKey").trim().isString(),
     query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
     query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
+    query("tokenFrom").custom((value, { req }) => {
+      if (value === req.query.tokenTo) {
+        throw new error(' tokenFrom and tokenTo cannot be same');
+      }
+      return true
+    })
   ],
     async (req, res, next) => {
       try {
@@ -48,9 +54,6 @@ module.exports = ({
         }
         const { address = "*" } = req.params;
         const { privateKey = "", amount = "", tokenFrom = "", tokenTo = "", tokenToAddress = "", network = "" } = { ...req.query };
-        if (tokenFrom === tokenTo) {
-         return res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
-        }
         const networkType = network.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
         const chainIds = chainNetwork()[networkType]
@@ -89,6 +92,12 @@ module.exports = ({
     query("privateKey").trim().isString(),
     query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
     query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
+    query("tokenFrom").custom((value, { req }) => {
+      if (value === req.query.tokenTo) {
+        throw new error(' tokenFrom and tokenTo cannot be same');
+      }
+      return true
+    })
   ],
     async (req, res, next) => {
       try {
@@ -98,9 +107,6 @@ module.exports = ({
         }
         const { address = "*" } = req.params;
         const { privateKey = "", amount = "", network = "", tokenFrom = "", tokenTo = "", tokenFromAddress = "" } = { ...req.query };
-        if (tokenFrom === tokenTo) {
-          return res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
-        }
         const networkType = network.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
         const tokenAbi = abi.APIS_ERC20
@@ -146,6 +152,18 @@ module.exports = ({
     query("privateKey").trim().isString(),
     query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
     query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
+    query("tokenFrom").custom((value, { req }) => {
+      if (value === req.query.tokenTo) {
+        throw new error(' tokenFrom and tokenTo cannot be same');
+      }
+      return true
+    }),
+    query("tokenFromAddress").custom((value, { req }) => {
+      if (value === req.query.tokenToAddress) {
+        throw new error('tokenFromAddress and tokenToAddress cannot be same')
+      }
+      return true
+    })
   ],
     async (req, res, next) => {
       try {
@@ -155,12 +173,6 @@ module.exports = ({
         }
         const { address = "*" } = req.params;
         const { privateKey = "", amount = "", network = "", tokenFrom = "", tokenTo = "", tokenFromAddress = "", tokenToAddress = "" } = { ...req.query };
-        if (tokenFrom === tokenTo) {
-          return res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
-        }
-        if (tokenFromAddress === tokenToAddress) {
-          return res.status(500).json({ error: "tokenFromAddress and tokenToAddress cannot be same" })
-        }
         const networkType = network.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
         const tokenAbi = abi.APIS_ERC20
@@ -206,6 +218,18 @@ module.exports = ({
     "/price", [
     query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
     query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
+    query("tokenFrom").custom((value, { req }) => {
+      if (value === req.query.tokenTo) {
+        throw new error(' tokenFrom and tokenTo cannot be same');
+      }
+      return true
+    }),
+    query("tokenFromAddress").custom((value, { req }) => {
+      if (value === req.query.tokenToAddress) {
+        throw new error('tokenFromAddress and tokenToAddress cannot be same')
+      }
+      return true
+    })
   ],
     async (req, res, next) => {
       try {
@@ -214,12 +238,6 @@ module.exports = ({
           return res.status(400).json({ errors: errors.array() });
         }
         const { amount = "", tokenFrom = "", tokenTo = "", network = "", tokenFromAddress = "", tokenToAddress = "" } = { ...req.query };
-        if (tokenFrom === tokenTo) {
-          return res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
-        }
-        if (tokenFromAddress === tokenToAddress) {
-          return res.status(500).json({ error: "tokenFromAddress and tokenToAddress cannot be same" })
-        }
         const networkType = network.toString().toUpperCase();
         const chainIds = chainNetwork()[networkType]
         const tokenFromInstance = await Fetcher.fetchTokenData(chainIds, tokenFromAddress);
@@ -255,6 +273,18 @@ module.exports = ({
     "/pair", [
     query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
     query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
+    query("tokenFrom").custom((value, { req }) => {
+      if (value === req.query.tokenTo) {
+        throw new error(' tokenFrom and tokenTo cannot be same');
+      }
+      return true
+    }),
+    query("tokenFromAddress").custom((value, { req }) => {
+      if (value === req.query.tokenToAddress) {
+        throw new error('tokenFromAddress and tokenToAddress cannot be same')
+      }
+      return true
+    })
   ],
     async (req, res, next) => {
       try {
@@ -263,12 +293,6 @@ module.exports = ({
           return res.status(400).json({ errors: errors.array() });
         }
         const { tokenFrom = "", tokenTo = "", network = "", tokenFromAddress = "", tokenToAddress = "" } = { ...req.query };
-        if (tokenFrom === tokenTo) {
-          return res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
-        }
-        if (tokenFromAddress === tokenToAddress) {
-          return res.status(500).json({ error: "tokenFromAddress and tokenToAddress cannot be same" })
-        }
         const networkType = network.toString().toUpperCase();
         const chainIds = chainNetwork()[networkType]
         const tokenFromInstance = await Fetcher.fetchTokenData(chainIds, tokenFromAddress);
