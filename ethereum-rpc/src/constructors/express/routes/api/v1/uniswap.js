@@ -3,21 +3,48 @@ const ethers = require('ethers');
 const { ChainId, WETH, Fetcher, Trade, Route, TokenAmount, TradeType, Percent } = require('@uniswap/sdk')
 const { query, param, validationResult } = require("express-validator");
 
+const { UNISWAP_ROUTER_ADDRESS, UNISWAP_SUPPORTED_CHAINS, UNISWAP_SUPPORTED_NETWORKS } = require('@/share/constants');
 
 module.exports = ({
   models,
   ethereum: { web3, buildContract, compiler, abi },
   ...context
 }) => {
+  const chainNetwork = () => {
+    const chainIdValue = {
+      MAINNET: ChainId.MAINNET,
+      RINKEBY: ChainId.RINKEBY
+    }
+    return chainIdValue
+  }
+  const userWallet = (privateKey, address) => {
+    const wallet = web3.eth.accounts.wallet.add({
+      privateKey,
+      address,
+    });
+    return wallet
+  }
+  const sendOptions = (address) => {
+    const options = {
+      from: address,
+      gasLimit: web3.utils.toHex(10000000),
+      gasPrice: web3.utils.toHex(50e9)
+    }
+    return options
+  }
 
   router.post(
     "/:address/swap/eth", [
     param("address").trim().isString(),
-    query("tokenFrom").trim().isIn(["eth"]),
-    query("tokenTo").trim().isIn(["dai", "mkr", "uni"]),
     query("privateKey").trim().isString(),
-    query("chain").trim().isIn(["ethereum"]),
-    query("network").trim().isIn(["rinkeby", "mainnet"])
+    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
+    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
+    query("tokenFrom").custom((value, { req }) => {
+      if (value === req.query.tokenTo) {
+        throw new error(' tokenFrom and tokenTo cannot be same');
+      }
+      return true
+    })
   ],
     async (req, res, next) => {
       try {
@@ -26,58 +53,30 @@ module.exports = ({
           return res.status(400).json({ errors: errors.array() });
         }
         const { address = "*" } = req.params;
-        const { privateKey = "", amount = "", tokenFrom = "", tokenTo = "" } = { ...req.query };
-        const tokenType = tokenTo.toString().toUpperCase();
+        const { privateKey = "", amount = "", tokenFrom = "", tokenTo = "", tokenToAddress = "", network = "" } = { ...req.query };
+        const networkType = network.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
-        const chainIds = ChainId.RINKEBY;
-
-        const tokenAddressRinkebyDai = '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735'
-        const tokenAddressRinkebyUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
-        const tokenAddressRinkebyMaker = '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85';
-        const tokenAddressRinkebyRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-
-        const DAI = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyDai);
-        const UNISWAP = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyUniswap);
-        const MAKER = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyMaker);
+        const chainIds = chainNetwork()[networkType]
         const weth = WETH[chainIds]
-
-        let token = {}
-        switch (tokenType) {
-          case 'DAI':
-            token = DAI;
-            break;
-          case 'UNI':
-            token = UNISWAP;
-            break;
-          case 'MKR':
-            token = MAKER
-            break;
+        const tokenToInstance = await Fetcher.fetchTokenData(chainIds, tokenToAddress);
+        if (!Object.keys(tokenToInstance).length) {
+          return res.status(500).json({ error: "token cannot be empty" })
         }
-        if (!Object.keys(token).length) {
-          return res.status(500).json({ error: "token value cannot be empty" })
-        }
-        const pair = await Fetcher.fetchPairData(token, weth)
+        const pair = await Fetcher.fetchPairData(tokenToInstance, weth)
         const route = new Route([pair], weth)
         const amountIn = web3.utils.toWei(amount);
         const trade = new Trade(route, new TokenAmount(weth, amountIn), TradeType.EXACT_INPUT)
         const slippageTolerance = new Percent('50', '10000') // 50 bips, or 0.50%
         const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw // needs to be converted to e.g. hex
-        const path = [weth.address, token.address]
+        const path = [weth.address, tokenToInstance.address]
         const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
         const valueInput = trade.inputAmount.raw // needs to be converted to e.g. hex
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
         const value = ethers.BigNumber.from(valueInput.toString()).toHexString();
-        const wallet = web3.eth.accounts.wallet.add({
-          privateKey,
-          address,
-        });
 
-        const contractInstance = await new web3.eth.Contract(routerAbi, tokenAddressRinkebyRouter, {
-          from: address,
-          gasLimit: web3.utils.toHex(10000000),
-          gasPrice: web3.utils.toHex(50e9),
-        });
-        const result = await contractInstance.methods.swapExactETHForTokens(amountOutMinHex, path, address, deadline)
+        const wallet = userWallet(privateKey, address)
+        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
+        const result = await contractInstanceRouter.methods.swapExactETHForTokens(amountOutMinHex, path, address, deadline)
           .send({ from: address, value: value, })
         return res.status(200).json({ result })
       } catch (e) {
@@ -87,16 +86,18 @@ module.exports = ({
     }
   );
 
-
-
   router.post(
     "/:address/swap/token", [
     param("address").trim().isString(),
-    query("tokenFrom").trim().isIn(["dai", "mkr", "uni"]),
-    query("tokenTo").trim().isIn(["eth"]),
     query("privateKey").trim().isString(),
-    query("chain").trim().isIn(["ethereum"]),
-    query("network").trim().isIn(["rinkeby", "mainnet"])
+    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
+    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
+    query("tokenFrom").custom((value, { req }) => {
+      if (value === req.query.tokenTo) {
+        throw new error(' tokenFrom and tokenTo cannot be same');
+      }
+      return true
+    })
   ],
     async (req, res, next) => {
       try {
@@ -105,67 +106,36 @@ module.exports = ({
           return res.status(400).json({ errors: errors.array() });
         }
         const { address = "*" } = req.params;
-        const { privateKey = "", amount = "", tokenFrom = "", tokenTo = "" } = { ...req.query };
-        const tokenType = tokenFrom.toString().toUpperCase();
+        const { privateKey = "", amount = "", network = "", tokenFrom = "", tokenTo = "", tokenFromAddress = "" } = { ...req.query };
+        const networkType = network.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
         const tokenAbi = abi.APIS_ERC20
-        const chainIds = ChainId.RINKEBY;
-
-        const tokenAddressRinkebyDai = '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735'
-        const tokenAddressRinkebyUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
-        const tokenAddressRinkebyMaker = '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85';
-        const tokenAddressRinkebyRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-
-        const DAI = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyDai);
-        const UNISWAP = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyUniswap);
-        const MAKER = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyMaker);
+        const chainIds = chainNetwork()[networkType]
         const weth = WETH[chainIds]
+        const tokenFromInstance = await Fetcher.fetchTokenData(chainIds, tokenFromAddress);
+        if (!Object.keys(tokenFromInstance).length) {
+          return res.status(500).json({ error: "token cannot be empty" })
+        }
 
-        let token = {};
-        switch (tokenType) {
-          case 'DAI':
-            token = DAI;
-            break;
-          case 'UNI':
-            token = UNISWAP;
-            break;
-          case 'MKR':
-            token = MAKER
-            break;
-        }
-        if (!Object.keys(token).length) {
-          return res.status(500).json({ error: "token value cannot be empty" })
-        }
-        const pair = await Fetcher.fetchPairData(token, weth)
-        const route = new Route([pair], token)
+        const pair = await Fetcher.fetchPairData(tokenFromInstance, weth)
+        const route = new Route([pair], tokenFromInstance)
         const amountIn = web3.utils.toWei(amount);
-        const trade = new Trade(route, new TokenAmount(token, amountIn), TradeType.EXACT_INPUT)
+        const trade = new Trade(route, new TokenAmount(tokenFromInstance, amountIn), TradeType.EXACT_INPUT)
         const slippageTolerance = new Percent('50', '10000')
         const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw
-        const path = [token.address, weth.address]
+        const path = [tokenFromInstance.address, weth.address]
         const deadline = Math.floor(Date.now() / 1000) + 60 * 20
         const valueInput = trade.inputAmount.raw
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
         const value = ethers.BigNumber.from(valueInput.toString()).toHexString();
-        const wallet = web3.eth.accounts.wallet.add({
-          privateKey,
-          address,
-        });
+        const wallet = userWallet(privateKey, address)
 
-        const contractInstanceToken = await new web3.eth.Contract(tokenAbi, token.address, {
-          from: address,
-          gasLimit: web3.utils.toHex(10000000),
-          gasPrice: web3.utils.toHex(50e9),
-        });
-        const transferring = await contractInstanceToken.methods.transfer(token.address, amountIn)
+        const contractInstanceToken = await new web3.eth.Contract(tokenAbi, tokenFromInstance.address, sendOptions(address));
+        const transferring = await contractInstanceToken.methods.transfer(tokenFromInstance.address, amountIn)
           .send({ from: address })
-        const approving = await contractInstanceToken.methods.approve(tokenAddressRinkebyRouter, amountIn)
+        const approving = await contractInstanceToken.methods.approve(UNISWAP_ROUTER_ADDRESS, amountIn)
           .send({ from: address })
-        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, tokenAddressRinkebyRouter, {
-          from: address,
-          gasLimit: web3.utils.toHex(10000000),
-          gasPrice: web3.utils.toHex(50e9),
-        });
+        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
         const result = await contractInstanceRouter.methods.swapExactTokensForETH(amountIn, amountOutMinHex, path, address, deadline)
           .send({ from: address })
         return res.status(200).json({ result })
@@ -179,11 +149,21 @@ module.exports = ({
   router.post(
     "/:address/swap", [
     param("address").trim().isString(),
-    query("tokenFrom").trim().isIn(["dai", "mkr", "uni", "weth"]),
-    query("tokenTo").trim().isIn(["dai", "mkr", "uni", "weth"]),
     query("privateKey").trim().isString(),
-    query("chain").trim().isIn(["ethereum"]),
-    query("network").trim().isIn(["rinkeby", "mainnet"])
+    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
+    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
+    query("tokenFrom").custom((value, { req }) => {
+      if (value === req.query.tokenTo) {
+        throw new error(' tokenFrom and tokenTo cannot be same');
+      }
+      return true
+    }),
+    query("tokenFromAddress").custom((value, { req }) => {
+      if (value === req.query.tokenToAddress) {
+        throw new error('tokenFromAddress and tokenToAddress cannot be same')
+      }
+      return true
+    })
   ],
     async (req, res, next) => {
       try {
@@ -192,64 +172,20 @@ module.exports = ({
           return res.status(400).json({ errors: errors.array() });
         }
         const { address = "*" } = req.params;
-        const { privateKey = "", amount = "", tokenFrom = "", tokenTo = "" } = { ...req.query };
-        if (tokenFrom === tokenTo) {
-          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
-        }
-
-        const tokenTypeFrom = tokenFrom.toString().toUpperCase();
-        const tokenTypeTo = tokenTo.toString().toUpperCase();
+        const { privateKey = "", amount = "", network = "", tokenFrom = "", tokenTo = "", tokenFromAddress = "", tokenToAddress = "" } = { ...req.query };
+        const networkType = network.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
         const tokenAbi = abi.APIS_ERC20
-        const chainIds = ChainId.RINKEBY;
-
-        const tokenAddressRinkebyDai = '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735'
-        const tokenAddressRinkebyUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
-        const tokenAddressRinkebyMaker = '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85';
-        const tokenAddressRinkebyWrappedEther = '0xc778417E063141139Fce010982780140Aa0cD5Ab';
-        const tokenAddressRinkebyRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-
-        const DAI = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyDai);
-        const UNISWAP = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyUniswap);
-        const MAKER = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyMaker);
-        const WETHS = await Fetcher.fetchTokenData(chainIds, tokenAddressRinkebyWrappedEther);
-
-        let tokenFromInstance = {};
-        switch (tokenTypeFrom) {
-          case 'DAI':
-            tokenFromInstance = DAI;
-            break;
-          case 'UNI':
-            tokenFromInstance = UNISWAP;
-            break;
-          case 'MKR':
-            tokenFromInstance = MAKER
-            break;
-          case 'WETH':
-            tokenFromInstance = WETHS
-            break;
-        }
+        const chainIds = chainNetwork()[networkType]
+        const tokenFromInstance = await Fetcher.fetchTokenData(chainIds, tokenFromAddress);
+        const tokenToInstance = await Fetcher.fetchTokenData(chainIds, tokenToAddress);
         if (!Object.keys(tokenFromInstance).length) {
-          return res.status(500).json({ error: "token value cannot be empty" })
-        }
-        let tokenToInstance = {};
-        switch (tokenTypeTo) {
-          case 'DAI':
-            tokenToInstance = DAI;
-            break;
-          case 'UNI':
-            tokenToInstance = UNISWAP;
-            break;
-          case 'MKR':
-            tokenToInstance = MAKER
-            break;
-          case 'WETH':
-            tokenToInstance = WETHS
-            break;
+          return res.status(500).json({ error: "token cannot be empty" })
         }
         if (!Object.keys(tokenToInstance).length) {
-          return res.status(500).json({ error: "token value cannot be empty" })
+          return res.status(500).json({ error: "token cannot be empty" })
         }
+
         const pair = await Fetcher.fetchPairData(tokenFromInstance, tokenToInstance)
         const route = new Route([pair], tokenFromInstance)
         const amountIn = web3.utils.toWei(amount);
@@ -261,25 +197,13 @@ module.exports = ({
         const valueInput = trade.inputAmount.raw
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
         const value = ethers.BigNumber.from(valueInput.toString()).toHexString();
-
-        const wallet = web3.eth.accounts.wallet.add({
-          privateKey,
-          address,
-        });
-        const contractInstanceToken = await new web3.eth.Contract(tokenAbi, tokenFromInstance.address, {
-          from: address,
-          gasLimit: web3.utils.toHex(10000000),
-          gasPrice: web3.utils.toHex(50e9),
-        });
+        const wallet = userWallet(privateKey, address)
+        const contractInstanceToken = await new web3.eth.Contract(tokenAbi, tokenFromInstance.address, sendOptions(address));
         const transferring = await contractInstanceToken.methods.transfer(tokenFromInstance.address, amountIn)
           .send({ from: address })
-        const approving = await contractInstanceToken.methods.approve(tokenAddressRinkebyRouter, amountIn)
+        const approving = await contractInstanceToken.methods.approve(UNISWAP_ROUTER_ADDRESS, amountIn)
           .send({ from: address })
-        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, tokenAddressRinkebyRouter, {
-          from: address,
-          gasLimit: web3.utils.toHex(10000000),
-          gasPrice: web3.utils.toHex(50e9),
-        });
+        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
         const result = await contractInstanceRouter.methods.swapExactTokensForTokens(amountIn, amountOutMinHex, path, address, deadline)
           .send({ from: address })
         return res.status(200).json({ result })
@@ -291,12 +215,21 @@ module.exports = ({
   );
 
   router.get(
-    "/:address/swap/price", [
-    param("address").trim().isString(),
-    query("tokenFrom").trim().isIn(["dai", "mkr", "uni", "weth", "eth"]),
-    query("tokenTo").trim().isIn(["dai", "mkr", "uni", "weth", "eth"]),
-    query("chain").trim().isIn(["ethereum"]),
-    query("network").trim().isIn(["rinkeby", "mainnet"]),
+    "/price", [
+    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
+    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
+    query("tokenFrom").custom((value, { req }) => {
+      if (value === req.query.tokenTo) {
+        throw new error(' tokenFrom and tokenTo cannot be same');
+      }
+      return true
+    }),
+    query("tokenFromAddress").custom((value, { req }) => {
+      if (value === req.query.tokenToAddress) {
+        throw new error('tokenFromAddress and tokenToAddress cannot be same')
+      }
+      return true
+    })
   ],
     async (req, res, next) => {
       try {
@@ -304,82 +237,13 @@ module.exports = ({
         if (!errors.isEmpty()) {
           return res.status(400).json({ errors: errors.array() });
         }
-        const { address = "*" } = req.params;
-        const { amount = "", tokenFrom = "", tokenTo = "", network = "" } = { ...req.query };
-        if (tokenFrom === tokenTo) {
-          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
-        }
-        const tokenTypeFrom = tokenFrom.toString().toUpperCase();
-        const tokenTypeTo = tokenTo.toString().toUpperCase();
+        const { amount = "", tokenFrom = "", tokenTo = "", network = "", tokenFromAddress = "", tokenToAddress = "" } = { ...req.query };
         const networkType = network.toString().toUpperCase();
-
-        let chainIds = {}
-        switch (networkType) {
-          case 'MAINNET':
-            chainIds = ChainId.MAINNET;
-            break;
-          case 'RINKEBY':
-            chainIds = ChainId.RINKEBY;
-            break;
-        }
-        let tokenAddressDai, tokenAddressUniswap, tokenAddressMaker, tokenAddressWrappedEther
-        if (networkType === "MAINNET") {
-          tokenAddressDai = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-          tokenAddressUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
-          tokenAddressMaker = '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2';
-          tokenAddressRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-          tokenAddressWrappedEther = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
-        }
-        else if (networkType === "RINKEBY") {
-          tokenAddressDai = '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735'
-          tokenAddressUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
-          tokenAddressMaker = '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85';
-          tokenAddressRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-          tokenAddressWrappedEther = '0xc778417E063141139Fce010982780140Aa0cD5Ab';
-        }
-        const DAI = await Fetcher.fetchTokenData(chainIds, tokenAddressDai);
-        const UNISWAP = await Fetcher.fetchTokenData(chainIds, tokenAddressUniswap);
-        const MAKER = await Fetcher.fetchTokenData(chainIds, tokenAddressMaker);
-        const WETHS = await Fetcher.fetchTokenData(chainIds, tokenAddressWrappedEther);
-
-        let tokenFromInstance = {};
-        switch (tokenTypeFrom) {
-          case 'DAI':
-            tokenFromInstance = DAI;
-            break;
-          case 'UNI':
-            tokenFromInstance = UNISWAP;
-            break;
-          case 'MKR':
-            tokenFromInstance = MAKER
-            break;
-          case 'WETH':
-            tokenFromInstance = WETHS
-            break;
-          case 'ETH':
-            tokenFromInstance = WETHS
-            break;
-        }
+        const chainIds = chainNetwork()[networkType]
+        const tokenFromInstance = await Fetcher.fetchTokenData(chainIds, tokenFromAddress);
+        const tokenToInstance = await Fetcher.fetchTokenData(chainIds, tokenToAddress);
         if (!Object.keys(tokenFromInstance).length) {
           return res.status(500).json({ error: "token cannot be empty" })
-        }
-        let tokenToInstance = {};
-        switch (tokenTypeTo) {
-          case 'DAI':
-            tokenToInstance = DAI;
-            break;
-          case 'UNI':
-            tokenToInstance = UNISWAP;
-            break;
-          case 'MKR':
-            tokenToInstance = MAKER
-            break;
-          case 'WETH':
-            tokenToInstance = WETHS
-            break;
-          case 'ETH':
-            tokenToInstance = WETHS
-            break;
         }
         if (!Object.keys(tokenToInstance).length) {
           return res.status(500).json({ error: "token cannot be empty" })
@@ -405,14 +269,22 @@ module.exports = ({
     }
   );
 
-
   router.get(
-    "/:address/swap/pair", [
-    param("address").trim().isString(),
-    query("tokenFrom").trim().isIn(["dai", "mkr", "uni", "weth", "eth"]),
-    query("tokenTo").trim().isIn(["dai", "mkr", "uni", "weth", "eth"]),
-    query("chain").trim().isIn(["ethereum"]),
-    query("network").trim().isIn(["rinkeby", "mainnet"]),
+    "/pair", [
+    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
+    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
+    query("tokenFrom").custom((value, { req }) => {
+      if (value === req.query.tokenTo) {
+        throw new error(' tokenFrom and tokenTo cannot be same');
+      }
+      return true
+    }),
+    query("tokenFromAddress").custom((value, { req }) => {
+      if (value === req.query.tokenToAddress) {
+        throw new error('tokenFromAddress and tokenToAddress cannot be same')
+      }
+      return true
+    })
   ],
     async (req, res, next) => {
       try {
@@ -420,82 +292,13 @@ module.exports = ({
         if (!errors.isEmpty()) {
           return res.status(400).json({ errors: errors.array() });
         }
-        const { address = "*" } = req.params;
-        const { amount = "", tokenFrom = "", tokenTo = "", network = "" } = { ...req.query };
-        if (tokenFrom === tokenTo) {
-          res.status(500).json({ error: "tokenFrom and tokenTo cannot be same" })
-        }
-        const tokenTypeFrom = tokenFrom.toString().toUpperCase();
-        const tokenTypeTo = tokenTo.toString().toUpperCase();
+        const { tokenFrom = "", tokenTo = "", network = "", tokenFromAddress = "", tokenToAddress = "" } = { ...req.query };
         const networkType = network.toString().toUpperCase();
-
-        let chainIds = {}
-        switch (networkType) {
-          case 'MAINNET':
-            chainIds = ChainId.MAINNET;
-            break;
-          case 'RINKEBY':
-            chainIds = ChainId.RINKEBY;
-            break;
-        }
-        let tokenAddressDai, tokenAddressUniswap, tokenAddressMaker, tokenAddressWrappedEther
-        if (networkType === "MAINNET") {
-          tokenAddressDai = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-          tokenAddressUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
-          tokenAddressMaker = '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2';
-          tokenAddressRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-          tokenAddressWrappedEther = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
-        }
-        else if (networkType === "RINKEBY") {
-          tokenAddressDai = '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735'
-          tokenAddressUniswap = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
-          tokenAddressMaker = '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85';
-          tokenAddressRouter = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-          tokenAddressWrappedEther = '0xc778417E063141139Fce010982780140Aa0cD5Ab';
-        }
-        const DAI = await Fetcher.fetchTokenData(chainIds, tokenAddressDai);
-        const UNISWAP = await Fetcher.fetchTokenData(chainIds, tokenAddressUniswap);
-        const MAKER = await Fetcher.fetchTokenData(chainIds, tokenAddressMaker);
-        const WETHS = await Fetcher.fetchTokenData(chainIds, tokenAddressWrappedEther);
-
-        let tokenFromInstance = {};
-        switch (tokenTypeFrom) {
-          case 'DAI':
-            tokenFromInstance = DAI;
-            break;
-          case 'UNI':
-            tokenFromInstance = UNISWAP;
-            break;
-          case 'MKR':
-            tokenFromInstance = MAKER
-            break;
-          case 'WETH':
-            tokenFromInstance = WETHS
-            break;
-          case 'ETH':
-            tokenFromInstance = WETHS
-            break;
-        }
+        const chainIds = chainNetwork()[networkType]
+        const tokenFromInstance = await Fetcher.fetchTokenData(chainIds, tokenFromAddress);
+        const tokenToInstance = await Fetcher.fetchTokenData(chainIds, tokenToAddress);
         if (!Object.keys(tokenFromInstance).length) {
           return res.status(500).json({ error: "token cannot be empty" })
-        }
-        let tokenToInstance = {};
-        switch (tokenTypeTo) {
-          case 'DAI':
-            tokenToInstance = DAI;
-            break;
-          case 'UNI':
-            tokenToInstance = UNISWAP;
-            break;
-          case 'MKR':
-            tokenToInstance = MAKER
-            break;
-          case 'WETH':
-            tokenToInstance = WETHS
-            break;
-          case 'ETH':
-            tokenToInstance = WETHS
-            break;
         }
         if (!Object.keys(tokenToInstance).length) {
           return res.status(500).json({ error: "token cannot be empty" })
@@ -508,6 +311,7 @@ module.exports = ({
       }
     }
   );
+
   return router;
 };
 
