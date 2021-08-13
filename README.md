@@ -1,4 +1,4 @@
-# The APIS Core
+# The APIS - A Decentralized API Layer for the Future of the Web
 
 [Visit our Website for more informatoin](https://www.theapis.io/).
 
@@ -6,13 +6,13 @@ The APIS is a decentralized read and write protocol, acting as necessary middlew
 
 
 
-Looking for our docker images? [Download and run TheAPIS images directly from DockerHub](https://hub.docker.com/u/theapis)
-
-[![Build Status](https://circleci.com/gh/The-APIS/apis-core/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/The-APIS/apis-core?branch=master)
-
 [Check out our Gitbook, our primary source of documentation](https://app.gitbook.com/@the-apis-1/s/the-apis/)
 
 [Or go straight to our JavaScript SDK](https://www.npmjs.com/package/@theapis/sdk)
+
+Looking for our docker images? [Download and run our images directly from DockerHub](https://hub.docker.com/u/theapis)
+
+[![Build Status](https://circleci.com/gh/The-APIS/apis-core/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/The-APIS/apis-core?branch=master)
 
 BTW, Follow us!
 [Medium](https://medium.com/the-apis) [Twitter](https://twitter.com/TheApis_io) [Facebook](https://www.facebook.com/theapis1/)
