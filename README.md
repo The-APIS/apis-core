@@ -1,6 +1,6 @@
 # The APIS Core
 
-Visit [TheApis Website](https://www.theapis.io/) and check out [TheApis White Paper](https://static.theapis.io/whitepaper.pdf).
+[Visit our Website for more informatoin](https://www.theapis.io/).
 
 The APIS is a decentralized read and write protocol, acting as necessary middleware for the mainstream growth of a fully decentralized internet. Our protocol is community owned, in that at least 70% of API tokens (our native token) will be distributed to the builders that utilize the APIS protocol, with the other 30% going to those who contribute ‘proof of work’ to the APIS protocol. The best way to use the APIS protocol is to build a cool Dapp with it. We work alongside you, so that you don’t need to hire any additional manpower or build any additional infrastructure, while still offering your users all of the best Web 3.0 experiences (DeFi, NFTs, DAOs, etc.). When your Dapp grows like crazy, your corresponding ownership of API tokens will ensure that you never experience the platform risk of the Web 2.0 era. We win as a team.
 
@@ -10,10 +10,11 @@ Looking for our docker images? [Download and run TheAPIS images directly from Do
 
 [![Build Status](https://circleci.com/gh/The-APIS/apis-core/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/The-APIS/apis-core?branch=master)
 
+[Check out our Gitbook, our primary source of documentation](https://app.gitbook.com/@the-apis-1/s/the-apis/)
 
-[TheAPIS JavaScript SDK](https://www.npmjs.com/package/@theapis/sdk)
+[Or go straight to our JavaScript SDK](https://www.npmjs.com/package/@theapis/sdk)
 
-Follow us!
+BTW, Follow us!
 [Medium](https://medium.com/the-apis) [Twitter](https://twitter.com/TheApis_io) [Facebook](https://www.facebook.com/theapis1/)
 
 
