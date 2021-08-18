@@ -72,6 +72,12 @@ module.exports = ({
    param("address").trim().isString(),
    query("type").trim().isIn(["erc20", "erc721"]),
    query("tokenAddress").trim().isString(),
+   param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
   ],
   async (req, res, next) => {
    try {
@@ -86,9 +92,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const tokenType = type.toString().toUpperCase();
     if (!(tokenType == "ERC20" || tokenType == "ERC721")) {
@@ -121,7 +124,14 @@ module.exports = ({
 
  router.get(
   "/:address/id",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -135,9 +145,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC721;
     const contract = await contractInstance(
@@ -160,7 +167,14 @@ module.exports = ({
 
  router.get(
   "/:address/owner",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -174,9 +188,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC721;
     const contract = await contractInstance(
@@ -199,7 +210,14 @@ module.exports = ({
 
  router.get(
   "/:address/name",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -213,9 +231,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC721;
     const contract = await contractInstance(
@@ -238,7 +253,14 @@ module.exports = ({
 
  router.get(
   "/:address/symbol",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -252,9 +274,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC721;
     const contract = await contractInstance(
@@ -277,7 +296,14 @@ module.exports = ({
 
  router.get(
   "/:address/supply",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -291,9 +317,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC721;
     const contract = await contractInstance(
@@ -316,7 +339,14 @@ module.exports = ({
 
  router.get(
   "/:address/contract",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -330,9 +360,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC721;
     const contract = await contractInstance(
@@ -355,7 +382,14 @@ module.exports = ({
 
  router.get(
   "/:address/uri",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -369,9 +403,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC721;
     const contract = await contractInstance(
@@ -394,7 +425,14 @@ module.exports = ({
 
  router.get(
   "/:address/approved",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -408,9 +446,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC721;
     const contract = await contractInstance(
@@ -433,7 +468,14 @@ module.exports = ({
 
  router.post(
   "/:address/mint",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+   param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -451,9 +493,6 @@ module.exports = ({
      tokenAddress.toString("hex")
     );
     const recieverAddress = prefixContractAddress(toAddress.toString("hex"));
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
-    }
     if (!web3.utils.isAddress(toAddress)) {
      return res.status(500).json({ error: "invalid address" });
     }
@@ -484,7 +523,14 @@ module.exports = ({
 
  router.post(
   "/:address/transfer",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -502,9 +548,6 @@ module.exports = ({
      tokenAddress.toString("hex")
     );
     const recieverAddress = prefixContractAddress(toAddress.toString("hex"));
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
-    }
     if (!web3.utils.isAddress(tokenAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
     }
@@ -535,7 +578,14 @@ module.exports = ({
 
  router.post(
   "/:address/burn",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -549,9 +599,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC721;
     const wallet = web3.eth.accounts.wallet.add({
@@ -578,7 +625,14 @@ module.exports = ({
 
  router.post(
   "/:address/approve",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -600,9 +654,6 @@ module.exports = ({
      return res.status(500).json({ error: "invalid contract address" });
     }
     if (!web3.utils.isAddress(recieverAddress)) {
-     return res.status(500).json({ error: "invalid address" });
-    }
-    if (!web3.utils.isAddress(address)) {
      return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC721;
@@ -634,6 +685,12 @@ module.exports = ({
    param("address").trim().isString(),
    query("type").trim().isIn(["erc1155"]),
    query("tokenAddress").trim().isString(),
+   param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
   ],
   async (req, res, next) => {
    try {
@@ -648,9 +705,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const tokenType = type.toString().toUpperCase();
     if (!(tokenType == "ERC1155")) {
@@ -677,7 +731,14 @@ module.exports = ({
 
  router.get(
   "/:address/erc1155/contract",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -691,9 +752,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC1155;
     const contract = await contractInstance(
@@ -716,7 +774,14 @@ module.exports = ({
 
  router.get(
   "/:address/erc1155/uri",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -730,9 +795,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC1155;
     const contract = await contractInstance(
@@ -755,7 +817,14 @@ module.exports = ({
 
  router.post(
   "/:address/erc1155/mint",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -775,9 +844,6 @@ module.exports = ({
      tokenAddress.toString("hex")
     );
     const recieverAddress = prefixContractAddress(toAddress.toString("hex"));
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
-    }
     if (!web3.utils.isAddress(toAddress)) {
      return res.status(500).json({ error: "invalid address" });
     }
@@ -809,7 +875,14 @@ module.exports = ({
 
  router.post(
   "/:address/erc1155/mint/batch",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -847,9 +920,6 @@ module.exports = ({
      tokenAddress.toString("hex")
     );
     const recieverAddress = prefixContractAddress(toAddress.toString("hex"));
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
-    }
     if (!web3.utils.isAddress(toAddress)) {
      return res.status(500).json({ error: "invalid address" });
     }
@@ -881,7 +951,14 @@ module.exports = ({
 
  router.post(
   "/:address/erc1155/transfer",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -901,9 +978,6 @@ module.exports = ({
      tokenAddress.toString("hex")
     );
     const recieverAddress = prefixContractAddress(toAddress.toString("hex"));
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
-    }
     if (!web3.utils.isAddress(tokenAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
     }
@@ -935,7 +1009,14 @@ module.exports = ({
  
  router.post(
   "/:address/erc1155/transfer/batch",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -968,9 +1049,6 @@ module.exports = ({
      tokenAddress.toString("hex")
     );
     const recieverAddress = prefixContractAddress(toAddress.toString("hex"));
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
-    }
     if (!web3.utils.isAddress(tokenAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
     }
@@ -1002,7 +1080,14 @@ module.exports = ({
  
  router.post(
   "/:address/erc1155/burn",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -1016,9 +1101,6 @@ module.exports = ({
     );
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
-    }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
     }
     const contractAbi = abi.APIS_ERC1155;
     const wallet = web3.eth.accounts.wallet.add({
@@ -1046,7 +1128,14 @@ module.exports = ({
  
  router.post(
   "/:address/erc1155/burn/batch",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
@@ -1074,9 +1163,6 @@ module.exports = ({
     if (!web3.utils.isAddress(tokenContractAddress)) {
      return res.status(500).json({ error: "invalid contract address" });
     }
-    if (!web3.utils.isAddress(address)) {
-     return res.status(500).json({ error: "invalid address" });
-    }
     const contractAbi = abi.APIS_ERC1155;
     const wallet = web3.eth.accounts.wallet.add({
      privateKey,
@@ -1102,7 +1188,14 @@ module.exports = ({
 
  router.post(
   "/:address/erc1155/uri",
-  [param("address").trim().isString(), query("tokenAddress").trim().isString()],
+  [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+  param("address").custom((value, { req }) => {
+    if (!web3.utils.isAddress(value)) {
+      throw new error("invalid address");
+    }
+    return true
+  }),
+],
   async (req, res, next) => {
    try {
     const errors = validationResult(req);
