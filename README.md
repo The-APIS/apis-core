@@ -14,8 +14,8 @@ Looking for our docker images? [Download and run our images directly from Docker
 
 [![Build Status](https://circleci.com/gh/The-APIS/apis-core/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/The-APIS/apis-core?branch=master)
 
-BTW, Follow us!
-[Medium](https://medium.com/the-apis) [Twitter](https://twitter.com/TheApis_io) [Facebook](https://www.facebook.com/theapis1/)
+Follow us!
+[Medium](https://medium.com/the-apis) | [Twitter](https://twitter.com/TheApis_io) | [Facebook](https://www.facebook.com/theapis1/)
 
 
 
