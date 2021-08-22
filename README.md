@@ -1,6 +1,6 @@
 # The APIS - A Decentralized API Layer for the Future of the Web
 
-[Visit our Website for more informatoin](https://www.theapis.io/).
+[The APIS Website](https://www.theapis.io/).
 
 The APIS is a decentralized read and write protocol, acting as necessary middleware for the mainstream growth of a fully decentralized internet. Our protocol is community owned, in that at least 70% of API tokens (our native token) will be distributed to the builders that utilize the APIS protocol, with the other 30% going to those who contribute ‘proof of work’ to the APIS protocol. The best way to use the APIS protocol is to build a cool Dapp with it. We work alongside you, so that you don’t need to hire any additional manpower or build any additional infrastructure, while still offering your users all of the best Web 3.0 experiences (DeFi, NFTs, DAOs, etc.). When your Dapp grows like crazy, your corresponding ownership of API tokens will ensure that you never experience the platform risk of the Web 2.0 era. We win as a team.
 
