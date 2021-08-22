@@ -6,7 +6,7 @@ The APIS is a decentralized read and write protocol, acting as necessary middlew
 
 
 
-[Check out our Gitbook, our primary source of documentation](https://app.gitbook.com/@the-apis-1/s/the-apis/)
+[Check out our primary source of documentation](https://app.gitbook.com/@the-apis-1/s/the-apis/)
 
 [Or go straight to our JavaScript SDK](https://www.npmjs.com/package/@theapis/sdk)
 
