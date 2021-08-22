@@ -8,7 +8,7 @@ The APIS is a decentralized read and write protocol, acting as necessary middlew
 
 [Check out our primary source of documentation](https://app.gitbook.com/@the-apis-1/s/the-apis/)
 
-[Or go straight to our JavaScript SDK](https://www.npmjs.com/package/@theapis/sdk)
+[The APIS JavaScript SDK](https://www.npmjs.com/package/@theapis/sdk)
 
 Looking for our docker images? [Download and run our images directly from DockerHub](https://hub.docker.com/u/theapis)
 
