@@ -1,6 +1,7 @@
 const axios = require("axios");
 const router = require("express").Router();
 const { body, query, param, validationResult } = require("express-validator");
+const isEmpty = require('lodash/isEmpty') 
 
 
 const prefixPrivateKey = (key) => (key.startsWith("0x") ? key : `0x${key}`);
@@ -830,23 +831,21 @@ module.exports = ({
           amounts = "",
         } = { ...req.query };
 
-        const amountArray = amounts.split(",").map(Number);
-        const idArray = ids.split(",").map(Number);
+        const amountArray = amounts.split(",")
+        const idArray = ids.split(",")
         if (amountArray.length != idArray.length) {
           return res
             .status(500)
             .json({ error: "NO: OF ID's NOT EQUAL TO NO OF AMOUNTS" });
         }
-        for (i = 0; i < amountArray.length; i++) {
-          if (amountArray[i] == "") {
-            return res.status(500).json({ error: "AMOUNT CANNOT BE NULL" });
-          }
+        if (amountArray.some(item => isEmpty(item))){
+          return res.status(500).json({ error : "AMOUNT CANNOT BE NULL"})
         }
-        for (i = 0; i < idArray.length; i++) {
-          if (idArray[i] == "") {
-            return res.status(500).json({ error: "ID CANNOT BE NULL" });
-          }
+        if (idArray.some(item => isEmpty(item))){
+          return res.status(500).json({ error : "ID CANNOT BE NULL"})
         }
+        const amountArrayList = amountArray.map(Number)
+        const idArrayList = idArray.map(Number)
         const tokenContractAddress = prefixContractAddress(
           tokenAddress.toString("hex")
         );
@@ -863,7 +862,7 @@ module.exports = ({
           address
         );
         contract.methods
-          .mintBatch(recieverAddress, idArray, amountArray, bytesData)
+          .mintBatch(recieverAddress, idArrayList, amountArrayList, bytesData)
           .send({ from: address })
           .then((result) => {
             return res.status(200).json({ result });
@@ -945,21 +944,19 @@ module.exports = ({
           amounts = "",
           data = "",
         } = { ...req.query };
-        const amountArray = amounts.split(",").map(Number);
-        const idArray = ids.split(",").map(Number);
+        const amountArray = amounts.split(",")
+        const idArray = ids.split(",")
         if (amountArray.length != idArray.length) {
           return res.status(500).json({ error: "NO: OF ID's NOT EQUAL TO NO OF AMOUNTS" })
         }
-        for (i = 0; i < amountArray.length; i++) {
-          if (amountArray[i] == "") {
-            return res.status(500).json({ error: "AMOUNT CANNOT BE NULL" })
-          }
+        if (amountArray.some(item => isEmpty(item))){
+          return res.status(500).json({ error : "AMOUNT CANNOT BE NULL"})
         }
-        for (i = 0; i < idArray.length; i++) {
-          if (idArray[i] == "") {
-            return res.status(500).json({ error: "ID CANNOT BE NULL" })
-          }
+        if (idArray.some(item => isEmpty(item))){
+          return res.status(500).json({ error : "ID CANNOT BE NULL"})
         }
+        const amountArrayList = amountArray.map(Number)
+        const idArrayList = idArray.map(Number)
         const tokenContractAddress = prefixContractAddress(
           tokenAddress.toString("hex")
         );
@@ -976,7 +973,7 @@ module.exports = ({
           address
         );
         contract.methods
-          .safeBatchTransferFrom(address, recieverAddress, idArray, amountArray, bytesData)
+          .safeBatchTransferFrom(address, recieverAddress, idArrayList, amountArrayList, bytesData)
           .send({ from: address })
           .then((result) => {
             return res.status(200).json({ result });
@@ -1042,21 +1039,19 @@ module.exports = ({
         }
         const { address = "*" } = req.params;
         let { tokenAddress = "", ids = "", privateKey = "", values = " " } = { ...req.query };
-        const valueArray = values.split(",").map(Number);
-        const idArray = ids.split(",").map(Number);
+        const valueArray = values.split(",")
+        const idArray = ids.split(",")
         if (valueArray.length != idArray.length) {
           return res.status(500).json({ error: "NO: OF ID's NOT EQUAL TO NO OF VALUES" })
         }
-        for (i = 0; i < valueArray.length; i++) {
-          if (valueArray[i] == "") {
-            return res.status(500).json({ error: "AMOUNT CANNOT BE NULL" })
-          }
+        if (valueArray.some(item => isEmpty(item))){
+          return res.status(500).json({ error : "VALUE CANNOT BE NULL"})
         }
-        for (i = 0; i < idArray.length; i++) {
-          if (idArray[i] == "") {
-            return res.status(500).json({ error: "ID CANNOT BE NULL" })
-          }
+        if (idArray.some(item => isEmpty(item))){
+          return res.status(500).json({ error : "ID CANNOT BE NULL"})
         }
+        const valueArrayList = valueArray.map(Number)
+        const idArrayList = idArray.map(Number)
         const tokenContractAddress = prefixContractAddress(
           tokenAddress.toString("hex")
         );
@@ -1071,7 +1066,7 @@ module.exports = ({
           address
         );
         contract.methods
-          .burnBatch(address, idArray, valueArray)
+          .burnBatch(address, idArrayList, valueArrayList)
           .send({ from: address })
           .then((result) => {
            return res.status(200).json({ result });
