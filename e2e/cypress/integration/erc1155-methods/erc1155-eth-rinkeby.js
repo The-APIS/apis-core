@@ -5,9 +5,9 @@ describe("Erc1155-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/0x6A3Cd6a4f7288a43921Ff88796cb75D9e36A8b9A/erc1155/balance`,
+    )}/api/v1/tokens/${Cypress.config("senderAddress1")}/erc1155/balance`,
     qs: {
-     tokenAddress: "0x85c95902239797b69beab4e617411fb94981a2a9",
+     tokenAddress: Cypress.config("tokenAddress3"),
      type: "erc1155",
      id: "1",
      apiKey: Cypress.config("apisCoreApiKey"),
@@ -25,9 +25,9 @@ describe("Erc1155-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/0xb08efdD94a2b705a12272Ae985Bc293d75aB70c9/erc1155/contract`,
+    )}/api/v1/tokens/${Cypress.config("senderAddress4")}/erc1155/contract`,
     qs: {
-     tokenAddress: "0x162019b50db2324eb59ee90b19ebcf84bf3c7ced",
+     tokenAddress: Cypress.config("tokenAddress4"),
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
@@ -43,9 +43,9 @@ describe("Erc1155-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/0xb08efdD94a2b705a12272Ae985Bc293d75aB70c9/erc1155/uri`,
+    )}/api/v1/tokens/${Cypress.config("senderAddress4")}/erc1155/uri`,
     qs: {
-     tokenAddress: "0x162019b50db2324eb59ee90b19ebcf84bf3c7ced",
+     tokenAddress: Cypress.config("tokenAddress4"),
      id: "1",
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
@@ -62,12 +62,11 @@ describe("Erc1155-methods - Ethereum Rinkeby", () => {
     method: "POST",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/0x0c623F6164Fca9a5d146917a93497E5946CC7340/erc1155/uri`,
+    )}/api/v1/tokens/${Cypress.config("senderAddress5")}/erc1155/uri`,
     qs: {
-     tokenAddress: "0xe56c0d9cc656196c92f6f6a598b703a342153830",
+     tokenAddress: Cypress.config("tokenAddress5"),
      uri: "Apis erc1155 token test",
-     privateKey:
-      "4b414498530f3e4fe8254e7584bcb8176c53d925185a1aaf6d3af88f1d129e74",
+     privateKey: Cypress.config("privateKey5"),
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
