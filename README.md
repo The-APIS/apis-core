@@ -1,21 +1,21 @@
 # The APIS - A Decentralized API Layer for the Future of the Web
 
-[Visit our Website for more informatoin](https://www.theapis.io/).
+[The APIS Website](https://www.theapis.io/).
 
 The APIS is a decentralized read and write protocol, acting as necessary middleware for the mainstream growth of a fully decentralized internet. Our protocol is community owned, in that at least 70% of API tokens (our native token) will be distributed to the builders that utilize the APIS protocol, with the other 30% going to those who contribute ‘proof of work’ to the APIS protocol. The best way to use the APIS protocol is to build a cool Dapp with it. We work alongside you, so that you don’t need to hire any additional manpower or build any additional infrastructure, while still offering your users all of the best Web 3.0 experiences (DeFi, NFTs, DAOs, etc.). When your Dapp grows like crazy, your corresponding ownership of API tokens will ensure that you never experience the platform risk of the Web 2.0 era. We win as a team.
 
 
 
-[Check out our Gitbook, our primary source of documentation](https://app.gitbook.com/@the-apis-1/s/the-apis/)
+[Check out our primary source of documentation](https://app.gitbook.com/@the-apis-1/s/the-apis/)
 
-[Or go straight to our JavaScript SDK](https://www.npmjs.com/package/@theapis/sdk)
+[The APIS JavaScript SDK](https://www.npmjs.com/package/@theapis/sdk)
 
 Looking for our docker images? [Download and run our images directly from DockerHub](https://hub.docker.com/u/theapis)
 
 [![Build Status](https://circleci.com/gh/The-APIS/apis-core/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/The-APIS/apis-core?branch=master)
 
-BTW, Follow us!
-[Medium](https://medium.com/the-apis) [Twitter](https://twitter.com/TheApis_io) [Facebook](https://www.facebook.com/theapis1/)
+Follow us!
+[Medium](https://medium.com/the-apis) | [Twitter](https://twitter.com/TheApis_io) | [Discord](https://discord.gg/UgRYEVb3us)
 
 
 
