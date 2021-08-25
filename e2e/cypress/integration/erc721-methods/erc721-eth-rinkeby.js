@@ -5,9 +5,9 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress1")}/balance`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/balance`,
     qs: {
-     tokenAddress: Cypress.config("tokenAddress1"),
+     tokenAddress: Cypress.config("contractAddress1"),
      type: "erc721",
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
@@ -24,9 +24,9 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress2")}/id`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/id`,
     qs: {
-     tokenAddress: Cypress.config('tokenAddress2'),
+     tokenAddress: Cypress.config('contractAddress1'),
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
@@ -42,9 +42,9 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress3")}/owner`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/owner`,
     qs: {
-     tokenAddress: Cypress.config('tokenAddress2'),
+     tokenAddress: Cypress.config('contractAddress1'),
      id: "1",
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
@@ -61,9 +61,9 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress4")}/name`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/name`,
     qs: {
-     tokenAddress: Cypress.config('tokenAddress1'),
+     tokenAddress: Cypress.config('contractAddress1'),
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
@@ -79,9 +79,9 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress4")}/symbol`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/symbol`,
     qs: {
-     tokenAddress: Cypress.config('tokenAddress1'),
+     tokenAddress: Cypress.config('contractAddress1'),
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
@@ -97,9 +97,9 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress4")}/supply`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/supply`,
     qs: {
-     tokenAddress: Cypress.config('tokenAddress1'),
+     tokenAddress: Cypress.config('contractAddress1'),
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
@@ -115,9 +115,9 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress4")}/contract`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/contract`,
     qs: {
-     tokenAddress: Cypress.config('tokenAddress1'),
+     tokenAddress: Cypress.config('contractAddress1'),
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
@@ -133,10 +133,10 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress4")}/uri`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/uri`,
     qs: {
-     tokenAddress: Cypress.config('tokenAddress1'),
-     id: "5",
+     tokenAddress: Cypress.config('contractAddress1'),
+     id: "1",
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
@@ -152,10 +152,10 @@ describe("Erc721-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress4")}/approved`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/approved`,
     qs: {
-     tokenAddress: Cypress.config('tokenAddress1'),
-     id: "5",
+     tokenAddress: Cypress.config('contractAddress1'),
+     id: "1",
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",

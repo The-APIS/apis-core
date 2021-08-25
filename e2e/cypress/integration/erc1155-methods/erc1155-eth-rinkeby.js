@@ -5,9 +5,9 @@ describe("Erc1155-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress1")}/erc1155/balance`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/erc1155/balance`,
     qs: {
-     tokenAddress: Cypress.config("tokenAddress3"),
+     tokenAddress: Cypress.config("contractAddress2"),
      type: "erc1155",
      id: "1",
      apiKey: Cypress.config("apisCoreApiKey"),
@@ -25,9 +25,9 @@ describe("Erc1155-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress4")}/erc1155/contract`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/erc1155/contract`,
     qs: {
-     tokenAddress: Cypress.config("tokenAddress4"),
+     tokenAddress: Cypress.config("contractAddress2"),
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
@@ -43,9 +43,9 @@ describe("Erc1155-methods - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress4")}/erc1155/uri`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/erc1155/uri`,
     qs: {
-     tokenAddress: Cypress.config("tokenAddress4"),
+     tokenAddress: Cypress.config("contractAddress2"),
      id: "1",
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
@@ -62,11 +62,11 @@ describe("Erc1155-methods - Ethereum Rinkeby", () => {
     method: "POST",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress5")}/erc1155/uri`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress1")}/erc1155/uri`,
     qs: {
-     tokenAddress: Cypress.config("tokenAddress5"),
+     tokenAddress: Cypress.config("contractAddress2"),
      uri: "Apis erc1155 token test",
-     privateKey: Cypress.config("privateKey5"),
+     privateKey: Cypress.config("privateKey1"),
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
      network: "rinkeby",
