@@ -68,12 +68,12 @@ describe("Unified - Ethereum Rinkeby", () => {
      token: {
       name: "The APIS",
       symbol: "API",
-      minter: Cypress.config("senderAddress4"),
-      account: Cypress.config("senderAddress4"),
+      minter: Cypress.config("accountAddress1"),
+      account: Cypress.config("accountAddress1"),
       initialSupply: "10000000000000000000000000",
      },
-     sender: Cypress.config("senderAddress4"),
-     privateKey: Cypress.config("privateKey4"),
+     sender: Cypress.config("accountAddress1"),
+     privateKey: Cypress.config("privateKey1"),
     },
    })
    .should((response) => {
@@ -101,8 +101,8 @@ describe("Unified - Ethereum Rinkeby", () => {
       symbol: "APIS",
       uri: "erc721 from apis",
      },
-     sender: Cypress.config("senderAddress4"),
-     privateKey:Cypress.config("privateKey4"),
+     sender: Cypress.config("accountAddress1"),
+     privateKey:Cypress.config("privateKey1"),
     },
    })
    .should((response) => {
@@ -129,8 +129,8 @@ describe("Unified - Ethereum Rinkeby", () => {
       name: "TheApis",
       uri: "apis erc 1155",
      },
-     sender: Cypress.config("senderAddress4"),
-     privateKey: Cypress.config("privateKey4"),
+     sender: Cypress.config("accountAddress1"),
+     privateKey: Cypress.config("privateKey1"),
     },
    })
    .should((response) => {
@@ -146,9 +146,9 @@ describe("Unified - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress5")}/balance`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/balance`,
     qs: {
-     tokenAddress: Cypress.config("tokenAddress6"),
+     tokenAddress: Cypress.config("contractAddress3"),
      type: "erc20",
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
@@ -165,9 +165,9 @@ describe("Unified - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress1")}/balance`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/balance`,
     qs: {
-     tokenAddress: Cypress.config("tokenAddress1"),
+     tokenAddress: Cypress.config("contractAddress1"),
      type: "erc721",
      apiKey: Cypress.config("apisCoreApiKey"),
      chain: "ethereum",
@@ -184,9 +184,9 @@ describe("Unified - Ethereum Rinkeby", () => {
     method: "GET",
     url: `${Cypress.config(
      "baseUrl"
-    )}/api/v1/tokens/${Cypress.config("senderAddress1")}/erc1155/balance`,
+    )}/api/v1/tokens/${Cypress.config("accountAddress2")}/erc1155/balance`,
     qs: {
-     tokenAddress: Cypress.config("tokenAddress3"),
+     tokenAddress: Cypress.config("contractAddress2"),
      type: "erc1155",
      id: "1",
      apiKey: Cypress.config("apisCoreApiKey"),
