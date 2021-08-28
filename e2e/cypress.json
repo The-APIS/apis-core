@@ -7,6 +7,7 @@
   "accountAddress1":"0x8c492498Cf819F5b794b613e0A8c6eb3265073F2",
   "accountAddress2": "0xc8bA9a0e6431a08D3032d8d77C2227cD884605eE",
   "privateKey1":"29449154390efb2b172676cc1f19d0de08d7009f86a64311193f7e75208d7be9",
+  "privateKey2":"",
   "pluginsFile": false,
   "supportFile": false,
   "fixturesFolder": false,
