@@ -462,6 +462,41 @@ module.exports = ({
       }
     }
   );
+  router.get(
+   "/:address/interface",
+   [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+   validateParamAddress({ key: "address" }),
+   validateQueryAddress({ key: "tokenAddress" })
+   ],
+   async (req, res, next) => {
+     try {
+       const errors = validationResult(req);
+       if (!errors.isEmpty()) {
+         return res.status(400).json({ errors: errors.array() });
+       }
+       const { address = "*" } = req.params;
+       let { tokenAddress = "", interfaceId = "" } = { ...req.query };
+       const tokenContractAddress = prefixContractAddress(
+         tokenAddress.toString("hex")
+       );
+       const contractAbi = abi.APIS_ERC721;
+       const contract = await contractInstance(
+         contractAbi,
+         tokenContractAddress,
+         address
+       );
+       contract.methods
+         .supportsInterface(interfaceId)
+         .call()
+         .then((result) => {
+           return res.status(200).json({ result });
+         });
+     } catch (e) {
+       console.error(e);
+       return res.status(500).json({ error: [e] });
+     }
+   }
+ );
   router.post(
     "/:address/mint",
     [param("address").trim().isString(), query("tokenAddress").trim().isString(),
@@ -755,6 +790,41 @@ module.exports = ({
       }
     }
   );
+  router.get(
+   "/:address/erc1155/interface",
+   [param("address").trim().isString(), query("tokenAddress").trim().isString(),
+   validateParamAddress({ key: "address" }),
+   validateQueryAddress({ key: "tokenAddress" })
+   ],
+   async (req, res, next) => {
+     try {
+       const errors = validationResult(req);
+       if (!errors.isEmpty()) {
+         return res.status(400).json({ errors: errors.array() });
+       }
+       const { address = "*" } = req.params;
+       let { tokenAddress = "", interfaceId = "" } = { ...req.query };
+       const tokenContractAddress = prefixContractAddress(
+         tokenAddress.toString("hex")
+       );
+       const contractAbi = abi.APIS_ERC1155;
+       const contract = await contractInstance(
+         contractAbi,
+         tokenContractAddress,
+         address
+       );
+       contract.methods
+         .supportsInterface(interfaceId)
+         .call()
+         .then((result) => {
+           return res.status(200).json({ result });
+         });
+     } catch (e) {
+       console.error(e);
+       return res.status(500).json({ error: [e] });
+     }
+   }
+ );
 
   router.post(
     "/:address/erc1155/mint",
