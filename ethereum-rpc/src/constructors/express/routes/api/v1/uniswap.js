@@ -3,7 +3,7 @@ const ethers = require('ethers');
 const { ChainId, WETH, Fetcher, Trade, Route, TokenAmount, TradeType, Percent } = require('@uniswap/sdk')
 const { query, param, validationResult } = require("express-validator");
 
-const { UNISWAP_ROUTER_ADDRESS, UNISWAP_SUPPORTED_CHAINS, UNISWAP_SUPPORTED_NETWORKS, UNISWAP_FACTORY_ADDRESS, WETH_ADDRESS} = require('@/share/constants');
+const { UNISWAP_ROUTER_ADDRESS, UNISWAP_SUPPORTED_CHAINS, UNISWAP_SUPPORTED_NETWORKS, UNISWAP_FACTORY_ADDRESS, WETH_ADDRESS } = require('@/share/constants');
 
 module.exports = ({
   models,
@@ -145,7 +145,7 @@ module.exports = ({
     }
   );
 
-  
+
   router.post(
     "/:address/swap", [
     param("address").trim().isString(),
@@ -240,68 +240,34 @@ module.exports = ({
           return res.status(400).json({ errors: errors.array() });
         }
         const { address = "*" } = req.params;
-        const { privateKey = "", amountA = "", amountB = "",amountAMin = "",amountBMin = "", network = "", tokenA = "", tokenB = "", tokenAAddress = "", tokenBAddress = "" } = { ...req.query };
-        const networkType = network.toString().toUpperCase();
+        const { privateKey = "", amountA = "", amountB = "", amountAMin = "", amountBMin = "", tokenB = "", tokenAAddress = "", tokenBAddress = "" } = { ...req.query };
+        const tokenBType = tokenB.toString().toUpperCase();
         const routerAbi = abi.UNISWAP_ROUTER.abi
         const tokenAbi = abi.APIS_ERC20
-        const chainIds = chainNetwork()[networkType]
         const amountAValue = web3.utils.toWei(amountA);
         const amountBValue = web3.utils.toWei(amountB);
         const amountAMinValue = web3.utils.toWei(amountAMin);
         const amountBMinValue = web3.utils.toWei(amountBMin);
         const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
         const wallet = userWallet(privateKey, address)
-        const contractInstanceTokenA = await new web3.eth.Contract(tokenAbi,tokenAAddress, sendOptions(address));
-        const contractInstanceTokenB = await new web3.eth.Contract(tokenAbi,tokenBAddress, sendOptions(address));
+        const contractInstanceTokenA = await new web3.eth.Contract(tokenAbi, tokenAAddress, sendOptions(address));
         const approvingTokenA = await contractInstanceTokenA.methods.approve(UNISWAP_ROUTER_ADDRESS, amountAValue)
           .send({ from: address })
+        if (tokenBType == "WETH" || tokenBType == "ETH") {
+          const contractInstanceWeth = await new web3.eth.Contract(tokenAbi, WETH_ADDRESS, sendOptions(address));
+          const approvingWeth = await contractInstanceWeth.methods.approve(UNISWAP_ROUTER_ADDRESS, amountBValue)
+            .send({ from: address })
+          const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
+          const result = await contractInstanceRouter.methods.addLiquidityETH(tokenAAddress, amountAValue, amountAMinValue, amountBMinValue, address, deadline)
+            .send({ from: address, value: amountBValue })
+          return res.status(200).json({ result })
+        }
+        const contractInstanceTokenB = await new web3.eth.Contract(tokenAbi, tokenBAddress, sendOptions(address));
         const approvingTokenB = await contractInstanceTokenB.methods.approve(UNISWAP_ROUTER_ADDRESS, amountBValue)
           .send({ from: address })
         const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
-        const result = await contractInstanceRouter.methods.addLiquidity(tokenAAddress, tokenBAddress, amountAValue,amountBValue,amountAMinValue,amountBMinValue, address, deadline)
+        const result = await contractInstanceRouter.methods.addLiquidity(tokenAAddress, tokenBAddress, amountAValue, amountBValue, amountAMinValue, amountBMinValue, address, deadline)
           .send({ from: address })
-        return res.status(200).json({ result })
-      } catch (e) {
-        console.error(e);
-        return res.status(500).json({ errors: [e] });
-      }
-    }
-  );
-
-  router.post(
-    "/:address/liquidity/add/eth", [
-    param("address").trim().isString(),
-    query("privateKey").trim().isString(),
-    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
-    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
-  ],
-    async (req, res, next) => {
-      try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          return res.status(400).json({ errors: errors.array() });
-        }
-        const { address = "*" } = req.params;
-        const { privateKey = "", amountA = "",amountWeth = "",amountAMin = "",amountWethMin = "", network = "", tokenA = "", tokenAAddress = "" } = { ...req.query };
-        const networkType = network.toString().toUpperCase();
-        const routerAbi = abi.UNISWAP_ROUTER.abi
-        const tokenAbi = abi.APIS_ERC20
-        const chainIds = chainNetwork()[networkType]
-        const amountAValue = web3.utils.toWei(amountA);
-        const wethValue = web3.utils.toWei(amountWeth);
-        const amountAMinValue = web3.utils.toWei(amountAMin);
-        const wethMinValue = web3.utils.toWei(amountWethMin);
-        const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
-        const wallet = userWallet(privateKey, address)
-        const contractInstanceTokenA = await new web3.eth.Contract(tokenAbi,tokenAAddress, sendOptions(address));
-        const contractInstanceWeth = await new web3.eth.Contract(tokenAbi,WETH_ADDRESS, sendOptions(address));
-        const approvingTokenA = await contractInstanceTokenA.methods.approve(UNISWAP_ROUTER_ADDRESS, amountAValue)
-          .send({ from: address })
-        const approvingWeth = await contractInstanceWeth.methods.approve(UNISWAP_ROUTER_ADDRESS, wethValue)
-          .send({ from: address })
-        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
-        const result = await contractInstanceRouter.methods.addLiquidityETH(tokenAAddress, amountAValue,amountAMinValue,wethMinValue, address, deadline)
-          .send({ from: address ,  value: wethValue  })
         return res.status(200).json({ result })
       } catch (e) {
         console.error(e);
@@ -330,25 +296,36 @@ module.exports = ({
           return res.status(400).json({ errors: errors.array() });
         }
         const { address = "*" } = req.params;
-        const { privateKey = "", lpTokenAmount = "",amountAMin = "",amountBMin = "", network = "", tokenAAddress = "", tokenBAddress = "" } = { ...req.query };
-        const networkType = network.toString().toUpperCase();
+        const { privateKey = "", lpTokenAmount = "", amountAMin = "", amountBMin = "", tokenAAddress = "", tokenBAddress = "", tokenB = "" } = { ...req.query };
+        const tokenBType = tokenB.toString().toUpperCase();
         const factoryAbi = abi.UNISWAP_FACTORY;
         const routerAbi = abi.UNISWAP_ROUTER.abi
         const tokenAbi = abi.APIS_ERC20
-        const chainIds = chainNetwork()[networkType]
         const lpTokenAmountValue = web3.utils.toWei(lpTokenAmount);
         const amountAMinValue = web3.utils.toWei(amountAMin);
         const amountBMinValue = web3.utils.toWei(amountBMin);
         const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
         const wallet = userWallet(privateKey, address)
-        const contractInstanceFactory = await new web3.eth.Contract(factoryAbi,UNISWAP_FACTORY_ADDRESS, sendOptions(address));
-        const lpTokenAddress = await contractInstanceFactory.methods.getPair(tokenAAddress,tokenBAddress)
-        .call()
-        const contractInstanceLpToken = await new web3.eth.Contract(tokenAbi,lpTokenAddress, sendOptions(address));
+        if (tokenBType == "WETH" || tokenBType == "ETH") {
+          const contractInstanceFactory = await new web3.eth.Contract(factoryAbi, UNISWAP_FACTORY_ADDRESS, sendOptions(address));
+          const lpTokenAddress = await contractInstanceFactory.methods.getPair(tokenAAddress, WETH_ADDRESS)
+            .call()
+          const contractInstanceLpToken = await new web3.eth.Contract(tokenAbi, lpTokenAddress, sendOptions(address));
+          const approvingLpToken = await contractInstanceLpToken.methods.approve(UNISWAP_ROUTER_ADDRESS, lpTokenAmountValue)
+            .send({ from: address })
+          const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
+          const result = await contractInstanceRouter.methods.removeLiquidityETH(tokenAAddress, lpTokenAmountValue, amountAMinValue, amountBMinValue, address, deadline)
+            .send({ from: address })
+          return res.status(200).json({ result })
+        }
+        const contractInstanceFactory = await new web3.eth.Contract(factoryAbi, UNISWAP_FACTORY_ADDRESS, sendOptions(address));
+        const lpTokenAddress = await contractInstanceFactory.methods.getPair(tokenAAddress, tokenBAddress)
+          .call()
+        const contractInstanceLpToken = await new web3.eth.Contract(tokenAbi, lpTokenAddress, sendOptions(address));
         const approvingLpToken = await contractInstanceLpToken.methods.approve(UNISWAP_ROUTER_ADDRESS, lpTokenAmountValue)
           .send({ from: address })
         const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
-        const result = await contractInstanceRouter.methods.removeLiquidity(tokenAAddress, tokenBAddress, lpTokenAmountValue,amountAMinValue,amountBMinValue, address, deadline)
+        const result = await contractInstanceRouter.methods.removeLiquidity(tokenAAddress, tokenBAddress, lpTokenAmountValue, amountAMinValue, amountBMinValue, address, deadline)
           .send({ from: address })
         return res.status(200).json({ result })
       } catch (e) {
@@ -358,48 +335,6 @@ module.exports = ({
     }
   );
 
-  router.post(
-    "/:address/liquidity/remove/eth", [
-    param("address").trim().isString(),
-    query("privateKey").trim().isString(),
-    query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
-    query("network").trim().isIn(UNISWAP_SUPPORTED_NETWORKS),
-  ],
-    async (req, res, next) => {
-      try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          return res.status(400).json({ errors: errors.array() });
-        }
-        const { address = "*" } = req.params;
-        const { privateKey = "", lpTokenAmount = "",amountAMin = "",amountWethMin = "", network = "", tokenAAddress = "" } = { ...req.query };
-        const networkType = network.toString().toUpperCase();
-        const factoryAbi = abi.UNISWAP_FACTORY;
-        const routerAbi = abi.UNISWAP_ROUTER.abi
-        const tokenAbi = abi.APIS_ERC20
-        const chainIds = chainNetwork()[networkType]
-        const lpTokenAmountValue = web3.utils.toWei(lpTokenAmount);
-        const amountAMinValue = web3.utils.toWei(amountAMin);
-        const amountWethMinValue = web3.utils.toWei(amountWethMin);
-        const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
-        const wallet = userWallet(privateKey, address)
-        const contractInstanceFactory = await new web3.eth.Contract(factoryAbi,UNISWAP_FACTORY_ADDRESS, sendOptions(address));
-        const lpTokenAddress = await contractInstanceFactory.methods.getPair(tokenAAddress,WETH_ADDRESS)
-        .call()
-        const contractInstanceLpToken = await new web3.eth.Contract(tokenAbi,lpTokenAddress, sendOptions(address));
-        const approvingLpToken = await contractInstanceLpToken.methods.approve(UNISWAP_ROUTER_ADDRESS, lpTokenAmountValue)
-          .send({ from: address })
-        const contractInstanceRouter = await new web3.eth.Contract(routerAbi, UNISWAP_ROUTER_ADDRESS, sendOptions(address));
-        const result = await contractInstanceRouter.methods.removeLiquidityETH(tokenAAddress, lpTokenAmountValue,amountAMinValue,amountWethMinValue, address, deadline)
-          .send({ from: address })
-        return res.status(200).json({ result })
-      } catch (e) {
-        console.error(e);
-        return res.status(500).json({ errors: [e] });
-      }
-    }
-  );
- 
   router.get(
     "/price", [
     query("chain").trim().isIn(UNISWAP_SUPPORTED_CHAINS),
