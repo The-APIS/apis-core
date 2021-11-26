@@ -13,7 +13,7 @@
     "migration:generate": "npm run sequelize migration:generate -- $@",
     "model:generate": "npm run sequelize model:generate -- $@",
     "seed:generate": "npm run sequelize seed:generate -- $@",
-    "db:migrate": "pm run sequelize db:migrate -- $@",
+    "db:migrate": "npm run sequelize db:migrate -- $@",
     "db:seed:all": "npm run sequelize db:seed:all -- $@",
     "seed": "npm run db:seed:all -- $@",
     "test:watch": "./node_modules/mocha/bin/mocha --recursive --watch",
