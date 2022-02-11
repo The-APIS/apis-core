@@ -19,7 +19,7 @@
     "@ethersproject/contracts": "5.4.0",
     "@ethersproject/providers": "5.4.1",
     "@ethersproject/solidity": "5.4.0",
-    "@openzeppelin/contracts": "3.2.0",
+    "@openzeppelin/contracts": "4.4.2",
     "@uniswap/sdk": "3.0.3",
     "apicache": "1.5.3",
     "axios": "0.21.1",
