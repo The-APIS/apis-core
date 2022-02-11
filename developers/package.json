@@ -9,7 +9,7 @@
     "antd": "4.12.3",
     "axios": "0.21.1",
     "beautiful-react-hooks": "0.31.0",
-    "node-sass": "5.0.0",
+    "node-sass": "7.0.0",
     "normalize.css": "8.0.1",
     "query-string": "4.3.4",
     "react": "^17.0.1",
