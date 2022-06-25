@@ -37,7 +37,7 @@
     "lodash": "^4.17.21",
     "module-alias": "2.2.0",
     "morgan": "^1.10.0",
-    "node-fetch": "2.6.1",
+    "node-fetch": "2.6.7",
     "pg": "8.3.3",
     "query-string": "6.6.0",
     "redis": "3.1.1",
