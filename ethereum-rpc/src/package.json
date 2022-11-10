@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "expect": "24.8.0",
-    "mocha": "6.1.4",
+    "mocha": "10.1.0",
     "nodemon": "1.18.10"
   },
   "_moduleAliases": {
