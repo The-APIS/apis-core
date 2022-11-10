@@ -16,7 +16,7 @@
   "license": "ISC",
   "devDependencies": {
     "expect": "26.6.2",
-    "mocha": "8.2.1"
+    "mocha": "10.1.0"
   },
   "_moduleAliases": {
     "@": ".",
